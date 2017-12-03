@@ -1,7 +1,6 @@
 package fileSystem;
 
 import java.io.*;
-
 import client.Client;
 
 public class FileSystem {
