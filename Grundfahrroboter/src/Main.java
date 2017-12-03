@@ -1,5 +1,5 @@
-import FileSystem.FileSystem;
-import ServerClient.Client;
+import client.Client;
+import fileSystem.FileSystem;
 import lejos.hardware.Audio;
 import lejos.hardware.LED;
 import lejos.hardware.ev3.LocalEV3;

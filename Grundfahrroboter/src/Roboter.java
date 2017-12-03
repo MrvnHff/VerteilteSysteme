@@ -1,14 +1,15 @@
-import Berechnung.GradCm;
-import Fahren.Drehen;
-import Fahren.FahrenCm;
-import Regler.PID;
-import Sensoren.Gyrosensor;
-import Sensoren.Lichtsensor;
-import ServerClient.Client;
-import Warten.WartenAuf;
+import Sensoren.StandartSensor;
+import client.Client;
+import control.PID;
+import driving.Drehen;
+import driving.FahrenCm;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.robotics.RegulatedMotor;
+import logic.GradCm;
+import sensors.Gyrosensor;
+import sensors.Lichtsensor;
+import wait.WaitFor;
 
 public class Roboter {
 	private double durchmesser;
@@ -35,13 +36,13 @@ public class Roboter {
 	
 	public void pidLichtCm(int geschwindigkeit, double cm) {
 		pidLicht.drivePID(geschwindigkeit);
-		WartenAuf.Grad(b, grcm.getGrad(cm), ">=");
+		WaitFor.Grad(b, grcm.getGrad(cm), ">=");
 		pidLicht.stopPID();
 	}
 	
 	public void pidGyroCm(int geschwindigkeit, double cm) {
 		pidGyro.drivePID(geschwindigkeit);
-		WartenAuf.Grad(b, grcm.getGrad(cm), ">=");
+		WaitFor.Grad(b, grcm.getGrad(cm), ">=");
 		pidGyro.stopPID();
 	}
 	
