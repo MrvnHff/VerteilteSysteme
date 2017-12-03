@@ -11,20 +11,22 @@ import lejos.robotics.RegulatedMotor;
  * Damit lässt sich das Fahren abhängig machen von verschiedenen Prozessen, die dann von außen Einfluss auf die Geschwindgkeit und das Fahrverhalten einnehmen können.
  *
  */
-public class Fahren extends Thread {
+public class Driving extends Thread {
+	public static final char FORWARD = 'f';
+	public static final char BACKWARD = 'b';
+	public static final char LEFT = 'l';
+	public static final char RIGHT = 'r';
+	
 	private RegulatedMotor b;
 	private RegulatedMotor c;	
 	private boolean stop = false;
 	private int speedB = 0;
 	private int speedC = 0;
-	private char direction = 'f';
+	private char direction = FORWARD;
 	private boolean regulate;
-	public static final char FORWARD = 'f';
-	public static final char BACKWARD = 'b';
-	public static final char LEFT = 'l';
-	public static final char RIGHT = 'r';
+	
 
-	public Fahren(RegulatedMotor b, RegulatedMotor c) {
+	public Driving(RegulatedMotor b, RegulatedMotor c) {
 		this.b = b;
 		this.c = c;
 		this.regulate = true;
@@ -115,7 +117,7 @@ public class Fahren extends Thread {
 		return regulate;
 	}
 	
-	public void stopDrive() {
+	public void stopDriving() {
 		stop = true;
 	}
 

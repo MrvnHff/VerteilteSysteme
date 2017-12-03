@@ -44,6 +44,6 @@ public class FileSystem {
 	
 	public static void sendFileToServer(String filename, Client client) {
 		File file = new File(PATH + filename);
-		client.sendeFile(file);
+		client.sendFile(file);
 	}
 }

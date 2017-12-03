@@ -1,68 +1,67 @@
-import Sensoren.StandartSensor;
 import client.Client;
 import control.PID;
-import driving.Drehen;
-import driving.FahrenCm;
+import driving.Turn;
+import driving.DriveCm;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.robotics.RegulatedMotor;
-import logic.GradCm;
+import logic.DegreeCm;
 import sensors.Gyrosensor;
-import sensors.Lichtsensor;
+import sensors.Lightsensor;
 import wait.WaitFor;
 
 public class Roboter {
-	private double durchmesser;
-	private PID pidLicht;
+	private double diameter;
+	private PID pidLight;
 	private PID pidGyro;
-	private GradCm grcm;
+	private DegreeCm grcm;
 	private RegulatedMotor b;
 	private RegulatedMotor c;
-	private Lichtsensor licht1;
+	private Lightsensor light1;
 	private Gyrosensor gyro;
 	private Client client;
 		
-	public Roboter (double durchmesser) {
+	public Roboter (double diameter) {
 		client = new Client("192.168.178.24", 6000);
-		this.setDurchmesser(durchmesser);
+		this.setDiameter(diameter);
 		b = new EV3LargeRegulatedMotor(MotorPort.B);
 		c = new EV3LargeRegulatedMotor(MotorPort.C);
-		licht1 = new Lichtsensor(1);
+		light1 = new Lightsensor(1);
 		gyro = new Gyrosensor(3);
-		pidLicht = new PID(50, licht1, 0.5, 0.2, 0.8, b, c);
+		pidLight = new PID(50, light1, 0.5, 0.2, 0.8, b, c);
 		pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c);
-		grcm = new GradCm(durchmesser);
+		grcm = new DegreeCm(diameter);
 	}
 	
-	public void pidLichtCm(int geschwindigkeit, double cm) {
-		pidLicht.drivePID(geschwindigkeit);
-		WaitFor.Grad(b, grcm.getGrad(cm), ">=");
-		pidLicht.stopPID();
+	public void pidLightCm(int speed, double cm) {
+		pidLight.drivePID(speed);
+		WaitFor.Degree(b, grcm.getDegree(cm), ">=");
+		pidLight.stopPID();
 	}
 	
-	public void pidGyroCm(int geschwindigkeit, double cm) {
-		pidGyro.drivePID(geschwindigkeit);
-		WaitFor.Grad(b, grcm.getGrad(cm), ">=");
+	public void pidGyroCm(int speed, double cm) {
+		pidGyro.drivePID(speed);
+		WaitFor.Degree(b, grcm.getDegree(cm), ">=");
 		pidGyro.stopPID();
 	}
 	
-	public void fahreCm(double cm, int speed) {
-		FahrenCm.fahreCm(cm, speed, b, c, grcm);
+	public void driveCm(double cm, int speed) {
+		DriveCm.driveCm(cm, speed, b, c, grcm);
 	}
 		
-	public void drehen(int grad, boolean rechts) {
-		Drehen.drehen(grad, rechts, b, c, gyro);
+	public void turn(int degree, boolean right) {
+		Turn.turn(degree, right, b, c, gyro);
 	}
 
-	public double getDurchmesser() {
-		return durchmesser;
+	public double getDiameter() {
+		return diameter;
 	}
 
-	public void setDurchmesser(double durchmesser) {
-		this.durchmesser = durchmesser;
+	public void setDiameter(double diameter) {
+		this.diameter = diameter;
 	}
 	
 	public void sendeServer(String anfrage) {
-		client.sendeAnfrage(anfrage);
+		client.sendRequest(anfrage);
 	}
 }

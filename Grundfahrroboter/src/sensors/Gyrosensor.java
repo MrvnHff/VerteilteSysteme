@@ -1,10 +1,10 @@
 package sensors;
-import sensors.StandartSensor;
+import sensors.DefaultSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
 
-public class Gyrosensor extends StandartSensor{
+public class Gyrosensor extends DefaultSensor{
 	private EV3GyroSensor gyro;
-	private float GyroGrad = 0;
+	private float gyroGrad = 0;
 	private float grad = 0;
 		
 	public Gyrosensor(int port) {
@@ -15,10 +15,10 @@ public class Gyrosensor extends StandartSensor{
 	}
 	
 	@Override
-	public int getMessung() {
+	public int getValue() {
 		provider.fetchSample(sample, 0);
-		grad = grad + (GyroGrad-sample[0]);
-		GyroGrad = sample[0];
+		grad = grad + (gyroGrad-sample[0]);
+		gyroGrad = sample[0];
 		return (int)Math.round(grad) ;
 	}
 	
@@ -27,7 +27,7 @@ public class Gyrosensor extends StandartSensor{
 	}
 	public void resetHard() {
 		grad = 0;
-		GyroGrad = 0;
+		gyroGrad = 0;
 		gyro.reset();
 	}
 }

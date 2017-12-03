@@ -1,31 +1,31 @@
 package wait;
 
 import lejos.robotics.RegulatedMotor;
-import sensors.StandartSensor;
+import sensors.DefaultSensor;
 
 public class WaitFor {
 
-	public static void Licht(StandartSensor s, int lichtlvl, String vergleich){
+	public static void Light(DefaultSensor s, int lightlvl, String compare){
 		boolean check = false;		
 		while (!check) {
-			switch (vergleich) {
+			switch (compare) {
 			case "=":
-				if (s.getMessung()==lichtlvl) {check = true;}
+				if (s.getValue()==lightlvl) {check = true;}
 				break;
 			case "<":
-				if (s.getMessung()<lichtlvl) {check = true;}
+				if (s.getValue()<lightlvl) {check = true;}
 				break;
 			case "<=":
-				if (s.getMessung()<=lichtlvl) {check = true;}
+				if (s.getValue()<=lightlvl) {check = true;}
 				break;
 			case ">":
-				if (s.getMessung()>lichtlvl) {check = true;}
+				if (s.getValue()>lightlvl) {check = true;}
 				break;
 			case ">=":
-				if (s.getMessung()>=lichtlvl) {check = true;}
+				if (s.getValue()>=lightlvl) {check = true;}
 				break;
 			case "!=":
-				if (s.getMessung()!=lichtlvl) {check = true;}
+				if (s.getValue()!=lightlvl) {check = true;}
 				break;
 			default:
 				check = true;
@@ -33,27 +33,27 @@ public class WaitFor {
 		}
 	}
 	
-	public static void Grad(RegulatedMotor motor, int gradlvl, String vergleich){
+	public static void Degree(RegulatedMotor motor, int degreelvl, String compare){
 		boolean check = false;		
 		while (!check) {
-			switch (vergleich) {
+			switch (compare) {
 			case "=":
-				if (motor.getTachoCount()==gradlvl) {check = true;}
+				if (motor.getTachoCount()==degreelvl) {check = true;}
 				break;
 			case "<":
-				if (motor.getTachoCount()<gradlvl) {check = true;}
+				if (motor.getTachoCount()<degreelvl) {check = true;}
 				break;
 			case "<=":
-				if (motor.getTachoCount()<=gradlvl) {check = true;}
+				if (motor.getTachoCount()<=degreelvl) {check = true;}
 				break;
 			case ">":
-				if (motor.getTachoCount()>gradlvl) {check = true;}
+				if (motor.getTachoCount()>degreelvl) {check = true;}
 				break;
 			case ">=":
-				if (motor.getTachoCount()>=gradlvl) {check = true;}
+				if (motor.getTachoCount()>=degreelvl) {check = true;}
 				break;
 			case "!=":
-				if (motor.getTachoCount()!=gradlvl) {check = true;}
+				if (motor.getTachoCount()!=degreelvl) {check = true;}
 				break;
 			default:
 				check = true;	

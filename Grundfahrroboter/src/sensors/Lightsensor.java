@@ -1,11 +1,11 @@
 package sensors;
-import sensors.StandartSensor;
+import sensors.DefaultSensor;
 import lejos.hardware.sensor.EV3ColorSensor;
 
-public class Lichtsensor extends StandartSensor{
+public class Lightsensor extends DefaultSensor{
 	private EV3ColorSensor light;
 		
-	public Lichtsensor(int port) {
+	public Lightsensor(int port) {
 		super(port);
 		light = new EV3ColorSensor(p);
 		provider = light.getRedMode();
@@ -13,7 +13,7 @@ public class Lichtsensor extends StandartSensor{
 	}
 	
 	@Override
-	public int getMessung() {
+	public int getValue() {
 		provider.fetchSample(sample, 0);
 		return Math.round(sample[0]*100);
 	}

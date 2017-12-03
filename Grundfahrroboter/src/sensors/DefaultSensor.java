@@ -3,17 +3,17 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.port.Port;
 import lejos.robotics.SampleProvider;
 
-public class StandartSensor {
+public class DefaultSensor {
 
 	protected SampleProvider provider;
 	protected float[] sample;
 	public Port p;
 
-	public StandartSensor(int port) {
+	public DefaultSensor(int port) {
 		setP(port);
 	}
 	
-	public int getMessung() {
+	public int getValue() {
 		return 0;
 	}
 	

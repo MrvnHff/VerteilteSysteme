@@ -3,49 +3,49 @@ package control;
 import Regler.DRegler;
 import Regler.IRegler;
 import Regler.PRegler;
-import driving.Fahren;
+import driving.Driving;
 import lejos.robotics.RegulatedMotor;
-import sensors.StandartSensor;
+import sensors.DefaultSensor;
 
 public class PID extends Thread {	
-	private Fahren drive;
-	private int mittelwert;
-	private int geschwindigkeit;
-	private StandartSensor s;
+	private Driving drive;
+	private int average;
+	private int speed;
+	private DefaultSensor s;
 	private PRegler p;
 	private IRegler i;
 	private DRegler d;
 	private boolean stop;
 
-	public PID(int mittelwert, StandartSensor s, double kp, double ki, double kd,RegulatedMotor b, RegulatedMotor c) {		
-		drive = new Fahren(b, c);
-		this.mittelwert = mittelwert;
+	public PID(int average, DefaultSensor s, double kp, double ki, double kd,RegulatedMotor b, RegulatedMotor c) {		
+		drive = new Driving(b, c);
+		this.average = average;
 		this.s = s;
 		p = new PRegler(kp);
-		i = new IRegler(ki, mittelwert);
+		i = new IRegler(ki, average);
 		d = new DRegler(kd);
 	}
 
 	public void run() {
 		stop = false;
 		while (!stop) {
-			int diff = mittelwert - s.getMessung();
-			double regelung = Math.round(p.regelP(diff) + i.regelI(diff) + d.regelD(diff));
-			drive.setSpeedB((int) (geschwindigkeit + regelung));
-			drive.setSpeedC((int) (geschwindigkeit - regelung));
-			System.out.println(regelung);
+			int diff = average - s.getValue();
+			double control = Math.round(p.regelP(diff) + i.regelI(diff) + d.regelD(diff));
+			drive.setSpeedB((int) (speed + control));
+			drive.setSpeedC((int) (speed - control));
+			System.out.println(control);
 		}
 	}
 
-	public void drivePID(int geschwindigkeit) {
-		this.geschwindigkeit = geschwindigkeit;
-		drive.setDirection('f');
-		drive.start(geschwindigkeit);
+	public void drivePID(int speed) {
+		this.speed = speed;
+		drive.setDirection(drive.FORWARD);
+		drive.start(speed);
 		start();			
 	}
 	
 	public void stopPID() {
-		drive.stopDrive();
+		drive.stopDriving();
 		stop = true;
 	}
 }

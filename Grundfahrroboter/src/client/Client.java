@@ -24,24 +24,24 @@ public class Client {
 		}
 	}
 
-	public String sendeAnfrage(String anfrage) {
-		String antwort = "";
+	public String sendRequest(String request) {
+		String answer = "";
 		try {
 			connect();
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-			out.writeObject(anfrage);
-			antwort = in.readLine();
+			out.writeObject(request);
+			answer = in.readLine();
 
 			socket.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return antwort;
+		return answer;
 	}
 
-	public void sendeFile(File file) {
+	public void sendFile(File file) {
 		try {
 			connect();
 			

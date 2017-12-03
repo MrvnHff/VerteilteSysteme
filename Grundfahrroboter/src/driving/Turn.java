@@ -9,25 +9,25 @@ import sensors.Gyrosensor;
  * @category Movement
  *
  */
-public class Drehen {	
+public class Turn {	
 
 	//Die Methode benutzt ein Fahren Objekt, um eine Drehung auszuführen. Die Geschwindigkeit der Drehung ist abhängig von dem bisher zurück gelegtem Winkels.
 	//Je größer der zurück gelegte Winkel, desto langsammer die Drehung. Das macht die Drehung genauer.
-	public static void drehen(int grad, boolean rechts, RegulatedMotor b, RegulatedMotor c, Gyrosensor gyro) {
-		Fahren drive = new Fahren(b, c);
-		int speed = grad - Math.abs(gyro.getMessung()) + 30;
+	public static void turn(int grad, boolean right, RegulatedMotor b, RegulatedMotor c, Gyrosensor gyro) {
+		Driving drive = new Driving(b, c);
+		int speed = grad - Math.abs(gyro.getValue()) + 30;
 		gyro.reset();
-		if (rechts) {
-			drive.setDirection(Fahren.RIGHT);
+		if (right) {
+			drive.setDirection(Driving.RIGHT);
 		} else {
-			drive.setDirection(Fahren.LEFT);
+			drive.setDirection(Driving.LEFT);
 		}
 		drive.start(speed);
-		while (grad - Math.abs(gyro.getMessung()) > 2) {
-			speed = grad - Math.abs(gyro.getMessung()) + 30;
+		while (grad - Math.abs(gyro.getValue()) > 2) {
+			speed = grad - Math.abs(gyro.getValue()) + 30;
 			drive.setSpeed(speed);
 		}
-		drive.stopDrive();
+		drive.stopDriving();
 	}
 
 }
