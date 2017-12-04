@@ -3,16 +3,29 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.port.Port;
 import lejos.robotics.SampleProvider;
 
+/**
+ * Die Klasse Default Sensor implementiert alle notwendigen Eigenschaften, die der Roboter benötigt, um die Daten eines Sensors auszulesen.
+ * 
+ * @author Lennart Monir
+ * @version 0.1
+ */
 public class DefaultSensor {
 
-	protected SampleProvider provider;
-	protected float[] sample;
+	protected SampleProvider provider; //Der Sample Provider liefert die Rohdaten eines Sensors.
+	protected float[] sample;  //Das sample-Array beinhaltet alle Rohdaten eines Sampels, das der Sample Provider liefert
 	public Port p;
 
+	/**
+	 * Der Standart Konstruktor DefaultSensor
+	 * @param port Int von 1-4 erlaubt
+	 */
 	public DefaultSensor(int port) {
 		setP(port);
 	}
 	
+	/**
+	 * @return Liefert ein Int zurück, dass den gemessenen Wert des Sensors liefert.
+	 */
 	public int getValue() {
 		return 0;
 	}
