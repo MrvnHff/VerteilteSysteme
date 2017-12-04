@@ -27,9 +27,14 @@ public class Gyrosensor extends DefaultSensor{
 		sample = new float[provider.sampleSize()];
 	}
 	
-	/* (non-Javadoc)
-	 * @see sensors.DefaultSensor#getValue()
-	 */
+	/**
+	 * Die Methode getValue() liefert einen Int Wert aus einem vom Provider erzeugtem Sampel, das der Sensor generiert hat.
+	 * Das Problem des Gyrosensors ist es, dass seine interne Methode {@link lejos.hardware.sensor.EV3GyroSensor#reset()} nicht nur den Zähler der Gradzahl zurücksetzt,
+	 * sondern gleich einen ganzen Hardwarereset durchführt. Das hat zur Folge, dass der Roboter jedes mal zwei Sekunden nichts machen kann.
+	 * Darum bildet getValue() die Gradzahl in einer neuen Variable ab, die sich über die Differenz eines Samples und der zuvor gemesenen Gradzahl eines Samples bildet.
+	 * Und dieser Wert lässt sich dann ganz einfach auf Null zurück setzen, ohne dass der ganze Sensor resetet wird.
+	 * @return Int grad, der Winkel, der objektiv gemessen wurde.
+	 */ 
 	@Override
 	public int getValue() {
 		provider.fetchSample(sample, 0);		//Der Provider ließt über den Modus ein Sample aus und schreibt es in das sample-Array beginnend ab der Stelle 0.

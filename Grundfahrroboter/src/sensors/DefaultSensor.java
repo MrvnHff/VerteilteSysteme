@@ -22,10 +22,7 @@ public class DefaultSensor {
 	public DefaultSensor(int port) {
 		setP(port);
 	}
-	
-	/**
-	 * @return Liefert ein Int zurück, dass den gemessenen Wert des Sensors liefert.
-	 */
+		
 	public int getValue() {
 		return 0;
 	}
