@@ -10,10 +10,10 @@ import lejos.robotics.RegulatedMotor;
  * @category Movement
  */
 public class Driving extends Thread {
-	public static final char FORWARD = 'f';
-	public static final char BACKWARD = 'b';
-	public static final char LEFT = 'l';
-	public static final char RIGHT = 'r';
+	public final static char FORWARD = 'f';
+	public final static char BACKWARD = 'b';
+	public final static char LEFT = 'l';
+	public final static char RIGHT = 'r';
 	
 	private RegulatedMotor b;
 	private RegulatedMotor c;	
