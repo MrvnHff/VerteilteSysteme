@@ -20,7 +20,6 @@ public class Roboter {
 	private double diameter;
 	private PID pidLight;
 	private PID pidGyro;
-	private DegreeCm grcm;
 	private RegulatedMotor b;
 	private RegulatedMotor c;
 	private Lightsensor light1;
@@ -41,24 +40,23 @@ public class Roboter {
 		light1 = new Lightsensor(1);
 		gyro = new Gyrosensor(3);
 		pidLight = new PID(50, light1, 0.5, 0.2, 0.8, b, c);
-		pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c);
-		grcm = new DegreeCm(diameter);
+		pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c);		
 	}
 	
 	public void pidLightCm(int speed, double cm) {
 		pidLight.drivePID(speed);
-		WaitFor.Degree(b, grcm.getDegree(cm), ">=");
+		WaitFor.Degree(b, DegreeCm.getDegree(cm, diameter), ">=");
 		pidLight.stopPID();
 	}
 	
 	public void pidGyroCm(int speed, double cm) {
 		pidGyro.drivePID(speed);
-		WaitFor.Degree(b, grcm.getDegree(cm), ">=");
+		WaitFor.Degree(b, DegreeCm.getDegree(cm, diameter), ">=");
 		pidGyro.stopPID();
 	}
 	
 	public void driveCm(double cm, int speed) {
-		DriveCm.driveCm(cm, speed, b, c, grcm);
+		DriveCm.driveCm(cm, speed, b, c, diameter);
 	}
 		
 	public void turn(int degree, boolean right) {

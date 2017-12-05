@@ -6,11 +6,11 @@ import logic.DegreeCm;
 
 public class DriveCm {
 
-	public static void driveCm(double cm, int speed, RegulatedMotor b, RegulatedMotor c, DegreeCm grcm) {
+	public static void driveCm(double cm, int speed, RegulatedMotor b, RegulatedMotor c, double diameter) {
 		Driving drive = new Driving(b, c);
 		int minspeed = 5;
 		int s = 0;
-		int degree = Math.abs(grcm.getDegree(cm));
+		int degree = Math.abs(DegreeCm.getDegree(cm, diameter));
 		if (cm < 0 ^ speed < 0) {
 			drive.setDirection(Driving.BACKWARD);
 		} else {

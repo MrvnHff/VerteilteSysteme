@@ -7,25 +7,14 @@ package logic;
  * @version 10.10.2017 
  */
 public class DegreeCm {
-	private double diameter = 0;
 	private static final double  PI = 3.141;
-
-	public DegreeCm() {}
-	public DegreeCm(double diameter) {
-		this.diameter = diameter;
-	}
-	public void setDiameter(double diameter) {
-		this.diameter = diameter;
-	}
-	public double getDiameter() {
-		return diameter;
-	}
+	
 	/**
 	 * Errechnet zu übergebener Strecke in cm die zu fahrende Gradzahl.
 	 * @param cm, ein double Wert, der in cm die Strecke darstellt.
 	 * @return degree, Int Gradzahl
 	 */
-	public int getDegree(double cm) {
+	public static int getDegree(double cm, double diameter) {
 		int degree = 0;
 		degree = (int)(Math.round((cm * 10) / (diameter * PI) * 360));
 		return degree;
@@ -36,7 +25,7 @@ public class DegreeCm {
 	 * @param degree, ein double Wert, der in Grad die Motorumdrehung darstellt.
 	 * @return cm, Int Strecke in cm
 	 */
-	public double getCm(double degree) {
+	public static double getCm(double degree, double diameter) {
 		double cm = 0;
 		cm = (degree * diameter * PI) / (3600);
 		return cm;
