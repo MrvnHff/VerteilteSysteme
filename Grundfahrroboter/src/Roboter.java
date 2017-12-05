@@ -10,6 +10,12 @@ import sensors.Gyrosensor;
 import sensors.Lightsensor;
 import wait.WaitFor;
 
+/**
+ * Die Roboter-Klasse vereint alle Eigenschaften und Klassen des Roboters. Sie soll ein digitales Abbild des Roboters darstellen und alle Funktionen zur Verfügung stellen,
+ * die der Roboter besitzt.
+ * @author Lennart Monir
+ * @version 0.1 *
+ */
 public class Roboter {
 	private double diameter;
 	private PID pidLight;
@@ -21,6 +27,12 @@ public class Roboter {
 	private Gyrosensor gyro;
 	private Client client;
 		
+	/**
+	 * Der Konstruktor initialisiert einen Client, um mit einem Server zu komunizieren, meldet zwei Motoren an ihren Ports B und C an, meldet einen Lichtsensor am Port
+	 * S1 und einen Gyrosensor am Port S3 an.
+	 * Ebenso werdem dem Roboter zwei PID-Regler für den Lichtsensor und den Gyrosensor zur Verfügung gestellt.
+	 * @param diameter, der Durchmesser der Reifen des Roboters zum Zeitpunkt des Aufrufs des Klassenobjektes.
+	 */
 	public Roboter (double diameter) {
 		client = new Client("192.168.178.24", 6000);
 		this.setDiameter(diameter);

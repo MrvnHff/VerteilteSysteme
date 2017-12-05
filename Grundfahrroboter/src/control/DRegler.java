@@ -13,8 +13,7 @@ public class DRegler {
 	
 	public DRegler(double kd) {
 		this.kd = kd;
-	}
-	
+	}	
 	
 	/**
 	 * Die Methode bildet den Regelanteil D. Dafür wird eine Differenz zwischen der jetzigen Differenz und der Dfferenz des voran gegangenen Schittes berechnet.

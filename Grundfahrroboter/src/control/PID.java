@@ -8,7 +8,7 @@ import lejos.robotics.RegulatedMotor;
 import sensors.DefaultSensor;
 
 /**
- * Die Klasse PID verwaltet einen PID-Regler.
+ * Die Klasse PID (Proportional, Integral, Differential) verwaltet einen PID-Regler.
  * Ein PID-Regler ist ein in der Steuerungs- und Regeltechnik weit verbreiteter Regelmechanismus, der einer Steuerungseinheit helfen soll,
  * schnell einen Zielwert zu erreichen. Die Technik soll dem Roboter helfen, dass er mit nur einem Lichtsensor einer Linie folgen kann.
  * Und das möglichst so, dass der Roboter möglichst keine Wellen fährt und die Linie nicht verliert.
