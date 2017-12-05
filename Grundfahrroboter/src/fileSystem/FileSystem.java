@@ -39,7 +39,7 @@ public class FileSystem {
 	
 	/**
 	 * Diese Methode erstellt aus einem zweidimensionalen Array eine CSV-Datei.
-	 * @param name, der Dateiname. Beachten, dass der Pfad mit enthalten ist.
+	 * @param name, der Dateiname. Beachten, dass der Pfad mit enthalten ist und csv muss nicht angehängt werden.
 	 * @param arr, das zu speichernde Array
 	 */
 	public static void saveAsCSV(String name, String arr[][]) {
