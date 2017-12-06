@@ -35,5 +35,7 @@ public class Lightsensor extends DefaultSensor{
 		provider.fetchSample(sample, 0);
 		return Math.round(sample[0]*100);
 	}
+	
+	//TODO Lichtsensor auch für den Farbmodus und für alle drei Ferben (RGB) implementieren. Evtl. noch für das Umgebungslicht. 
 		
 }
