@@ -20,3 +20,11 @@ RoboCop/RoboCop-Server/\.classpath
 RoboCop/RoboCop-Server/\.project
 
 RoboCop/RoboCop-Server/\.settings/
+
+Dateiabfrage/client/\.idea/
+
+Dateiabfrage/client/cmake-build-debug/
+
+Dateiabfrage/server/\.idea/
+
+Dateiabfrage/server/cmake-build-debug/
