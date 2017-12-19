@@ -1,7 +1,10 @@
-import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class Client {
+	
+	private Client() {}
 
 	public static void main(String args[]) {
 		Server server;
@@ -24,8 +27,8 @@ public class Client {
 		scan.close();		
 		
 		try {
-			server = (Server) Naming.lookup("rmi://0.0.0.0:1234/Server");
-			//TestServer server = new TestServer();
+			Registry registry = LocateRegistry.getRegistry("0.0.0.0", 42424);
+			server = (Server) registry.lookup("I_bims");
 			System.out.println(server.getValue(namen));
 		} catch (Exception e) {
 			System.out.println(e);
