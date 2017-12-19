@@ -9,7 +9,7 @@ public class Client {
 	public static void main(String args[]) {
 		Server server;
 		
-		int MAX = 10;
+		int MAX = 10000;
 		int count = 0;
 		String namen = "";
 		String eingabe = "";
