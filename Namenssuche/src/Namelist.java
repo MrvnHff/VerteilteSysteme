@@ -12,12 +12,16 @@ public class Namelist {
 		namelist[5] = "Cheik DaBoss";
 	}
 
-	public String getName(String s) throws NoNameFoundException {
+	public String getName(String s) {
 		String[] names = s.split(";");
 		int l = names.length;
 		String name = "";
 		for (int i = 0; i < l; i++) {
+			try {
 			name = name + findName(names[i]);
+			}catch (Exception e) {
+				name = name + e + "\n";
+			}
 		}
 		return name;
 	}
