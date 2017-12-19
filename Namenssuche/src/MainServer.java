@@ -18,8 +18,7 @@ public class MainServer implements Server {
         try {
             Server obj = new MainServer();
             Server stub = (Server) UnicastRemoteObject.exportObject(obj, 0);
-            System.out.println(obj.toString());
-            // Bind the remote object's stub in the registry
+            //System.out.println(obj.toString());
             LocateRegistry.createRegistry(42424);
             Registry registry = LocateRegistry.getRegistry(42424);
             registry.bind("I_bims", stub);
