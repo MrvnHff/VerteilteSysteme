@@ -1,5 +1,9 @@
 public class NoNameFoundException extends Exception
  {
-     public NoNameFoundException() { super(); }
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public NoNameFoundException() { super(); }
      public NoNameFoundException(String s) { super(s); }
  }

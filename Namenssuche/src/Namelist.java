@@ -1,29 +1,27 @@
 
-import java.rmi.server.*;
-import java.rmi.RemoteException;
-
-public class ServerImpl extends UnicastRemoteObject implements Server {
-	private String namelist[];
-	private static final int MAX = 8;
-
-	public ServerImpl() throws RemoteException {
-		namelist = new String[MAX];
+public class Namelist {
+    private String namelist[];
+    private static final int MAX = 6;
+    public Namelist() {
+    	namelist = new String[MAX];
 		namelist[0] = "Lennart Monir";
 		namelist[1] = "Marvin Hoff";
-		namelist[2] = "Lauryn Monir";
-		namelist[3] = "Gunda Monir";
-		namelist[4] = "Helga Hoffhenke";
-		namelist[5] = "Line Hoffhenke";
-		namelist[6] = "Henrik Diestel";
-		namelist[7] = "Jannis Groth";
+		namelist[2] = "Mathias Wittling";
+		namelist[3] = "Janek Dahl";
+		namelist[4] = "Maritza Villa";
+		namelist[5] = "Cheik DaBoss";
 	}
 
-	public String getValue(String s) throws NoNameFoundException {
+	public String getName(String s) {
 		String[] names = s.split(";");
 		int l = names.length;
 		String name = "";
 		for (int i = 0; i < l; i++) {
+			try {
 			name = name + findName(names[i]);
+			}catch (Exception e) {
+				name = name + e + "\n";
+			}
 		}
 		return name;
 	}
@@ -42,3 +40,5 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		return name;
 	}
 }
+
+
