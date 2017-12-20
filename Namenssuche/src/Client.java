@@ -9,7 +9,7 @@ public class Client {
 	public static void main(String args[]) {
 		Server server;
 		
-		int MAX = 10000;
+		int MAX = 10;
 		int count = 0;
 		String namen = "";
 		String eingabe = "";
@@ -27,7 +27,7 @@ public class Client {
 		scan.close();		
 		
 		try {
-			Registry registry = LocateRegistry.getRegistry("0.0.0.0", 42424);
+			Registry registry = LocateRegistry.getRegistry("0.0.0.0", 54321);
 			server = (Server) registry.lookup("I_bims");
 			System.out.println(server.getValue(namen));
 		} catch (Exception e) {

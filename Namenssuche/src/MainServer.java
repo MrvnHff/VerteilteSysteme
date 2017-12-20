@@ -19,8 +19,8 @@ public class MainServer implements Server {
             Server obj = new MainServer();
             Server stub = (Server) UnicastRemoteObject.exportObject(obj, 0);
             //System.out.println(obj.toString());
-            LocateRegistry.createRegistry(42424);
-            Registry registry = LocateRegistry.getRegistry(42424);
+            LocateRegistry.createRegistry(54321);
+            Registry registry = LocateRegistry.getRegistry(54321);
             registry.bind("I_bims", stub);
 
             System.err.println("Server ready");

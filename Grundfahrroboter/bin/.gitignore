@@ -1,19 +1,20 @@
 /Client.class
+/Main.class
+/Main3.class
+/Main4.class
+/MainServer.class
+/Namelist.class
 /NoNameFoundException.class
+/Roboter.class
 /Server.class
-/ServerImpl.class
-/ServerProc.class
-/TestServer.class
-/sensors/
-/wait/
+/StarteClient
+/StarteServer
+/client/
 /control/
 /driving/
 /exceptions/
+/fileSystem/
+/java.policy
 /logic/
-<<<<<<< HEAD
-=======
 /sensors/
 /wait/
-/MainServer.class
-/Namelist.class
->>>>>>> 3b0ed2305fde42ce580a6505b8aaec9c8177f68b
