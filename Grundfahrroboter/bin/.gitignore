@@ -1,7 +1,12 @@
-/client/
-/control/
-/driving/
-/fileSystem/
-/logic/
+/Client.class
+/NoNameFoundException.class
+/Server.class
+/ServerImpl.class
+/ServerProc.class
+/TestServer.class
 /sensors/
 /wait/
+/control/
+/driving/
+/exceptions/
+/logic/
