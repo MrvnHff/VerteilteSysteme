@@ -68,7 +68,7 @@ int readNBytesFromFile(int byteCount, char client_message[], char buffer[]) {
         return 1;
     } else {
 
-        while (endOfFile == false && i < byteCount) {
+        while (endOfFile == false && i <= byteCount) {
             c = fgetc(pFile);
             if (feof(pFile)) {
                 endOfFile = true;
