@@ -14,5 +14,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
+  	<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-configuration2</artifactId>
+	</dependency>
+	<dependency>
+	  <groupId>commons-beanutils</groupId>
+	  <artifactId>commons-beanutils</artifactId>
+	</dependency>
   </dependencies>
 </project>
