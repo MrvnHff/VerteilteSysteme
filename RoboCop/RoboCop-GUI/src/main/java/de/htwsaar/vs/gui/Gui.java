@@ -34,28 +34,24 @@ import javafx.stage.Stage;
 
 public class Gui extends Application {
 
-	private static final String CONFIG_FILENAME = "config/config.properties";
+	private static final String CONFIG_FILENAME = "config/config";
+	private static final String FXML_BUNDLE_FILENAME = "config/fxml_files";
 	
+	//Hier Sprache ändern
 	private Locale locale = new Locale("de");
 	
 	private Stage primaryStage = new Stage();
 	private BorderPane rootLayout;
 	
-	private Configuration config;
+	private ResourceBundle config;
+	private ResourceBundle fxmlBundle;
 	
+	/**
+	 * Lädt die configurationen aus den properties dateien
+	 */
 	private void loadConfiguration() {
-		try {
-			org.apache.commons.configuration2.builder.fluent.Parameters params = new org.apache.commons.configuration2.builder.fluent.Parameters();			
-
-			FileBasedConfigurationBuilder<FileBasedConfiguration> builder =
-			    new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-			    .configure(params.fileBased()
-			        .setFileName(CONFIG_FILENAME));
-			
-			config = builder.getConfiguration();
-		} catch (ConfigurationException cex) {
-			System.out.println(cex);
-		}		
+		config = ResourceBundle.getBundle(CONFIG_FILENAME);
+		fxmlBundle = ResourceBundle.getBundle(FXML_BUNDLE_FILENAME);
 	}
 	
 	@Override
@@ -72,9 +68,8 @@ public class Gui extends Application {
 
 	private void initRootLayout() {
 		try {
-			System.out.println(config.getString("fxml.rootLayout"));
 			FXMLLoader rootLayoutLoader = new FXMLLoader();
-			rootLayoutLoader.setLocation(Gui.class.getClassLoader().getResource(config.getString("fxml.rootLayout")));
+			rootLayoutLoader.setLocation(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.rootLayout")));
 			rootLayout = (BorderPane) rootLayoutLoader.load();
 			
 			buildGui();
@@ -122,7 +117,7 @@ public class Gui extends Application {
 		BorderPane robot = null;
 		
 		try {
-			ResourceBundle bundle = ResourceBundle.getBundle("config/robot", locale);
+			ResourceBundle bundle = ResourceBundle.getBundle(config.getString("config.robot"), locale);
 			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(config.getString("fxml.robot")), bundle);
 		
 			robot = (BorderPane) robotLoader.load();
