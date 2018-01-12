@@ -85,6 +85,7 @@ public class Gui extends Application {
 	private void buildGui() {
 		GridPane gridPane = new GridPane();
 		HBox hbox = new HBox();
+		hbox.setSpacing(10);
 		hbox.getChildren().add(buildRobotPane());
 		hbox.getChildren().add(buildRobotPane());
 		hbox.getChildren().add(buildRobotPane());
@@ -117,9 +118,8 @@ public class Gui extends Application {
 		BorderPane robot = null;
 		
 		try {
-			ResourceBundle bundle = ResourceBundle.getBundle(config.getString("config.robot"), locale);
-			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(config.getString("fxml.robot")), bundle);
-		
+			
+			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
 			robot = (BorderPane) robotLoader.load();
 		} catch (IOException e) {
 			System.out.println(e);
