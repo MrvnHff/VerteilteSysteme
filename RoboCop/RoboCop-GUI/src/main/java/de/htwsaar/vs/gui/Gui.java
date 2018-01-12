@@ -23,6 +23,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -84,12 +85,16 @@ public class Gui extends Application {
 	
 	private void buildGui() {
 		GridPane gridPane = new GridPane();
-		HBox hbox = new HBox();
-		hbox.setSpacing(10);
-		hbox.getChildren().add(buildRobotPane());
-		hbox.getChildren().add(buildRobotPane());
-		hbox.getChildren().add(buildRobotPane());
-		gridPane.add(hbox, 0, 0);
+		
+		FlowPane flow = new FlowPane();
+		flow.setVgap(10);
+		flow.setHgap(10);
+		flow.setPrefWrapLength(800);
+		flow.getChildren().add(buildRobotPane());
+		flow.getChildren().add(buildRobotPane());
+		flow.getChildren().add(buildRobotPane());
+		flow.getChildren().add(buildRobotPane());
+		gridPane.add(flow, 0, 0);
 		
 		Pane pane = new Pane();
 		Canvas canvas = new Canvas(400, 400);
@@ -100,7 +105,7 @@ public class Gui extends Application {
                 "-fx-border-radius: 5;" +
                 "-fx-border-color: blue;");
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-		gc.strokeText("Hello Canvas", 150, 100);
+		gc.strokeText("Hello Canvas", 200, 200);
 		
 		pane.getChildren().add(canvas);
 		gridPane.add(pane, 1, 0);
