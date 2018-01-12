@@ -123,7 +123,6 @@ public class Gui extends Application {
 		BorderPane robot = null;
 		
 		try {
-			
 			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
 			robot = (BorderPane) robotLoader.load();
 		} catch (IOException e) {
