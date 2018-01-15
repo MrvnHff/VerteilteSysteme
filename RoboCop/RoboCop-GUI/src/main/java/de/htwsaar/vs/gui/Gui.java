@@ -1,40 +1,23 @@
 package de.htwsaar.vs.gui;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Locale;
-import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.FileBasedConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.htwsaar.vs.gui.graph.CellType;
+import de.htwsaar.vs.gui.graph.Graph;
+import de.htwsaar.vs.gui.graph.Model;
+import de.htwsaar.vs.gui.layout.random.RandomLayout;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Gui extends Application {
@@ -44,6 +27,8 @@ public class Gui extends Application {
 	
 	//Hier Sprache ändern
 	private Locale locale = new Locale("en");
+	
+	Graph graph;
 	
 	private Stage primaryStage = new Stage();
 	private BorderPane rootLayout;
@@ -55,7 +40,7 @@ public class Gui extends Application {
 	 * Lädt die configurationen aus den properties dateien
 	 */
 	private void loadConfiguration() {
-		config = ResourceBundle.getBundle(CONFIG_FILENAME);
+		config = ResourceBundle.getBundle(CONFIG_FILENAME, locale);
 		fxmlBundle = ResourceBundle.getBundle(FXML_BUNDLE_FILENAME);
 	}
 	
@@ -102,19 +87,11 @@ public class Gui extends Application {
 		flow.getChildren().add(buildRobotPane());
 		gridPane.add(flow, 0, 0);
 		
-		Pane pane = new Pane();
-		Canvas canvas = new Canvas(400, 400);
-		pane.setStyle("-fx-padding: 10;" +
-                "-fx-border-style: solid inside;" +
-                "-fx-border-width: 2;" +
-                "-fx-border-insets: 5;" +
-                "-fx-border-radius: 5;" +
-                "-fx-border-color: blue;");
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-		gc.strokeText("Hello Canvas", 200, 200);
+		graph = new Graph();
 		
-		pane.getChildren().add(canvas);
-		gridPane.add(pane, 1, 0);	
+		addGraphComponents();
+		
+		gridPane.add(graph.getScrollPane(), 1, 0);	
 		
 		//Server TextArea
 		TextArea textarea = new TextArea();
@@ -127,6 +104,35 @@ public class Gui extends Application {
 		rootLayout.setCenter(splitPane);
 
 	}
+	
+	private void addGraphComponents() {
+
+        Model model = graph.getModel();
+
+        graph.beginUpdate();
+
+        model.addCell("Cell A", CellType.RECTANGLE);
+        model.addCell("Cell B", CellType.RECTANGLE);
+        model.addCell("Cell C", CellType.RECTANGLE);
+        model.addCell("Cell D", CellType.TRIANGLE);
+        model.addCell("Cell E", CellType.TRIANGLE);
+        model.addCell("Cell F", CellType.RECTANGLE);
+        model.addCell("Cell G", CellType.RECTANGLE);
+
+        model.addEdge("Cell A", "Cell B");
+        model.addEdge("Cell A", "Cell C");
+        model.addEdge("Cell B", "Cell C");
+        model.addEdge("Cell C", "Cell D");
+        model.addEdge("Cell B", "Cell E");
+        model.addEdge("Cell D", "Cell F");
+        model.addEdge("Cell D", "Cell G");
+
+        graph.endUpdate();
+        
+        RandomLayout rl = new RandomLayout(graph);
+        rl.execute();
+
+    }
 	
 	private BorderPane buildRobotPane() {
 		BorderPane robot = null;
