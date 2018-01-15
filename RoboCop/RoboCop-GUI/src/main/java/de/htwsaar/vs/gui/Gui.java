@@ -16,10 +16,12 @@ import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
@@ -108,15 +110,18 @@ public class Gui extends Application {
 		gc.strokeText("Hello Canvas", 200, 200);
 		
 		pane.getChildren().add(canvas);
-		gridPane.add(pane, 1, 0);
-		
-		rootLayout.setCenter(gridPane);
-		
+		gridPane.add(pane, 1, 0);	
 		
 		//Server TextArea
 		TextArea textarea = new TextArea();
 		textarea.setEditable(false);
-		rootLayout.setBottom(textarea);
+		
+		SplitPane splitPane = new SplitPane();
+		splitPane.getItems().addAll(gridPane, textarea);
+		splitPane.setOrientation(Orientation.VERTICAL);
+		
+		rootLayout.setCenter(splitPane);
+
 	}
 	
 	private BorderPane buildRobotPane() {
