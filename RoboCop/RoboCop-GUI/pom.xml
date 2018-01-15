@@ -22,5 +22,9 @@
 	  <groupId>commons-beanutils</groupId>
 	  <artifactId>commons-beanutils</artifactId>
 	</dependency>
+	<dependency>
+		<groupId>de.codecentric.centerdevice</groupId>
+		<artifactId>javafxsvg</artifactId>
+	</dependency>
   </dependencies>
 </project>

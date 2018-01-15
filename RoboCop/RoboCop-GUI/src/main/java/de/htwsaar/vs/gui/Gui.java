@@ -14,6 +14,8 @@ import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
@@ -41,7 +43,7 @@ public class Gui extends Application {
 	private static final String FXML_BUNDLE_FILENAME = "config/fxml_files";
 	
 	//Hier Sprache ändern
-	private Locale locale = new Locale("de");
+	private Locale locale = new Locale("en");
 	
 	private Stage primaryStage = new Stage();
 	private BorderPane rootLayout;
@@ -59,6 +61,8 @@ public class Gui extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
+		//wird benötigt um svg dateien zu laden
+		SvgImageLoaderFactory.install();
 		loadConfiguration();
 		
 		this.primaryStage = primaryStage;

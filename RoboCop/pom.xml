@@ -62,7 +62,11 @@
 		    <artifactId>commons-beanutils</artifactId>
 		    <version>${commons-beanutils-version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>de.codecentric.centerdevice</groupId>
+			<artifactId>javafxsvg</artifactId>
+			<version>1.2.1</version>
+		</dependency>
     </dependencies>
   </dependencyManagement>
 </project>
