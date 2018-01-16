@@ -13,6 +13,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
@@ -74,8 +75,10 @@ public class Gui extends Application {
 		}	
 	}
 	
-	private void buildGui() {
-		GridPane gridPane = new GridPane();
+	private void buildGui() {		
+		SplitPane splitPane1 = new SplitPane();
+		splitPane1.setOrientation(Orientation.HORIZONTAL);
+		splitPane1.setDividerPositions(0.6f, 0.4f);
 		
 		FlowPane flow = new FlowPane();
 		flow.setVgap(10);
@@ -85,23 +88,27 @@ public class Gui extends Application {
 		flow.getChildren().add(buildRobotPane());
 		flow.getChildren().add(buildRobotPane());
 		flow.getChildren().add(buildRobotPane());
-		gridPane.add(flow, 0, 0);
+		
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setFitToWidth(true);
+		scrollPane.setContent(flow);
 		
 		graph = new Graph();
 		
 		addGraphComponents();
 		
-		gridPane.add(graph.getScrollPane(), 1, 0);	
+		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
 		
 		//Server TextArea
 		TextArea textarea = new TextArea();
 		textarea.setEditable(false);
 		
-		SplitPane splitPane = new SplitPane();
-		splitPane.getItems().addAll(gridPane, textarea);
-		splitPane.setOrientation(Orientation.VERTICAL);
+		SplitPane splitPane2 = new SplitPane();
+		splitPane2.getItems().addAll(splitPane1, textarea);
+		splitPane2.setOrientation(Orientation.VERTICAL);
+		splitPane2.setDividerPositions(0.8f, 0.2f);
 		
-		rootLayout.setCenter(splitPane);
+		rootLayout.setCenter(splitPane2);
 
 	}
 	
