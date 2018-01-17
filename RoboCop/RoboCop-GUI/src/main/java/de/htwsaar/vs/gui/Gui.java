@@ -18,7 +18,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Gui extends Application {
@@ -27,7 +26,7 @@ public class Gui extends Application {
 	private static final String FXML_BUNDLE_FILENAME = "config/fxml_files";
 	
 	//Hier Sprache ändern
-	private Locale locale = new Locale("en");
+	private Locale locale = new Locale("de");
 	
 	Graph graph;
 	
@@ -94,7 +93,6 @@ public class Gui extends Application {
 		scrollPane.setContent(flow);
 		
 		graph = new Graph();
-		
 		addGraphComponents();
 		
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	

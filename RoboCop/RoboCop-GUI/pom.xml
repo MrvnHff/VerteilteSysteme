@@ -26,5 +26,9 @@
 		<groupId>de.codecentric.centerdevice</groupId>
 		<artifactId>javafxsvg</artifactId>
 	</dependency>
+	<dependency>
+		<groupId>org.jgrapht</groupId>
+		<artifactId>jgrapht-core</artifactId>
+	</dependency>
   </dependencies>
 </project>
