@@ -30,5 +30,19 @@
 		<groupId>org.jgrapht</groupId>
 		<artifactId>jgrapht-core</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>org.tinyjee.jgraphx</groupId>
+	    <artifactId>jgraphx</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.jgrapht</groupId>
+	    <artifactId>jgrapht-ext</artifactId>
+	    <version>1.0.1</version>
+	</dependency>
+	<dependency>
+		<groupId>de.htwsaar.vs</groupId>
+		<artifactId>RoboCop-Server</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</dependency>
   </dependencies>
 </project>

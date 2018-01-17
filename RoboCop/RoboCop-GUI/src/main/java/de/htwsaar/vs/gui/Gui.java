@@ -1,23 +1,41 @@
 package de.htwsaar.vs.gui;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import javax.swing.JButton;
+import javax.swing.SwingUtilities;
+
+import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.DefaultEdge;
+
+import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxUtils;
 
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.htwsaar.vs.gui.graph.CellType;
 import de.htwsaar.vs.gui.graph.Graph;
 import de.htwsaar.vs.gui.graph.Model;
 import de.htwsaar.vs.gui.layout.random.RandomLayout;
+import de.htwsaar.vs.server.Server;
+import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import javafx.application.Application;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Gui extends Application {
@@ -29,6 +47,8 @@ public class Gui extends Application {
 	private Locale locale = new Locale("de");
 	
 	Graph graph;
+	
+	Server server;
 	
 	private Stage primaryStage = new Stage();
 	private BorderPane rootLayout;
@@ -46,6 +66,7 @@ public class Gui extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
+		server = new Server();
 		//wird benötigt um svg dateien zu laden
 		SvgImageLoaderFactory.install();
 		loadConfiguration();
@@ -95,7 +116,11 @@ public class Gui extends Application {
 		graph = new Graph();
 		addGraphComponents();
 		
-		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
+		
+		final SwingNode swingNode = new SwingNode();
+        createAndSetSwingContent(swingNode);
+		
+		splitPane1.getItems().addAll(scrollPane, swingNode);	
 		
 		//Server TextArea
 		TextArea textarea = new TextArea();
@@ -109,6 +134,32 @@ public class Gui extends Application {
 		rootLayout.setCenter(splitPane2);
 
 	}
+	
+	private void createAndSetSwingContent(final SwingNode swingNode) {
+		JGraphXAdapter<RoboNode, DefaultEdge> graphXAdapter = new JGraphXAdapter<RoboNode, DefaultEdge>(server.getRoadMap());
+		mxGraphComponent graphComponent = new mxGraphComponent(graphXAdapter);
+		
+		//setze Graph auf nicht editierbar
+		graphComponent.setEnabled(false);
+		
+		//ändere Style von graphkanten
+		mxGraphModel graphModel  = (mxGraphModel)graphComponent.getGraph().getModel(); 
+		Collection<Object> cells =  graphModel.getCells().values();
+		mxUtils.setCellStyles(graphComponent.getGraph().getModel(), 
+			    cells.toArray(), mxConstants.STYLE_ENDARROW, mxConstants.NONE);
+		
+		//benute circle Layout
+		mxCircleLayout circleLayout = new mxCircleLayout(graphXAdapter);
+		circleLayout.execute(graphXAdapter.getDefaultParent());
+		
+		//Setze graph in SwingNode
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                swingNode.setContent(graphComponent);
+            }
+        });
+    }
 	
 	private void addGraphComponents() {
 
