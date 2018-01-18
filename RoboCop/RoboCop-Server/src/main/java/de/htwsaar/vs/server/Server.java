@@ -14,16 +14,7 @@ public class Server {
 	RoboGraph roboGraph;
 	
 	public Server() {
-		roboGraph = new RoboGraph(2, 3);
-		/*roboGraph.addNode("0/0");
-		roboGraph.addNode("0/1");
-		roboGraph.addNode("1/0");
-		roboGraph.addNode("1/1");
-		roboGraph.addEdge("0/0", "0/1");
-		roboGraph.addEdge("0/1", "1/1");
-		roboGraph.addEdge("1/1", "1/0");
-		roboGraph.addEdge("1/0", "0/0");*/
-		
+		roboGraph = new RoboGraph(3, 3);		
 	}
 	
 	public RoboGraph getRoboGraph() {

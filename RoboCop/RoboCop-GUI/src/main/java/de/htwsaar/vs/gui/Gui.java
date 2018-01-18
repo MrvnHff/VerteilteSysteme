@@ -21,6 +21,7 @@ import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.htwsaar.vs.gui.graph.CellType;
 import de.htwsaar.vs.gui.graph.Graph;
 import de.htwsaar.vs.gui.graph.Model;
+import de.htwsaar.vs.gui.layout.grid.GridLayout;
 import de.htwsaar.vs.gui.layout.random.RandomLayout;
 import de.htwsaar.vs.server.Server;
 import de.htwsaar.vs.server.graph.nodes.RoboNode;
@@ -114,8 +115,9 @@ public class Gui extends Application {
 		scrollPane.setContent(flow);
 		
 		graph = new Graph(server.getRoboGraph());
-		RandomLayout rl = new RandomLayout(graph);
-        rl.execute();
+		GridLayout gl = new GridLayout(graph);
+		gl.setScale(100);
+        gl.execute();
 		//addGraphComponents();
 		
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	

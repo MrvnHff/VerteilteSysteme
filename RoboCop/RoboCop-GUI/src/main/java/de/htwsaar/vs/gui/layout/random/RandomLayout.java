@@ -9,9 +9,9 @@ import de.htwsaar.vs.gui.layout.base.Layout;
 
 public class RandomLayout extends Layout {
 
-    Graph graph;
+    private Graph graph;
 
-    Random rnd = new Random();
+    private Random rnd = new Random();
 
     public RandomLayout(Graph graph) {
 
