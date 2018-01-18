@@ -22,29 +22,29 @@ public class RoboGraph {
 		rowCount = 0;
 	}
 	
-	public RoboGraph(int col, int row) {
+	public RoboGraph(int row, int col) {
 		this();
 		
 		columnCount = col;
 		rowCount = row;
 		
-		for(int x = 0; x < col; x++) {
-			for(int y = 0; y < row; y++) {
+		for(int x = 0; x < row; x++) {
+			for(int y = 0; y < col; y++) {
 				addNode(x + "/" + y);
 			}
 		}
 		
-		for(int i = 0; i < col - 1 ; i++) {
-    		for(int j = 0; j < row - 1 ; j++) {
+		for(int i = 0; i < row - 1 ; i++) {
+    		for(int j = 0; j < col - 1 ; j++) {
     			addEdge(i + "/" + j, i + "/" + (j+1));
     			addEdge(i + "/" + j, (i+1) + "/" + j);
     		}
     	}
 		
-		for(int n = 0; n < col-2; n++) {
-			addEdge(n + "/" + (row-1), (n+1) + "/" + (row-1));    			
+		for(int n = 0; n < col-1; n++) {
+			addEdge((row-1) + "/" + n, (row-1) + "/" + (n+1));    			
 		}
-		for(int m = 0; m < row-2; m++) {
+		for(int m = 0; m < row-1; m++) {
 			addEdge(m + "/" + (col-1), (m+1) + "/" + (col-1));
 		}
 	}

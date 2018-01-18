@@ -59,20 +59,18 @@ public class Graph {
     		model.addCell(node.getNodeId(), CellType.RECTANGLE);
     	}
     	
-    	int gridSize = (int) Math.sqrt(nodes.size());
-    	
-    	for(int i = 0; i < col - 1 ; i++) {
-    		for(int j = 0; j < row - 1 ; j++) {
+    	for(int i = 0; i < row - 1 ; i++) {
+    		for(int j = 0; j < col - 1 ; j++) {
     			model.addEdge(i + "/" + j, i + "/" + (j+1));
     			model.addEdge(i + "/" + j, (i+1) + "/" + j);
     		}
     	}
     	
     	
-    	for(int n = 0; n < col-2; n++) {
-			model.addEdge(n + "/" + (row-1), (n+1) + "/" + (row-1));    			
+    	for(int n = 0; n < col-1; n++) {
+			model.addEdge((row-1) + "/" + n, (row-1) + "/" + (n+1));    			
 		}
-		for(int m = 0; m < row-2; m++) {
+		for(int m = 0; m < row-1; m++) {
 			model.addEdge(m + "/" + (col-1), (m+1) + "/" + (col-1));
 		}
     	endUpdate();
