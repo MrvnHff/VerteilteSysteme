@@ -1,10 +1,6 @@
 package de.htwsaar.vs.gui.graph;
 
 import java.util.Collection;
-import java.util.Iterator;
-
-import org.jgrapht.graph.SimpleGraph;
-
 import de.htwsaar.vs.server.graph.RoboGraph;
 import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import javafx.scene.Group;

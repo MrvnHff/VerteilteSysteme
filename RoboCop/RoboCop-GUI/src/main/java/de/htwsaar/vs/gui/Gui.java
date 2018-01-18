@@ -1,42 +1,22 @@
 package de.htwsaar.vs.gui;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.swing.JButton;
-import javax.swing.SwingUtilities;
-
-import org.jgrapht.ext.JGraphXAdapter;
-import org.jgrapht.graph.DefaultEdge;
-
-import com.mxgraph.layout.mxCircleLayout;
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxUtils;
-
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import de.htwsaar.vs.gui.graph.CellType;
 import de.htwsaar.vs.gui.graph.Graph;
-import de.htwsaar.vs.gui.graph.Model;
 import de.htwsaar.vs.gui.layout.grid.GridLayout;
-import de.htwsaar.vs.gui.layout.random.RandomLayout;
 import de.htwsaar.vs.server.Server;
-import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import javafx.application.Application;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Gui extends Application {
@@ -134,35 +114,6 @@ public class Gui extends Application {
 		rootLayout.setCenter(splitPane2);
 
 	}
-	
-	private void addGraphComponents() {
-
-        Model model = graph.getModel();
-
-        graph.beginUpdate();
-
-        model.addCell("Cell A", CellType.RECTANGLE);
-        model.addCell("Cell B", CellType.RECTANGLE);
-        model.addCell("Cell C", CellType.RECTANGLE);
-        model.addCell("Cell D", CellType.TRIANGLE);
-        model.addCell("Cell E", CellType.TRIANGLE);
-        model.addCell("Cell F", CellType.RECTANGLE);
-        model.addCell("Cell G", CellType.RECTANGLE);
-
-        model.addEdge("Cell A", "Cell B");
-        model.addEdge("Cell A", "Cell C");
-        model.addEdge("Cell B", "Cell C");
-        model.addEdge("Cell C", "Cell D");
-        model.addEdge("Cell B", "Cell E");
-        model.addEdge("Cell D", "Cell F");
-        model.addEdge("Cell D", "Cell G");
-
-        graph.endUpdate();
-        
-        RandomLayout rl = new RandomLayout(graph);
-        rl.execute();
-
-    }
 	
 	private BorderPane buildRobotPane() {
 		BorderPane robot = null;
