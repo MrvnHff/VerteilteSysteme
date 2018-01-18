@@ -3,12 +3,14 @@ package de.htwsaar.vs.gui.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 public class Cell extends Pane {
 
     String cellId;
+    RoboNode cellValue;
 
     List<Cell> children = new ArrayList<>();
     List<Cell> parents = new ArrayList<>();
@@ -17,6 +19,12 @@ public class Cell extends Pane {
 
     public Cell(String cellId) {
         this.cellId = cellId;
+    }
+    
+    public Cell(String cellId, RoboNode cellValue) {
+    	this(cellId);
+    	this.cellValue = cellValue;
+    	
     }
 
     public void addCellChild(Cell cell) {
@@ -43,7 +51,6 @@ public class Cell extends Pane {
 
         this.view = view;
         getChildren().add(view);
-
     }
 
     public Node getView() {
@@ -52,5 +59,13 @@ public class Cell extends Pane {
 
     public String getCellId() {
         return cellId;
+    }
+    
+    public void setCellValue(RoboNode cellValue) {
+    	this.cellValue = cellValue;
+    }
+    
+    public RoboNode getCellvalue() {
+    	return this.cellValue;
     }
 }

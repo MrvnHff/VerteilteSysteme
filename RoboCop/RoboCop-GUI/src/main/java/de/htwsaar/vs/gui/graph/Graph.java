@@ -1,5 +1,12 @@
 package de.htwsaar.vs.gui.graph;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.jgrapht.graph.SimpleGraph;
+
+import de.htwsaar.vs.server.graph.RoboGraph;
+import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
@@ -37,6 +44,39 @@ public class Graph {
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 
+    }
+    
+    public Graph(RoboGraph roboGraph) {
+    	this();
+    	RoboNode node;
+    	Collection<RoboNode> nodes = roboGraph.getAllNodes();
+    	RoboNode[] nodesArray = new RoboNode[nodes.size()];
+    	nodes.toArray(nodesArray);
+    	int col = roboGraph.getColumnCount();
+    	int row = roboGraph.getRowCount();
+    	for(int i = 0; i < nodes.size(); i++) {
+    		node = nodesArray[i];
+    		model.addCell(node.getNodeId(), CellType.RECTANGLE);
+    	}
+    	
+    	int gridSize = (int) Math.sqrt(nodes.size());
+    	
+    	for(int i = 0; i < col - 1 ; i++) {
+    		for(int j = 0; j < row - 1 ; j++) {
+    			model.addEdge(i + "/" + j, i + "/" + (j+1));
+    			model.addEdge(i + "/" + j, (i+1) + "/" + j);
+    		}
+    	}
+    	
+    	
+    	for(int n = 0; n < col-2; n++) {
+			model.addEdge(n + "/" + (row-1), (n+1) + "/" + (row-1));    			
+		}
+		for(int m = 0; m < row-2; m++) {
+			model.addEdge(m + "/" + (col-1), (m+1) + "/" + (col-1));
+		}
+    	endUpdate();
+    	
     }
 
     public ScrollPane getScrollPane() {

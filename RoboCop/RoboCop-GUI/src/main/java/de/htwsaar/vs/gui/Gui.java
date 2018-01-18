@@ -113,14 +113,12 @@ public class Gui extends Application {
 		scrollPane.setFitToWidth(true);
 		scrollPane.setContent(flow);
 		
-		graph = new Graph();
-		addGraphComponents();
+		graph = new Graph(server.getRoboGraph());
+		RandomLayout rl = new RandomLayout(graph);
+        rl.execute();
+		//addGraphComponents();
 		
-		
-		final SwingNode swingNode = new SwingNode();
-        createAndSetSwingContent(swingNode);
-		
-		splitPane1.getItems().addAll(scrollPane, swingNode);	
+		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
 		
 		//Server TextArea
 		TextArea textarea = new TextArea();
@@ -134,32 +132,6 @@ public class Gui extends Application {
 		rootLayout.setCenter(splitPane2);
 
 	}
-	
-	private void createAndSetSwingContent(final SwingNode swingNode) {
-		JGraphXAdapter<RoboNode, DefaultEdge> graphXAdapter = new JGraphXAdapter<RoboNode, DefaultEdge>(server.getRoadMap());
-		mxGraphComponent graphComponent = new mxGraphComponent(graphXAdapter);
-		
-		//setze Graph auf nicht editierbar
-		graphComponent.setEnabled(false);
-		
-		//ändere Style von graphkanten
-		mxGraphModel graphModel  = (mxGraphModel)graphComponent.getGraph().getModel(); 
-		Collection<Object> cells =  graphModel.getCells().values();
-		mxUtils.setCellStyles(graphComponent.getGraph().getModel(), 
-			    cells.toArray(), mxConstants.STYLE_ENDARROW, mxConstants.NONE);
-		
-		//benute circle Layout
-		mxCircleLayout circleLayout = new mxCircleLayout(graphXAdapter);
-		circleLayout.execute(graphXAdapter.getDefaultParent());
-		
-		//Setze graph in SwingNode
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                swingNode.setContent(graphComponent);
-            }
-        });
-    }
 	
 	private void addGraphComponents() {
 
