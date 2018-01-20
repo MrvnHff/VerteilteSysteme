@@ -82,6 +82,10 @@ public class Model {
         return allCells;
     }
     
+    public List<RobotCell> getAllRobotCells() {
+    	return allRobotCells;
+    }
+    
     public Cell getCell(String id) {
     	return cellMap.get(id);
     }

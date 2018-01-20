@@ -24,7 +24,6 @@ public class Cell extends Pane {
     public Cell(String cellId, RoboNode cellValue) {
     	this(cellId);
     	this.cellValue = cellValue;
-    	
     }
 
     public void addCellChild(Cell cell) {

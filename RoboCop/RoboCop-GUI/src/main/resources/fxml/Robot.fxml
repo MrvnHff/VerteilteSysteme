@@ -20,7 +20,7 @@
          </BorderPane.margin></Text>
    </top>
    <bottom>
-      <TextArea editable="false" prefHeight="100.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <TextArea fx:id="textArea" editable="false" prefHeight="100.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets top="5.0" />
          </BorderPane.margin></TextArea>
@@ -39,7 +39,7 @@
         </rowConstraints>
          <children>
             <Label text="%robot.label.position" />
-            <TextField GridPane.columnIndex="1" />
+            <TextField fx:id="position" GridPane.columnIndex="1" />
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="1">
                <children>
                   <Label text="%robot.label.destination" />
@@ -47,7 +47,7 @@
                </children>
             </HBox>
             <Label text="%robot.label.control" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="destination" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

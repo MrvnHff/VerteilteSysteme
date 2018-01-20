@@ -10,6 +10,7 @@ import de.htwsaar.vs.gui.graph.Graph;
 import de.htwsaar.vs.gui.layout.grid.GridLayout;
 import de.htwsaar.vs.gui.layout.robot.RobotLayout;
 import de.htwsaar.vs.server.Server;
+import de.htwsaar.vs.server.graph.nodes.RobotOrientation;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
@@ -103,6 +104,7 @@ public class Gui extends Application {
         
         RobotLayout rl = new RobotLayout(graph);
         rl.moveRobotTo("George", "1/1");
+        rl.rotate("George" , 90);
         rl.execute();
 		//addGraphComponents();
 		
