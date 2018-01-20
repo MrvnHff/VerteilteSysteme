@@ -93,9 +93,11 @@ public class Graph {
         // add components to graph pane
         getCellLayer().getChildren().addAll(model.getAddedEdges());
         getCellLayer().getChildren().addAll(model.getAddedCells());
+        getCellLayer().getChildren().addAll(model.getAddedRobotCells());
 
         // remove components from graph pane
         getCellLayer().getChildren().removeAll(model.getRemovedCells());
+        getCellLayer().getChildren().removeAll(model.getRemovedRobotCells());
         getCellLayer().getChildren().removeAll(model.getRemovedEdges());
 
         // enable dragging of cells

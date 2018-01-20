@@ -5,8 +5,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.htwsaar.vs.gui.graph.CellType;
 import de.htwsaar.vs.gui.graph.Graph;
 import de.htwsaar.vs.gui.layout.grid.GridLayout;
+import de.htwsaar.vs.gui.layout.robot.RobotLayout;
 import de.htwsaar.vs.server.Server;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -58,8 +60,6 @@ public class Gui extends Application {
 		initRootLayout();
 	}
 
-	
-
 	private void initRootLayout() {
 		try {
 			FXMLLoader rootLayoutLoader = new FXMLLoader();
@@ -95,9 +95,15 @@ public class Gui extends Application {
 		scrollPane.setContent(flow);
 		
 		graph = new Graph(server.getRoboGraph());
+		graph.getModel().addCell("George", CellType.ROBOT);
+		graph.endUpdate();
 		GridLayout gl = new GridLayout(graph);
-		gl.setScale(100);
+		gl.setScale(200);
         gl.execute();
+        
+        RobotLayout rl = new RobotLayout(graph);
+        rl.moveRobotTo("George", "1/1");
+        rl.execute();
 		//addGraphComponents();
 		
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.htwsaar.vs.gui.cells.RectangleCell;
+import de.htwsaar.vs.gui.cells.RobotCell;
 import de.htwsaar.vs.gui.cells.TriangleCell;
 
 public class Model {
@@ -15,12 +16,17 @@ public class Model {
     List<Cell> allCells;
     List<Cell> addedCells;
     List<Cell> removedCells;
+    
+    List<RobotCell> allRobotCells;
+    List<RobotCell> addedRobotCells;
+    List<RobotCell> removedRobotCells;
 
     List<Edge> allEdges;
     List<Edge> addedEdges;
     List<Edge> removedEdges;
 
     Map<String,Cell> cellMap; // <id,cell>
+    Map<String, Cell> robotMap;
 
     public Model() {
 
@@ -40,25 +46,48 @@ public class Model {
         addedEdges = new ArrayList<>();
         removedEdges = new ArrayList<>();
 
+        allRobotCells = new ArrayList<>();
+        addedRobotCells = new ArrayList<>();
+        removedRobotCells = new ArrayList<>();
+        
+        addedRobotCells = new ArrayList<>();
         cellMap = new HashMap<>(); // <id,cell>
+        robotMap = new HashMap<>();
 
     }
 
     public void clearAddedLists() {
         addedCells.clear();
         addedEdges.clear();
+        addedRobotCells.clear();
     }
 
     public List<Cell> getAddedCells() {
         return addedCells;
+    }
+    
+    public List<RobotCell> getAddedRobotCells() {
+    	return addedRobotCells;
     }
 
     public List<Cell> getRemovedCells() {
         return removedCells;
     }
 
+    public List<RobotCell> getRemovedRobotCells() {
+        return removedRobotCells;
+    }
+    
     public List<Cell> getAllCells() {
         return allCells;
+    }
+    
+    public Cell getCell(String id) {
+    	return cellMap.get(id);
+    }
+    
+    public Cell getRobotCell(String id) {
+    	return robotMap.get(id);
     }
 
     public List<Edge> getAddedEdges() {
@@ -86,6 +115,10 @@ public class Model {
             TriangleCell circleCell = new TriangleCell(id);
             addCell(circleCell);
             break;
+        case ROBOT:
+        	RobotCell robotCell = new RobotCell(id);
+        	addRobotCell(robotCell);
+        	break;
 
         default:
             throw new UnsupportedOperationException("Unsupported type: " + type);
@@ -95,9 +128,13 @@ public class Model {
     private void addCell( Cell cell) {
 
         addedCells.add(cell);
-
         cellMap.put( cell.getCellId(), cell);
 
+    }
+    
+    private void addRobotCell(RobotCell cell) {
+    	addedRobotCells.add(cell);
+    	robotMap.put(cell.getCellId(), cell);
     }
 
     public void addEdge( String sourceId, String targetId) {
@@ -141,9 +178,15 @@ public class Model {
         // cells
         allCells.addAll( addedCells);
         allCells.removeAll( removedCells);
+        
+        allRobotCells.addAll(addedRobotCells);
+        allRobotCells.addAll(removedRobotCells);
 
         addedCells.clear();
         removedCells.clear();
+        
+        addedRobotCells.clear();
+        removedRobotCells.clear();
 
         // edges
         allEdges.addAll( addedEdges);
