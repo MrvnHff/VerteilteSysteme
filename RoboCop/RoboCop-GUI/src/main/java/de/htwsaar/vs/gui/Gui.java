@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.htwsaar.vs.gui.controller.RobotController;
 import de.htwsaar.vs.gui.graph.CellType;
 import de.htwsaar.vs.gui.graph.Graph;
 import de.htwsaar.vs.gui.layout.grid.GridLayout;
@@ -30,9 +31,12 @@ public class Gui extends Application {
 	//Hier Sprache ändern
 	private Locale locale = new Locale("de");
 	
-	Graph graph;
+	private Graph graph;
 	
-	Server server;
+	private Server server;
+	
+	private int controllerCount = 0;
+	private RobotController robotControllers[] = new RobotController[4];
 	
 	private Stage primaryStage = new Stage();
 	private BorderPane rootLayout;
@@ -89,7 +93,7 @@ public class Gui extends Application {
 		flow.getChildren().add(buildRobotPane());
 		flow.getChildren().add(buildRobotPane());
 		flow.getChildren().add(buildRobotPane());
-		flow.getChildren().add(buildRobotPane());
+		flow.getChildren().add(buildRobotPane());		
 		
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
@@ -106,7 +110,10 @@ public class Gui extends Application {
         rl.moveRobotTo("George", "1/1");
         rl.rotate("George" , 90);
         rl.execute();
-		//addGraphComponents();
+        
+        robotControllers[0].setServer(server);
+        robotControllers[0].setRobotId("George");
+        robotControllers[0].setRobotLayout(rl);
 		
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
 		
@@ -125,10 +132,12 @@ public class Gui extends Application {
 	
 	private BorderPane buildRobotPane() {
 		BorderPane robot = null;
-		
+		int controllerCount = 0;
 		try {
 			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
 			robot = (BorderPane) robotLoader.load();
+			robotControllers[controllerCount] = robotLoader.getController();
+			controllerCount++;
 		} catch (IOException e) {
 			System.out.println(e);
 		}
