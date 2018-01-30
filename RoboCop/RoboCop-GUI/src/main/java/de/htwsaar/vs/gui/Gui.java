@@ -101,12 +101,14 @@ public class Gui extends Application {
 		
 		graph = new Graph(server.getRoboGraph());
 		graph.getModel().addCell("George", CellType.ROBOT);
+		graph.getModel().addCell("Jane", CellType.ROBOT);
 		graph.endUpdate();
 		GridLayout gl = new GridLayout(graph);
 		gl.setScale(200);
         gl.execute();
         
         RobotLayout rl = new RobotLayout(graph);
+        rl.moveRobotTo("Jane", "2/2");
         rl.moveRobotTo("George", "1/1");
         rl.rotate("George" , 90);
         rl.execute();
@@ -114,6 +116,10 @@ public class Gui extends Application {
         robotControllers[0].setServer(server);
         robotControllers[0].setRobotId("George");
         robotControllers[0].setRobotLayout(rl);
+        
+        robotControllers[1].setServer(server);
+        robotControllers[1].setRobotId("Jane");
+        robotControllers[1].setRobotLayout(rl);
 		
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
 		
@@ -132,7 +138,6 @@ public class Gui extends Application {
 	
 	private BorderPane buildRobotPane() {
 		BorderPane robot = null;
-		int controllerCount = 0;
 		try {
 			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
 			robot = (BorderPane) robotLoader.load();

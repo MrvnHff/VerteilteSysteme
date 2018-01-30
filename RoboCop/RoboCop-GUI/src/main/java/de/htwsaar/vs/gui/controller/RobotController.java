@@ -39,6 +39,7 @@ public class RobotController implements Initializable{
 	
 	public void setRobotId(String robotId) {
 		this.robotId = robotId;
+		this.title.setText(bundle.getString("robot.title") + " " + robotId);
 	}
 	
 	public void setRobotLayout(RobotLayout rl) {

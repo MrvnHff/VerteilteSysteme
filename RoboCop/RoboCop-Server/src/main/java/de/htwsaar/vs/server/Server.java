@@ -7,7 +7,8 @@ public class Server {
 	RoboGraph roboGraph;
 	
 	public Server() {
-		roboGraph = new RoboGraph(3, 3);		
+		roboGraph = new RoboGraph(3, 3);
+		System.out.println(roboGraph.toString());
 	}
 	
 	public RoboGraph getRoboGraph() {
@@ -17,5 +18,6 @@ public class Server {
 	
 	public static void main(String[] args) {
         Server server = new Server();
+   
     }
 }
