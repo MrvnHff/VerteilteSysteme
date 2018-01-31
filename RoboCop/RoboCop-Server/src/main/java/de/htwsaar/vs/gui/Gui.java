@@ -1,6 +1,8 @@
 package de.htwsaar.vs.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -36,10 +38,12 @@ public class Gui extends Application {
 	private Server server;
 	
 	private int controllerCount = 0;
-	private RobotController robotControllers[] = new RobotController[4];
+	private List<RobotController> robotControllers = new ArrayList<RobotController>();
 	
 	private Stage primaryStage = new Stage();
+	private RobotLayout rl;
 	private BorderPane rootLayout;
+	private FlowPane flow;
 	
 	private ResourceBundle config;
 	private ResourceBundle fxmlBundle;
@@ -55,6 +59,7 @@ public class Gui extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		server = new Server();
+		
 		//wird benötigt um svg dateien zu laden
 		SvgImageLoaderFactory.install();
 		loadConfiguration();
@@ -63,6 +68,8 @@ public class Gui extends Application {
 		this.primaryStage.setTitle(config.getString("general.title"));
 		
 		initRootLayout();
+		server.setGui(this);
+		
 	}
 
 	private void initRootLayout() {
@@ -86,41 +93,34 @@ public class Gui extends Application {
 		splitPane1.setOrientation(Orientation.HORIZONTAL);
 		splitPane1.setDividerPositions(0.6f, 0.4f);
 		
-		FlowPane flow = new FlowPane();
+		flow = new FlowPane();
 		flow.setVgap(10);
 		flow.setHgap(10);
 		flow.setPrefWrapLength(800);
-		flow.getChildren().add(buildRobotPane());
-		flow.getChildren().add(buildRobotPane());
-		flow.getChildren().add(buildRobotPane());
-		flow.getChildren().add(buildRobotPane());		
+		
+		
 		
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
 		scrollPane.setContent(flow);
 		
+		
 		graph = new Graph(server.getRoboGraph());
-		graph.getModel().addCell("George", CellType.ROBOT);
-		graph.getModel().addCell("Jane", CellType.ROBOT);
-		graph.endUpdate();
+		
+		
 		GridLayout gl = new GridLayout(graph);
 		gl.setScale(200);
         gl.execute();
         
-        RobotLayout rl = new RobotLayout(graph);
-        rl.moveRobotTo("Jane", "2/2");
+        rl = new RobotLayout(graph);
+        /*rl.moveRobotTo("Jane", "2/2");
         rl.moveRobotTo("George", "1/1");
         rl.rotate("George" , 90);
         rl.execute();
+        */
         
-        robotControllers[0].setServer(server);
-        robotControllers[0].setRobotId("George");
-        robotControllers[0].setRobotLayout(rl);
         
-        robotControllers[1].setServer(server);
-        robotControllers[1].setRobotId("Jane");
-        robotControllers[1].setRobotLayout(rl);
-		
+        
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
 		
 		//Server TextArea
@@ -136,13 +136,24 @@ public class Gui extends Application {
 
 	}
 	
-	private BorderPane buildRobotPane() {
+	public void addRobot(String robotId) {
+		flow.getChildren().add(buildRobotPane(robotId));
+	}
+	
+	private BorderPane buildRobotPane(String robotId) {
 		BorderPane robot = null;
 		try {
 			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
 			robot = (BorderPane) robotLoader.load();
-			robotControllers[controllerCount] = robotLoader.getController();
+			RobotController controller = robotLoader.getController();
+			controller.setServer(server);
+			controller.setRobotId(robotId);
+			controller.setRobotLayout(rl);
+			robotControllers.add(controller);
 			controllerCount++;
+			
+			graph.getModel().addCell(robotId, CellType.ROBOT);
+			graph.endUpdate();
 		} catch (IOException e) {
 			System.out.println(e);
 		}
