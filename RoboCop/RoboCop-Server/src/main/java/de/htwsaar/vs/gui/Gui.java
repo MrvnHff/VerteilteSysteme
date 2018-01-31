@@ -13,7 +13,6 @@ import de.htwsaar.vs.gui.graph.Graph;
 import de.htwsaar.vs.gui.layout.grid.GridLayout;
 import de.htwsaar.vs.gui.layout.robot.RobotLayout;
 import de.htwsaar.vs.server.Server;
-import de.htwsaar.vs.server.graph.nodes.RobotOrientation;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
@@ -37,7 +36,6 @@ public class Gui extends Application {
 	
 	private Server server;
 	
-	private int controllerCount = 0;
 	private List<RobotController> robotControllers = new ArrayList<RobotController>();
 	
 	private Stage primaryStage = new Stage();
@@ -98,29 +96,18 @@ public class Gui extends Application {
 		flow.setHgap(10);
 		flow.setPrefWrapLength(800);
 		
-		
-		
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
 		scrollPane.setContent(flow);
 		
-		
 		graph = new Graph(server.getRoboGraph());
-		
 		
 		GridLayout gl = new GridLayout(graph);
 		gl.setScale(200);
         gl.execute();
         
         rl = new RobotLayout(graph);
-        /*rl.moveRobotTo("Jane", "2/2");
-        rl.moveRobotTo("George", "1/1");
-        rl.rotate("George" , 90);
-        rl.execute();
-        */
-        
-        
-        
+                
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
 		
 		//Server TextArea
@@ -133,7 +120,6 @@ public class Gui extends Application {
 		splitPane2.setDividerPositions(0.8f, 0.2f);
 		
 		rootLayout.setCenter(splitPane2);
-
 	}
 	
 	public void addRobot(String robotId) {
@@ -150,7 +136,6 @@ public class Gui extends Application {
 			controller.setRobotId(robotId);
 			controller.setRobotLayout(rl);
 			robotControllers.add(controller);
-			controllerCount++;
 			
 			graph.getModel().addCell(robotId, CellType.ROBOT);
 			graph.endUpdate();

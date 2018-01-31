@@ -7,6 +7,11 @@ import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
+/**
+ * Jede Zelle wird alsPane repräsentiert in der jeder art von Knoten als view eingesetzt werden kann
+ * @author Mathias Wittling
+ *
+ */
 public class Cell extends Pane {
 
     String cellId;

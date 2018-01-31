@@ -7,6 +7,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Scale;
 
+/**
+ * Extended ScrollPane wich is zoomable and scrollable in both directions
+ * @author Mathias Wittling
+ *
+ */
 public class ZoomableScrollPane extends ScrollPane {
     Group zoomGroup;
     Scale scaleTransform;
@@ -111,19 +116,16 @@ public class ZoomableScrollPane extends ScrollPane {
 
         @Override
         public void handle(ScrollEvent scrollEvent) {
-            // if (scrollEvent.isControlDown())
-            {
-
-                if (scrollEvent.getDeltaY() < 0) {
-                    scaleValue -= delta;
-                } else {
-                    scaleValue += delta;
-                }
-
-                zoomTo(scaleValue);
-
-                scrollEvent.consume();
+        	if (scrollEvent.getDeltaY() < 0) {
+        		scaleValue -= delta;
+            } else {
+                scaleValue += delta;
             }
+        	
+        	zoomTo(scaleValue);
+
+            scrollEvent.consume();
+            
         }
     }
 }

@@ -1,13 +1,10 @@
 package de.htwsaar.vs.gui.layout.robot;
 
 import java.util.List;
-import java.util.Map;
-
 import de.htwsaar.vs.gui.cells.RobotCell;
 import de.htwsaar.vs.gui.graph.Cell;
 import de.htwsaar.vs.gui.graph.Graph;
 import de.htwsaar.vs.gui.layout.base.Layout;
-import de.htwsaar.vs.server.graph.nodes.RobotOrientation;
 import javafx.scene.transform.Rotate;
 
 public class RobotLayout extends Layout{
@@ -18,6 +15,7 @@ public class RobotLayout extends Layout{
 		this.graph = graph;
 	}
 	
+	//does nothing at the moment
 	public void execute() {
 		List<RobotCell> cells = graph.getModel().getAllRobotCells();
 	
