@@ -2,6 +2,7 @@ package de.htwsaar.vs.server.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -66,6 +67,22 @@ public class RoboGraph {
 	
 	public Collection<RoboNode> getAllNodes() {
 		return roboNodeMap.values();
+	}
+	
+	public Set<RoboEdge> getAllEdges() {
+		return roadGraph.edgeSet();
+	}
+	
+	public Set<RoboEdge> getEdgesOf(String node) {
+		return roadGraph.edgesOf(node);
+	}
+	
+	public String getEdgeSource(RoboEdge edge) {
+		return roadGraph.getEdgeSource(edge);
+	}
+	
+	public String getEdgeTarget(RoboEdge edge) {
+		return roadGraph.getEdgeTarget(edge);
 	}
 	
 	public int getColumnCount() {

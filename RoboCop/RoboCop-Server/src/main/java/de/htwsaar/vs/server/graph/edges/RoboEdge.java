@@ -18,4 +18,5 @@ public class RoboEdge extends DefaultEdge {
 	public String getRobotId() {
 		return robotId;
 	}
+	
 }

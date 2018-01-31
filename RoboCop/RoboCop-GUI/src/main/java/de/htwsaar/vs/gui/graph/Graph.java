@@ -1,7 +1,11 @@
 package de.htwsaar.vs.gui.graph;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
 import de.htwsaar.vs.server.graph.RoboGraph;
+import de.htwsaar.vs.server.graph.edges.RoboEdge;
 import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
@@ -48,14 +52,28 @@ public class Graph {
     	Collection<RoboNode> nodes = roboGraph.getAllNodes();
     	RoboNode[] nodesArray = new RoboNode[nodes.size()];
     	nodes.toArray(nodesArray);
+    	RoboEdge edge;
+    	Set<RoboEdge> edges;
     	int col = roboGraph.getColumnCount();
     	int row = roboGraph.getRowCount();
+    	
+    	
     	for(int i = 0; i < nodes.size(); i++) {
     		node = nodesArray[i];
     		model.addCell(node.getNodeId(), CellType.RECTANGLE);
     	}
     	
-    	for(int i = 0; i < row - 1 ; i++) {
+    	for(int i = 0; i < nodes.size(); i++) {
+    		node = nodesArray[i];
+    		edges = roboGraph.getEdgesOf(node.getNodeId());
+    		for(Iterator<RoboEdge> it = edges.iterator(); it.hasNext();) {
+    			edge = it.next();
+    			model.addEdge(roboGraph.getEdgeSource(edge), roboGraph.getEdgeTarget(edge));
+    			
+    		}
+    	}
+    	
+    	/*for(int i = 0; i < row - 1 ; i++) {
     		for(int j = 0; j < col - 1 ; j++) {
     			model.addEdge(i + "/" + j, i + "/" + (j+1));
     			model.addEdge(i + "/" + j, (i+1) + "/" + j);
@@ -68,7 +86,7 @@ public class Graph {
 		}
 		for(int m = 0; m < row-1; m++) {
 			model.addEdge(m + "/" + (col-1), (m+1) + "/" + (col-1));
-		}
+		}*/
     	endUpdate();
     	
     }
