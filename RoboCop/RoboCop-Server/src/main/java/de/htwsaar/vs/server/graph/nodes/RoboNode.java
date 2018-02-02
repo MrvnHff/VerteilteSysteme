@@ -3,7 +3,7 @@ package de.htwsaar.vs.server.graph.nodes;
 public class RoboNode {
 	private String nodeId;
 	private String robotId;
-	private RobotOrientation orientation;
+	private Orientation orientation;
 	
 	public RoboNode() {
 		nodeId = null;
@@ -11,7 +11,7 @@ public class RoboNode {
 		orientation = null;
 	}
 	
-	public RoboNode(String nodeId, String robotId, RobotOrientation orientation) {
+	public RoboNode(String nodeId, String robotId, Orientation orientation) {
 		this.nodeId = nodeId;
 		this.robotId = robotId;
 		this.orientation = orientation;

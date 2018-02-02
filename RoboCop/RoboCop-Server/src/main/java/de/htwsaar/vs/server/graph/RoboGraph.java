@@ -2,22 +2,21 @@ package de.htwsaar.vs.server.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
+import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import de.htwsaar.vs.server.graph.edges.RoboEdge;
 import de.htwsaar.vs.server.graph.nodes.RoboNode;
 
 public class RoboGraph {
 	
-	SimpleGraph<String, RoboEdge> roadGraph; 
+	SimpleGraph<String, DefaultEdge> roadGraph; 
 	HashMap<String, RoboNode> roboNodeMap;
 	int columnCount;
 	int rowCount;
 	
 	public RoboGraph() {
-		roadGraph = new SimpleGraph<String, RoboEdge>(RoboEdge.class);
+		roadGraph = new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
 		roboNodeMap = new HashMap<String, RoboNode>();
 		columnCount = 0;
 		rowCount = 0;
@@ -50,6 +49,8 @@ public class RoboGraph {
 		}
 	}
 	
+	/*addEdge((gridSize-1) + "/" + k, (gridSize-1) + "/" + (k+1));
+    addEdge(k + "/" + (gridSize-1), (k+1) + "/" + (gridSize-1));*/
 	
 	public void addNode(String nodeId) {
 		roadGraph.addVertex(nodeId);
@@ -68,32 +69,12 @@ public class RoboGraph {
 		return roboNodeMap.values();
 	}
 	
-	public Set<RoboEdge> getAllEdges() {
-		return roadGraph.edgeSet();
-	}
-	
-	public Set<RoboEdge> getEdgesOf(String node) {
-		return roadGraph.edgesOf(node);
-	}
-	
-	public String getEdgeSource(RoboEdge edge) {
-		return roadGraph.getEdgeSource(edge);
-	}
-	
-	public String getEdgeTarget(RoboEdge edge) {
-		return roadGraph.getEdgeTarget(edge);
-	}
-	
 	public int getColumnCount() {
 		return columnCount;
 	}
 	
 	public int getRowCount() {
 		return rowCount;
-	}
-	
-	public String toString() {
-		return roadGraph.toString();
 	}
 	
 }
