@@ -2,16 +2,12 @@ package de.htwsaar.vs.server;
 
 import java.rmi.registry.Registry;
 
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.SimpleGraph;
-
+import de.htwsaar.vs.gui.Gui;
 import de.htwsaar.vs.server.graph.RoboGraph;
-import de.htwsaar.vs.server.graph.nodes.Orientation;
-import de.htwsaar.vs.server.graph.nodes.RoboNode;
 
 public class Server {
+	private Gui gui;
+	
 	private String serverLog;
 	private Registry registry;
 	private String robotLog;
@@ -25,6 +21,21 @@ public class Server {
 	 */
 	public Server() {
 		roboGraph = new RoboGraph(3, 3);		
+	}
+	
+	/**
+	 * Fügt neuen Roboter zum RoboGraph hinzu und in die GUI ein
+	 * @param robotId Id des neuen Roboters
+	 */
+	private void addRobot(String robotId) {
+		gui.addRobot(robotId);
+		//roboGraph.addRobot(robotId) // needs to be implemented
+	}
+	
+	public void setGui(Gui gui) {
+		this.gui = gui;
+		//Wird momentan hier nur zum testen hinzugefügt. die Roboter sollen später natürlich dynamisch hinzugefügt werden sobald sie sich mit dem Server verbinden
+		addRobot("George");
 	}
 	
 	/**
