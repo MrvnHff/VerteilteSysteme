@@ -33,6 +33,16 @@ public class Server {
 		gui.addRobot(robotId, position);
 	}
 	
+	public void turnRobotLeft(String robotId) {
+		roboGraph.turnRobotLeft(robotId);
+		//toDo: methode die die bewegung an den physichen roboter kommuniziert
+	}
+	
+	public void turnRobotRight(String robotId) {
+		roboGraph.turnRobotRight(robotId);
+		//toDo: methode die die bewegung an den physichen roboter kommuniziert
+	}
+	
 	public void setGui(Gui gui) {
 		this.gui = gui;
 		//Wird momentan hier nur zum testen hinzugefügt. die Roboter sollen später natürlich dynamisch hinzugefügt werden sobald sie sich mit dem Server verbinden
@@ -101,4 +111,8 @@ public class Server {
 	public static void main(String[] args) {
         Server server = new Server();
     }
+
+	
+
+	
 }

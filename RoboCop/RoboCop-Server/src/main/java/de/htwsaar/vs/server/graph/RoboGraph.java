@@ -118,4 +118,27 @@ public class RoboGraph {
 		return null;
 	}
 	
+	
+	private RoboNode findRobotById(String robotId) {
+		RoboNode node;
+		Iterator<RoboNode> it = roboNodeMap.values().iterator();
+		while(it.hasNext()) {
+			node = it.next();
+			if(node.getRobotId() == robotId) {
+				return node;
+			}
+		}
+		return null;
+	}
+
+	public void turnRobotLeft(String robotId) {
+		RoboNode node = findRobotById(robotId);
+		node.turnLeft();
+	}
+
+	public void turnRobotRight(String robotId) {
+		RoboNode node = findRobotById(robotId);
+		node.turnRight();
+	}
+	
 }

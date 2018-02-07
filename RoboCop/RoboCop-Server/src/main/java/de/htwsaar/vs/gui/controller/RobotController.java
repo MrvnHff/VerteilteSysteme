@@ -48,10 +48,12 @@ public class RobotController implements Initializable{
 	
 	public void rotateRobotLeft() {
 		rotateRobot(-90);
+		server.turnRobotLeft(robotId);
 	}
 	
 	public void rotateRobotRight() {
 		rotateRobot(90);
+		server.turnRobotRight(robotId);
 	}
 	
 	public void rotateRobot(int angle) {

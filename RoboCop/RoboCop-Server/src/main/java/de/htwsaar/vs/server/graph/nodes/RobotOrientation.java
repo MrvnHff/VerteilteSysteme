@@ -13,6 +13,6 @@ public enum RobotOrientation {
 	}
 
 	public RobotOrientation turnLeft() {
-		return vals[Math.abs((this.ordinal()-1) % (vals.length))];
+		return vals[((this.ordinal() - 1 + vals.length) % (vals.length))];
 	}
 }

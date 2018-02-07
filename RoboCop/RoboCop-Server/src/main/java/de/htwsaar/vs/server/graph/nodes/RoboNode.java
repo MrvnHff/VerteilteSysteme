@@ -25,6 +25,10 @@ public class RoboNode {
 		return this.nodeId;
 	}
 	
+	public String getRobotId() {
+		return this.robotId;
+	}
+	
 	public void setRobotId(String robotId) {
 		this.robotId = robotId;
 	}
@@ -44,5 +48,16 @@ public class RoboNode {
 	@Override
 	public String toString() {
 		return robotId + "|"+ orientation;
+	}
+
+	public void turnLeft() {
+		orientation = orientation.turnLeft();
+		System.out.println(this.orientation);
+		
+	}
+
+	public void turnRight() {
+		orientation = orientation.turnRight();
+		System.out.println(this.orientation);
 	}
 }

@@ -42,6 +42,14 @@ public class RobotOrientationTest {
 		assertEquals(RobotOrientation.NORTH, orient1);
 	}
 	
+	@Test
+	public void testTurnLeftNorthtoSouth() {
+		for(int i = 0; i < 2; i++) {
+			orient1 = orient1.turnLeft();
+		}
+		assertEquals(RobotOrientation.SOUTH, orient1);
+	}
+	
 	
 
 }
