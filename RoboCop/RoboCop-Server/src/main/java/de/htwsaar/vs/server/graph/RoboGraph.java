@@ -2,6 +2,7 @@ package de.htwsaar.vs.server.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
@@ -9,6 +10,7 @@ import org.jgrapht.graph.SimpleGraph;
 
 import de.htwsaar.vs.server.graph.edges.RoboEdge;
 import de.htwsaar.vs.server.graph.nodes.RoboNode;
+import de.htwsaar.vs.server.graph.nodes.RobotOrientation;
 
 public class RoboGraph {
 	
@@ -94,6 +96,26 @@ public class RoboGraph {
 	
 	public String toString() {
 		return roadGraph.toString();
+	}
+	
+	public String addRobot(String robotId) {
+		String position = findFreePosition();
+		RoboNode node = roboNodeMap.get(position);
+		node.setRobotId(robotId);
+		node.setOrientation(RobotOrientation.NORTH);
+		return position;
+	}
+
+	private String findFreePosition() {
+		RoboNode node;
+		Iterator<RoboNode> it = roboNodeMap.values().iterator();
+		while(it.hasNext()) {
+			node = it.next();
+			if(node.isEmpty()) {
+				return node.getNodeId();
+			}
+		}
+		return null;
 	}
 	
 }

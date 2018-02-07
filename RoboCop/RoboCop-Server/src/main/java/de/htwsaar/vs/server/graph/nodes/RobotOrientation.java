@@ -1,8 +1,14 @@
 package de.htwsaar.vs.server.graph.nodes;
 
 public enum RobotOrientation {
-	NORTH,
-	SOUTH,
 	EAST,
-	WEST
+	NORTH,
+	WEST,
+	SOUTH;
+	
+	private static RobotOrientation[]  vals = values();
+	
+	public RobotOrientation turnRight() {
+		return vals[this.ordinal()+1 % vals.length];
+	}
 }

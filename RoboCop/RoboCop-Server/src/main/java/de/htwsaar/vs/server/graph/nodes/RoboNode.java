@@ -25,6 +25,22 @@ public class RoboNode {
 		return this.nodeId;
 	}
 	
+	public void setRobotId(String robotId) {
+		this.robotId = robotId;
+	}
+	
+	public void setOrientation(RobotOrientation orientation) {
+		this.orientation = orientation;
+	}
+	
+	public boolean isEmpty() {
+		if(robotId == null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return robotId + "|"+ orientation;

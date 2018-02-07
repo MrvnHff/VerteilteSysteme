@@ -122,8 +122,9 @@ public class Gui extends Application {
 		rootLayout.setCenter(splitPane2);
 	}
 	
-	public void addRobot(String robotId) {
+	public void addRobot(String robotId, String position) {
 		flow.getChildren().add(buildRobotPane(robotId));
+		rl.moveRobotTo(robotId, position);
 	}
 	
 	private BorderPane buildRobotPane(String robotId) {

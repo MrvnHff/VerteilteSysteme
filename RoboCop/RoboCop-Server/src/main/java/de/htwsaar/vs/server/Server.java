@@ -28,14 +28,16 @@ public class Server {
 	 * @param robotId Id des neuen Roboters
 	 */
 	private void addRobot(String robotId) {
-		gui.addRobot(robotId);
-		//roboGraph.addRobot(robotId) // needs to be implemented
+		String position;
+		position = roboGraph.addRobot(robotId);
+		gui.addRobot(robotId, position);
 	}
 	
 	public void setGui(Gui gui) {
 		this.gui = gui;
 		//Wird momentan hier nur zum testen hinzugefügt. die Roboter sollen später natürlich dynamisch hinzugefügt werden sobald sie sich mit dem Server verbinden
 		addRobot("George");
+		addRobot("Jane");
 	}
 	
 	/**
