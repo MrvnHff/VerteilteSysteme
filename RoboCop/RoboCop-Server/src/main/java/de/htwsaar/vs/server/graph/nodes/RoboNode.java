@@ -37,6 +37,10 @@ public class RoboNode {
 		this.orientation = orientation;
 	}
 	
+	public RobotOrientation getOrientation() {
+		return this.orientation;
+	}
+	
 	public boolean isEmpty() {
 		if(robotId == null) {
 			return true;

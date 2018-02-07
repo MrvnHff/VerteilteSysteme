@@ -11,6 +11,7 @@ import org.jgrapht.graph.SimpleGraph;
 import de.htwsaar.vs.server.graph.edges.RoboEdge;
 import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import de.htwsaar.vs.server.graph.nodes.RobotOrientation;
+import de.htwsaar.vs.utils.IdUtils;
 
 public class RoboGraph {
 	
@@ -82,6 +83,10 @@ public class RoboGraph {
 		return roboNodeMap.get(nodeId);
 	}
 	
+	public RoboEdge getEdge(String source, String target) {
+		return roadGraph.getEdge(source, target);
+	}
+	
 	public Collection<RoboNode> getAllNodes() {
 		return roboNodeMap.values();
 	}
@@ -139,6 +144,35 @@ public class RoboGraph {
 	public void turnRobotRight(String robotId) {
 		RoboNode node = findRobotById(robotId);
 		node.turnRight();
+	}
+	
+	private RoboNode findNodeInFrontOfRobot(RoboNode node) {
+		String targetNodeId;
+		int coordinates[] = IdUtils.extractCoordinates(node.getNodeId());
+		switch(node.getOrientation()) {
+		case WEST:
+			coordinates[1] -= 1;
+			break;
+		case NORTH:
+			coordinates[0] -= 1;
+			break;
+		case EAST:
+			coordinates[1] += 1;
+			break;
+		case SOUTH:
+			coordinates[0] += 1;
+		}
+		targetNodeId = IdUtils.createIdString(coordinates[0], coordinates[1]);
+		return getNode(targetNodeId);
+	}
+	
+	public String moveRobotForward(String robotId) {
+		RoboNode sourceNode = findRobotById(robotId);
+		RoboNode targetNode = findNodeInFrontOfRobot(sourceNode);
+		sourceNode.setRobotId(null);
+		targetNode.setRobotId(robotId);
+		targetNode.setOrientation(sourceNode.getOrientation());
+		return targetNode.getNodeId();
 	}
 	
 }

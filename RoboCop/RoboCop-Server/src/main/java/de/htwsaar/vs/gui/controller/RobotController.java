@@ -59,4 +59,9 @@ public class RobotController implements Initializable{
 	public void rotateRobot(int angle) {
 		robotLayout.rotate(this.robotId, angle);
 	}
+	
+	public void moveRobotForward() {
+		String destination = server.moveRobotForward(robotId);
+		robotLayout.moveRobotTo(robotId, destination);
+	}
 } 

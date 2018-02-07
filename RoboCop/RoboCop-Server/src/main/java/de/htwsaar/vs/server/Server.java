@@ -43,6 +43,12 @@ public class Server {
 		//toDo: methode die die bewegung an den physichen roboter kommuniziert
 	}
 	
+	public String moveRobotForward(String robotId) {
+		String destination = roboGraph.moveRobotForward(robotId);
+		//toDo: methode die die bewegung an den physichen roboter kommuniziert
+		return destination;
+	}
+	
 	public void setGui(Gui gui) {
 		this.gui = gui;
 		//Wird momentan hier nur zum testen hinzugefügt. die Roboter sollen später natürlich dynamisch hinzugefügt werden sobald sie sich mit dem Server verbinden

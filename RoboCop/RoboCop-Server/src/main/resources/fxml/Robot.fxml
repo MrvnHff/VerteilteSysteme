@@ -78,7 +78,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="up" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" styleClass="up-button" GridPane.columnIndex="1" />
+                  <Button fx:id="up" mnemonicParsing="false" onAction="#moveRobotForward" prefHeight="30.0" prefWidth="50.0" styleClass="up-button" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </children>

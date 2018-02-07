@@ -5,6 +5,7 @@ import java.util.List;
 import de.htwsaar.vs.gui.graph.Cell;
 import de.htwsaar.vs.gui.graph.Graph;
 import de.htwsaar.vs.gui.layout.base.Layout;
+import de.htwsaar.vs.utils.IdUtils;
 
 public class GridLayout extends Layout{
 	
@@ -27,19 +28,12 @@ public class GridLayout extends Layout{
 		int coordinates[];
 		
 		for(Cell cell: cells) {
-			coordinates = extractCoordinates(cell.getCellId());
+			coordinates = IdUtils.extractCoordinates(cell.getCellId());
 			cell.relocate(coordinates[1] * scale, coordinates[0] * scale);
 		}
 	}
 	
-	public int[] extractCoordinates(String cellId) {
-		String strCoordinates[];
-		int	intCoordinates[] = new int[2];
-		strCoordinates = cellId.split("/");
-		intCoordinates[0] =  Integer.parseInt(strCoordinates[0]);
-		intCoordinates[1] =  Integer.parseInt(strCoordinates[1]);
-		return intCoordinates;
-	}
+	
 	
 	public void setScale(int scale) {
 		this.scale = scale;
