@@ -5,10 +5,14 @@ import java.util.ResourceBundle;
 
 import de.htwsaar.vs.gui.layout.robot.RobotLayout;
 import de.htwsaar.vs.server.Server;
+import de.htwsaar.vs.server.exceptions.NoValidTargetNodeException;
+import de.htwsaar.vs.server.exceptions.TargetIsOccupiedException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
 
 public class RobotController implements Initializable{
@@ -60,8 +64,22 @@ public class RobotController implements Initializable{
 		robotLayout.rotate(this.robotId, angle);
 	}
 	
+	private void showAlert(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Aktion ist fehlgeschlagen");
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+	
 	public void moveRobotForward() {
-		String destination = server.moveRobotForward(robotId);
-		robotLayout.moveRobotTo(robotId, destination);
+		try {
+			String destination = server.moveRobotForward(robotId);
+			robotLayout.moveRobotTo(robotId, destination);
+		} catch (NoValidTargetNodeException e) {
+			showAlert("Kein Gültiges Ziel");
+		} catch (TargetIsOccupiedException e) {
+			showAlert("Ziel ist bereits belegt");
+		}
 	}
 } 

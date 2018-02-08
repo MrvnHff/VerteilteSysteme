@@ -8,6 +8,8 @@ import java.util.Set;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
+import de.htwsaar.vs.server.exceptions.NoValidTargetNodeException;
+import de.htwsaar.vs.server.exceptions.TargetIsOccupiedException;
 import de.htwsaar.vs.server.graph.edges.RoboEdge;
 import de.htwsaar.vs.server.graph.nodes.RoboNode;
 import de.htwsaar.vs.server.graph.nodes.RobotOrientation;
@@ -169,10 +171,16 @@ public class RoboGraph {
 	public String moveRobotForward(String robotId) {
 		RoboNode sourceNode = findRobotById(robotId);
 		RoboNode targetNode = findNodeInFrontOfRobot(sourceNode);
-		sourceNode.setRobotId(null);
-		targetNode.setRobotId(robotId);
-		targetNode.setOrientation(sourceNode.getOrientation());
-		return targetNode.getNodeId();
+		if(targetNode == null) {
+			throw new NoValidTargetNodeException();
+		} else if(!targetNode.isEmpty()) {
+			throw new TargetIsOccupiedException();
+		} else {
+			sourceNode.setRobotId(null);
+			targetNode.setRobotId(robotId);
+			targetNode.setOrientation(sourceNode.getOrientation());
+			return targetNode.getNodeId();
+		}
 	}
 	
 }
