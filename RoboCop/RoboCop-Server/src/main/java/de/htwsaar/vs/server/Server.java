@@ -54,6 +54,9 @@ public class Server {
 		//Wird momentan hier nur zum testen hinzugefügt. die Roboter sollen später natürlich dynamisch hinzugefügt werden sobald sie sich mit dem Server verbinden
 		addRobot("George");
 		addRobot("Jane");
+		gui.addServerTextMessage("Hello World");
+		gui.addRobotTextMessage("George", "Hello George");
+		gui.addRobotTextMessage("Jane", "Hello Jane");
 	}
 	
 	/**

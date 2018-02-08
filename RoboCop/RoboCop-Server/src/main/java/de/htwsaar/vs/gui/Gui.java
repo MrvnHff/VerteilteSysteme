@@ -2,6 +2,7 @@ package de.htwsaar.vs.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -36,12 +37,14 @@ public class Gui extends Application {
 	
 	private Server server;
 	
-	private List<RobotController> robotControllers = new ArrayList<RobotController>();
+	private HashMap<String, RobotController> robotControllers = new HashMap<String, RobotController>();
 	
 	private Stage primaryStage = new Stage();
 	private RobotLayout rl;
 	private BorderPane rootLayout;
 	private FlowPane flow;
+	
+	private TextArea textArea;
 	
 	private ResourceBundle config;
 	private ResourceBundle fxmlBundle;
@@ -111,11 +114,11 @@ public class Gui extends Application {
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
 		
 		//Server TextArea
-		TextArea textarea = new TextArea();
-		textarea.setEditable(false);
+		textArea = new TextArea();
+		textArea.setEditable(false);
 		
 		SplitPane splitPane2 = new SplitPane();
-		splitPane2.getItems().addAll(splitPane1, textarea);
+		splitPane2.getItems().addAll(splitPane1, textArea);
 		splitPane2.setOrientation(Orientation.VERTICAL);
 		splitPane2.setDividerPositions(0.8f, 0.2f);
 		
@@ -136,7 +139,7 @@ public class Gui extends Application {
 			controller.setServer(server);
 			controller.setRobotId(robotId);
 			controller.setRobotLayout(rl);
-			robotControllers.add(controller);
+			robotControllers.put(robotId, controller);
 			
 			graph.getModel().addCell(robotId, CellType.ROBOT);
 			graph.endUpdate();
@@ -144,6 +147,17 @@ public class Gui extends Application {
 			System.out.println(e);
 		}
 		return robot;
+	}
+	
+	public void addServerTextMessage(String msg) {
+		textArea.appendText(msg);
+		textArea.appendText("\n");
+	}
+	
+	public void addRobotTextMessage(String robotId, String msg) {
+		RobotController controller = robotControllers.get(robotId);
+		controller.addTextMessage(msg);
+		controller.addTextMessage("\n");
 	}
 	
 	public static void main(String[] args) {

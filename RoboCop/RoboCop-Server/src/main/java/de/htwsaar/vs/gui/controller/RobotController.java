@@ -50,6 +50,10 @@ public class RobotController implements Initializable{
 		this.robotLayout = rl;
 	}
 	
+	public void addTextMessage(String msg) {
+		textArea.appendText(msg);
+	}
+	
 	public void rotateRobotLeft() {
 		rotateRobot(-90);
 		server.turnRobotLeft(robotId);
