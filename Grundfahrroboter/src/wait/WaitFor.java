@@ -21,7 +21,7 @@ public class WaitFor {
 		boolean check = false;		
 		while (!check) {
 			switch (compare) {
-			case "=":
+			case "==":
 				if (s.getValue()==lightlvl) {check = true;}
 				break;
 			case "<":

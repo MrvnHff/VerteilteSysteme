@@ -31,11 +31,13 @@ public class Turn {
 			drive.setDirection(Driving.LEFT);
 		}
 		drive.start(speed);
-		while (grad - Math.abs(gyro.getValue()) > 2) {
-			speed = grad - Math.abs(gyro.getValue()) + 30;
+		while (grad - Math.abs(gyro.getValue()) > 1) {
+			speed = grad - Math.abs(gyro.getValue()) + 50;
+			System.out.println(gyro.getValue());
 			drive.setSpeed(speed);
 		}
 		drive.stopDriving();
+		System.out.println("Habe mich gedreht! " + gyro.getValue());
 	}
 
 }

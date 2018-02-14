@@ -1,11 +1,12 @@
+package logic;
 import client.Client;
 import control.PID;
 import driving.Turn;
+import driving.Drive;
 import driving.DriveCm;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.robotics.RegulatedMotor;
-import logic.DegreeCm;
 import sensors.Gyrosensor;
 import sensors.Lightsensor;
 import wait.WaitFor;
@@ -20,11 +21,12 @@ public class Roboter {
 	private double diameter;
 	private PID pidLight;
 	private PID pidGyro;
+	private Drive drive;
 	private RegulatedMotor b;
 	private RegulatedMotor c;
 	private Lightsensor light1;
 	private Gyrosensor gyro;
-	private Client client;
+	//private Client client;
 		
 	/**
 	 * Der Konstruktor initialisiert einen Client, um mit einem Server zu komunizieren, meldet zwei Motoren an ihren Ports B und C an, meldet einen Lichtsensor am Port
@@ -33,30 +35,44 @@ public class Roboter {
 	 * @param diameter, der Durchmesser der Reifen des Roboters zum Zeitpunkt des Aufrufs des Klassenobjektes.
 	 */
 	public Roboter (double diameter) {
-		client = new Client("192.168.178.24", 6000);
+		//client = new Client("192.168.178.24", 6000);
 		this.setDiameter(diameter);
 		b = new EV3LargeRegulatedMotor(MotorPort.B);
 		c = new EV3LargeRegulatedMotor(MotorPort.C);
 		light1 = new Lightsensor(1);
 		gyro = new Gyrosensor(3);
-		pidLight = new PID(50, light1, 0.5, 0.2, 0.8, b, c);
-		pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c);		
+		pidLight = new PID(50, light1, 2, 25, 20, b, c);
+		pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c);
+		drive = new Drive(b, c);
 	}
 	
 	public void pidLightCm(int speed, double cm) {
-		pidLight.drivePID(speed);
+		pidLight.drivePID(PowerRegulation.getSpeed(speed, b));
 		WaitFor.Degree(b, DegreeCm.getDegree(cm, diameter), ">=");
 		pidLight.stopPID();
 	}
 	
 	public void pidGyroCm(int speed, double cm) {
-		pidGyro.drivePID(speed);
+		pidGyro.drivePID(PowerRegulation.getSpeed(speed, b));
 		WaitFor.Degree(b, DegreeCm.getDegree(cm, diameter), ">=");
 		pidGyro.stopPID();
 	}
 	
 	public void driveCm(double cm, int speed) {
-		DriveCm.driveCm(cm, speed, b, c, diameter);
+		DriveCm.driveCm(cm, PowerRegulation.getSpeed(speed, b), b, c, diameter);
+	}
+	
+	public void drive(int speed) {
+		drive.drive(PowerRegulation.getSpeed(speed, b));
+	}
+	public void stopDrive() {
+		drive.stopDriving();
+	}
+	
+	public void driveUntilLight(int speed, int lightlvl, String compare) {
+		drive.drive(PowerRegulation.getSpeed(speed, b));
+		WaitFor.Sensor(light1, lightlvl, compare);
+		drive.stopDriving();
 	}
 		
 	public void turn(int degree, boolean right) {
@@ -71,7 +87,7 @@ public class Roboter {
 		this.diameter = diameter;
 	}
 	
-	public void sendeServer(String anfrage) {
-		client.sendRequest(anfrage);
+	public void hardGyroReset() {
+		gyro.resetHard();
 	}
 }

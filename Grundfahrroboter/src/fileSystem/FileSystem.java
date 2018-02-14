@@ -1,4 +1,4 @@
-package fileSystem;
+package FileSystem;
 
 import java.io.*;
 import client.Client;

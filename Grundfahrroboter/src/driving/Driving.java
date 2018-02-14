@@ -17,10 +17,10 @@ public class Driving extends Thread {
 	
 	private RegulatedMotor b;
 	private RegulatedMotor c;	
-	private boolean stop = false;
-	private int speedB = 0;
-	private int speedC = 0;
-	private char direction = FORWARD;
+	private boolean stop;
+	private int speedB;
+	private int speedC;
+	private char direction;
 	private boolean regulate;
 	
 
@@ -32,6 +32,10 @@ public class Driving extends Thread {
 	public Driving(RegulatedMotor b, RegulatedMotor c) {
 		this.b = b;
 		this.c = c;
+		stop = false;
+		speedB = 0;
+		speedC = 0;
+		direction = FORWARD;
 		this.regulate = true;
 	}
 
@@ -53,19 +57,21 @@ public class Driving extends Thread {
 		if (direction == BACKWARD) {
 			b.backward();
 			c.backward();
-		}else if (direction == LEFT) {
+			regulate = true;
+		}else if (direction == RIGHT) {
 			b.forward();
 			c.backward();
 			regulate = false;
-		}else if (direction == RIGHT) {
+		}else if (direction == LEFT) {
 			b.backward();
 			c.forward();
 			regulate = false;
 		}else{
 			b.forward();
 			c.forward();
+			regulate = true;
 		}
-		while (!stop) {
+		while (!isInterrupted()) {
 			if (regulate) {
 				if (b.getTachoCount() < c.getTachoCount()) {
 					b.setSpeed(speedB + 1);
@@ -77,10 +83,15 @@ public class Driving extends Thread {
 					b.setSpeed(speedB);
 					c.setSpeed(speedC);
 				}
+			}else {
+				b.setSpeed(speedB);
+				c.setSpeed(speedC);
 			}
 		}
 		b.setSpeed(0);
-		c.setSpeed(0);		
+		c.setSpeed(0);
+		b.stop(true);
+		c.stop(true);
 	}
 
 	/**
@@ -140,6 +151,7 @@ public class Driving extends Thread {
 	}
 	
 	public void stopDriving() {
+		interrupt();
 		stop = true;
 	}
 

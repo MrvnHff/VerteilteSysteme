@@ -18,6 +18,7 @@ public class PRegler {
 	 * @return Regelanteil P.
 	 */
 	public double regelP(int diff) {
+		//System.out.println(diff);
 		return diff * kp;
 	}
 }

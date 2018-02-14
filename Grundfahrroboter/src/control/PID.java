@@ -1,8 +1,8 @@
 package control;
 
-import Regler.DRegler;
-import Regler.IRegler;
-import Regler.PRegler;
+import control.DRegler;
+import control.IRegler;
+import control.PRegler;
 import driving.Driving;
 import lejos.robotics.RegulatedMotor;
 import sensors.DefaultSensor;
@@ -56,12 +56,16 @@ public class PID extends Thread {
 	 */
 	public void run() {
 		stop = false;
+		double px,ix,dx;
 		while (!stop) {
 			int diff = average - s.getValue();
-			double control = Math.round(p.regelP(diff) + i.regelI(diff) + d.regelD(diff));
-			drive.setSpeedB((int) (speed + control));
-			drive.setSpeedC((int) (speed - control));
-			System.out.println(control);
+			px = p.regelP(diff);
+			ix = i.regelI(diff);
+			dx = d.regelD(diff);
+			double control = Math.round(px+ix+dx);
+			drive.setSpeedB((int) (speed - control));
+			drive.setSpeedC((int) (speed + control));
+			//System.out.println(control);
 		}
 	}
 
