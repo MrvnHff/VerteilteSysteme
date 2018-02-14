@@ -1,0 +1,6 @@
+#!/bin/bash
+
+javac ServerProc.java
+rmic ServerImpl
+rmiregistry 1234 &
+java -Djava.security.policy=java.policy ServerProc
