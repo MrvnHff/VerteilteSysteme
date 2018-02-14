@@ -2,7 +2,7 @@
  * @author {garte}
  * @version {10.01.2018}
  */
-package client;
+package de.htwsaar.vs.server;
 
 /**
  * @author garte
