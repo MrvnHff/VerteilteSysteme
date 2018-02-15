@@ -126,11 +126,11 @@ public class Gui extends Application {
 	}
 	
 	public void addRobot(String robotId, String position) {
-		flow.getChildren().add(buildRobotPane(robotId));
+		flow.getChildren().add(buildRobotPane(robotId, position));
 		rl.moveRobotTo(robotId, position);
 	}
 	
-	private BorderPane buildRobotPane(String robotId) {
+	private BorderPane buildRobotPane(String robotId, String position) {
 		BorderPane robot = null;
 		try {
 			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
@@ -139,6 +139,7 @@ public class Gui extends Application {
 			controller.setServer(server);
 			controller.setRobotId(robotId);
 			controller.setRobotLayout(rl);
+			controller.setPosition(position);
 			robotControllers.put(robotId, controller);
 			
 			graph.getModel().addCell(robotId, CellType.ROBOT);

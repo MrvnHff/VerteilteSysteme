@@ -80,10 +80,15 @@ public class RobotController implements Initializable{
 		try {
 			String destination = server.moveRobotForward(robotId);
 			robotLayout.moveRobotTo(robotId, destination);
+			position.setText(destination);
 		} catch (NoValidTargetNodeException e) {
 			showAlert("Kein Gültiges Ziel");
 		} catch (TargetIsOccupiedException e) {
 			showAlert("Ziel ist bereits belegt");
 		}
+	}
+
+	public void setPosition(String position) {
+		this.position.setText(position);		
 	}
 } 
