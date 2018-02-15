@@ -5,14 +5,13 @@ import java.rmi.registry.Registry;
 import de.htwsaar.vs.gui.Gui;
 import de.htwsaar.vs.server.graph.RoboGraph;
 
-public class Server {
+public class Server implements ServerInterface{
 	private Gui gui;
 	
 	private String serverLog;
 	private Registry registry;
 	private String robotLog;
-	private boolean robotStatus;
-	private WorkerImplement worker;
+	private boolean flag;
 	
 	private RoboGraph roboGraph;
 	
@@ -80,8 +79,8 @@ public class Server {
      * Stellt den Art des Logs des Roboters fest.
      * @return robotStatus
      */
-    public boolean isRobotStatus() {
-        return this.robotStatus;
+    public boolean getFlag() {
+        return this.flag;
     }
     
 	/**
@@ -107,12 +106,13 @@ public class Server {
     }
     
     /**
-	 * Zum Schreiben Des logs des Roboters.
-	 * @param log
-	 */
-    public void printRobotLog(String log, boolean status){
-    	this.robotStatus = status;
-    	this.robotLog = "-> "+log;
+     * Zum Schreiben Des logs des Roboters.
+     * @param log
+     * @param flag
+     */
+    public void printRobotLog(String log, boolean flag){
+    	this.flag = flag;
+    	this.robotLog = log;
     }
 
 	
@@ -120,8 +120,6 @@ public class Server {
 	public static void main(String[] args) {
         Server server = new Server();
     }
-
-	
 
 	
 }
