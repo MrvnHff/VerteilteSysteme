@@ -164,6 +164,9 @@ public class RobotController implements Initializable{
 	}
 	
 	private void driveRobotTo(String destination) {
-		server.driveRobotTo(robotId, destination);
+		new Thread(() -> {
+			server.driveRobotTo(robotId, destination);
+		}).start();
+		
 	}
 } 

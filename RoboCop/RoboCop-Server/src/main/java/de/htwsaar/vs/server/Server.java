@@ -69,6 +69,7 @@ public class Server implements ServerInterface{
 	public void moveRobotForwardGui(String robotId) {
 		String destination = moveRobotForward(robotId);
 		gui.setRobotPosition(robotId, destination);
+		//wartezeit dient nur dazu, das man den Pfad in der gui nachverfolgen kann
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
