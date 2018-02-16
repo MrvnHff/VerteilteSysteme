@@ -3,8 +3,11 @@ package de.htwsaar.vs.server.graph;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -125,8 +128,12 @@ public class RoboGraph {
 		return null;
 	}
 	
+	public String getRobotPosition(String robotId) {
+		RoboNode node = getRobotById(robotId);
+		return node.getNodeId();
+	}
 	
-	private RoboNode findRobotById(String robotId) {
+	private RoboNode getRobotById(String robotId) {
 		RoboNode node;
 		Iterator<RoboNode> it = roboNodeMap.values().iterator();
 		while(it.hasNext()) {
@@ -139,12 +146,12 @@ public class RoboGraph {
 	}
 
 	public void turnRobotLeft(String robotId) {
-		RoboNode node = findRobotById(robotId);
+		RoboNode node = getRobotById(robotId);
 		node.turnLeft();
 	}
 
 	public void turnRobotRight(String robotId) {
-		RoboNode node = findRobotById(robotId);
+		RoboNode node = getRobotById(robotId);
 		node.turnRight();
 	}
 	
@@ -168,8 +175,40 @@ public class RoboGraph {
 		return getNode(targetNodeId);
 	}
 	
+	/**
+	 * Liefert die benötigte drehung um den Robotor in Richtung des Zielknoten auszurichten. Nur für benachbarte Knoten geeignet
+	 * @param robotId Id des roboters
+	 * @param destination id des Zielknotens
+	 * @return benötigte drehung, -1 für einmal links, 1 für einmal rechts, 2 für zweimal rechts und so weiter
+	 */
+	public int getNeededRotation(String robotId, String destination) {
+		RobotOrientation neededOrientation;
+		RobotOrientation nodeOrientation;
+		
+		RoboNode node = getRobotById(robotId);
+		String nodeId = node.getNodeId();
+		nodeOrientation = node.getOrientation();
+		if(nodeId.equals(destination)) {
+			return 0;
+		}
+		
+		int Node[] = IdUtils.extractCoordinates(nodeId);
+		int Dest[] = IdUtils.extractCoordinates(destination);
+		
+		if((Node[0] + 1) == Dest[0] && Node[1] == Dest[1]) {
+			neededOrientation = RobotOrientation.SOUTH;
+		} else if((Node[0] - 1) == Dest[0] && Node[1] == Dest[1]) {
+			neededOrientation = RobotOrientation.NORTH;
+		} else if(Node[0] == Dest[0] && (Node[1] - 1) == Dest[1]) {
+			neededOrientation = RobotOrientation.WEST;
+		} else {
+			neededOrientation = RobotOrientation.EAST;
+		}
+		return nodeOrientation.getDifference(neededOrientation);
+	}
+	
 	public String moveRobotForward(String robotId) {
-		RoboNode sourceNode = findRobotById(robotId);
+		RoboNode sourceNode = getRobotById(robotId);
 		RoboNode targetNode = findNodeInFrontOfRobot(sourceNode);
 		if(targetNode == null) {
 			throw new NoValidTargetNodeException();
@@ -181,6 +220,14 @@ public class RoboGraph {
 			targetNode.setOrientation(sourceNode.getOrientation());
 			return targetNode.getNodeId();
 		}
+	}
+
+	public List<String> getShortesPath(String robotId, String destination) {
+		RoboNode sourceNode = getRobotById(robotId);
+		String start = sourceNode.getNodeId();
+		DijkstraShortestPath<String, RoboEdge> shortestPathAlgo = new DijkstraShortestPath<String, RoboEdge>(roadGraph);
+		GraphPath<String, RoboEdge> path = shortestPathAlgo.getPath(start, destination);
+		return path.getVertexList();
 	}
 	
 }

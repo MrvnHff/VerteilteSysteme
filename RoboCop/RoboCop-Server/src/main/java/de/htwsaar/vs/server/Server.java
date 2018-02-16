@@ -1,6 +1,7 @@
 package de.htwsaar.vs.server;
 
 import java.rmi.registry.Registry;
+import java.util.List;
 
 import de.htwsaar.vs.gui.Gui;
 import de.htwsaar.vs.server.graph.RoboGraph;
@@ -32,20 +33,73 @@ public class Server implements ServerInterface{
 		gui.addRobot(robotId, position);
 	}
 	
+	/**
+	 * Dreht den Roboter im RoboGraph und gibt den Befehl an den physischen roboter weiter
+	 */
 	public void turnRobotLeft(String robotId) {
 		roboGraph.turnRobotLeft(robotId);
 		//toDo: methode die die bewegung an den physichen roboter kommuniziert
 	}
 	
+	
+	public void turnRobotLeftGui(String robotId) {
+		turnRobotLeft(robotId);
+		gui.turnRobotLeft(robotId);
+	}
+	
+	/**
+	 * Dreht den Roboter im RoboGraph und gibt den Befehl an den physischen roboter weiter
+	 */
 	public void turnRobotRight(String robotId) {
 		roboGraph.turnRobotRight(robotId);
 		//toDo: methode die die bewegung an den physichen roboter kommuniziert
+	}
+	
+	public void turnRobotRightGui(String robotId) {
+		turnRobotRight(robotId);
+		gui.turnRobotRight(robotId);
 	}
 	
 	public String moveRobotForward(String robotId) {
 		String destination = roboGraph.moveRobotForward(robotId);
 		//toDo: methode die die bewegung an den physichen roboter kommuniziert
 		return destination;
+	}
+	
+	public void moveRobotForwardGui(String robotId) {
+		String destination = moveRobotForward(robotId);
+		gui.setRobotPosition(robotId, destination);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void driveRobotTo(String robotId, String destination) {
+		String position = roboGraph.getRobotPosition(robotId);
+		List<String> path = roboGraph.getShortesPath(robotId, destination);
+		path.remove(0);
+		//Der folgende algorithmus ist arbeit für einen eigenen Thread/Worker, sodass die pfade gleichzeitg für mehrere roboter abgearbeitet werden können
+		for(String nodeId: path) {
+			
+			int rotationsNeeded = roboGraph.getNeededRotation(robotId, nodeId);
+			switch(rotationsNeeded) {
+				case 1: turnRobotRightGui(robotId);
+						break;
+				case 2: turnRobotRightGui(robotId);
+						turnRobotRightGui(robotId);
+						break;
+				case -1:turnRobotLeftGui(robotId);
+						break;
+				case -2:turnRobotLeftGui(robotId);
+						break;
+				default:break;
+			}
+			moveRobotForwardGui(robotId);
+		}
 	}
 	
 	public void setGui(Gui gui) {
@@ -120,6 +174,8 @@ public class Server implements ServerInterface{
 	public static void main(String[] args) {
         Server server = new Server();
     }
+
+	
 
 	
 }

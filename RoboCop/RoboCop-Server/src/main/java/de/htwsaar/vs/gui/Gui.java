@@ -139,7 +139,7 @@ public class Gui extends Application {
 			controller.setServer(server);
 			controller.setRobotId(robotId);
 			controller.setRobotLayout(rl);
-			controller.setPosition(position);
+			controller.setPositionTextField(position);
 			robotControllers.put(robotId, controller);
 			
 			graph.getModel().addCell(robotId, CellType.ROBOT);
@@ -159,6 +159,21 @@ public class Gui extends Application {
 		RobotController controller = robotControllers.get(robotId);
 		controller.addTextMessage(msg);
 		controller.addTextMessage("\n");
+	}
+	
+	public void setRobotPosition(String robotId, String position) {
+		RobotController controller = robotControllers.get(robotId);
+		controller.setRobotPosition(position);
+	}
+	
+	public void turnRobotLeft(String robotId) {
+		RobotController controller = robotControllers.get(robotId);
+		controller.rotateRobotLeftServer();
+	}
+	
+	public void turnRobotRight(String robotId) {
+		RobotController controller = robotControllers.get(robotId);
+		controller.rotateRobotRightServer();
 	}
 	
 	public static void main(String[] args) {

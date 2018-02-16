@@ -8,10 +8,12 @@ import org.junit.Test;
 public class RobotOrientationTest {
 
 	private RobotOrientation orient1;
+	private RobotOrientation orient2;
 	
 	@Before
 	public void setUp() {
 		orient1 = RobotOrientation.NORTH;
+		orient2 = RobotOrientation.SOUTH;
 	}
 	
 	@Test
@@ -50,6 +52,28 @@ public class RobotOrientationTest {
 		assertEquals(RobotOrientation.SOUTH, orient1);
 	}
 	
+	@Test
+	public void testDifferenceNorthWest() {
+		int i = orient1.getDifference(RobotOrientation.WEST);
+		assertEquals(-1, i);
+	}
 	
+	@Test
+	public void testDifferenceNorthEAST() {
+		int i = orient1.getDifference(RobotOrientation.EAST);
+		assertEquals(1, i);
+	}
+	
+	@Test
+	public void testDifferenceNorthSouth() {
+		int i = orient1.getDifference(RobotOrientation.SOUTH);
+		assertEquals(2, i);
+	}
+	
+	@Test
+	public void testDifferenceSouthNorth() {
+		int i = orient2.getDifference(RobotOrientation.NORTH);
+		assertEquals(-2, i);
+	}
 
 }

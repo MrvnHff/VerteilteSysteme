@@ -15,4 +15,8 @@ public enum RobotOrientation {
 	public RobotOrientation turnLeft() {
 		return vals[((this.ordinal() - 1 + vals.length) % (vals.length))];
 	}
+	
+	public int getDifference(RobotOrientation orientation) {
+		return (this.ordinal() - orientation.ordinal()) * (-1);
+	}
 }
