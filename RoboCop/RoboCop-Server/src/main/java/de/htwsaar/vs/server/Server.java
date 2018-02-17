@@ -12,7 +12,8 @@ public class Server implements ServerInterface{
 	private String serverLog;
 	private Registry registry;
 	private String robotLog;
-	private boolean flag;
+	private boolean robotFlag;
+	private boolean serverFlag;
 	
 	private RoboGraph roboGraph;
 	
@@ -121,6 +122,17 @@ public class Server implements ServerInterface{
 		return this.roboGraph;
 	}
 	
+	public boolean getServerFlag() {
+		// TODO Auto-generated method stub
+		return this.serverFlag;
+	}
+
+	
+	public String getServerLog() {
+		// TODO Auto-generated method stub
+		return this.serverLog;
+	}
+	
 	
 	/**
 	 * Die Methode gibt den log des Roboters zurück
@@ -134,8 +146,8 @@ public class Server implements ServerInterface{
      * Stellt den Art des Logs des Roboters fest.
      * @return robotStatus
      */
-    public boolean getFlag() {
-        return this.flag;
+    public boolean getRobotFlag() {
+        return this.robotFlag;
     }
     
 	/**
@@ -156,8 +168,9 @@ public class Server implements ServerInterface{
 	 * Zum Schreiben Des logs des Servers.
 	 * @param log
 	 */
-    public void printServerLog(String log){
-    	this.serverLog = "-> "+log;
+    private void printServerLog(String serverLog, boolean serverFlag){
+    	this.serverLog = serverLog;
+    	this.serverFlag = serverFlag;
     }
     
     /**
@@ -165,9 +178,9 @@ public class Server implements ServerInterface{
      * @param log
      * @param flag
      */
-    public void printRobotLog(String log, boolean flag){
-    	this.flag = flag;
-    	this.robotLog = log;
+    public void printRobotLog(String robotLog, boolean robotFlag){
+    	this.robotFlag = robotFlag;
+    	this.robotLog = robotLog;
     }
 
 	
@@ -175,8 +188,5 @@ public class Server implements ServerInterface{
 	public static void main(String[] args) {
         Server server = new Server();
     }
-
-	
-
 	
 }
