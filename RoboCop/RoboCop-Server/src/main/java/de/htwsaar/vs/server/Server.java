@@ -94,9 +94,14 @@ public class Server implements ServerInterface{
 				case 2: turnRobotRightGui(robotId);
 						turnRobotRightGui(robotId);
 						break;
+				case 3: turnRobotLeftGui(robotId);
+						break;
 				case -1:turnRobotLeftGui(robotId);
 						break;
 				case -2:turnRobotLeftGui(robotId);
+						turnRobotLeftGui(robotId);
+						break;
+				case -3:turnRobotRightGui(robotId);
 						break;
 				default:break;
 			}
