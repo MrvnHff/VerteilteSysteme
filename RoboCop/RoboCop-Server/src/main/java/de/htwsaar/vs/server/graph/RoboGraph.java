@@ -3,6 +3,7 @@ package de.htwsaar.vs.server.graph;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,10 +21,10 @@ import de.htwsaar.vs.utils.IdUtils;
 
 public class RoboGraph {
 	
-	SimpleGraph<String, RoboEdge> roadGraph; 
-	HashMap<String, RoboNode> roboNodeMap;
-	int columnCount;
-	int rowCount;
+	private SimpleGraph<String, RoboEdge> roadGraph; 
+	private HashMap<String, RoboNode> roboNodeMap;
+	private int columnCount;
+	private int rowCount;
 	
 	public RoboGraph() {
 		roadGraph = new SimpleGraph<String, RoboEdge>(RoboEdge.class);
@@ -59,6 +60,7 @@ public class RoboGraph {
 		}
 	}
 	
+
 	public Set<RoboEdge> getAllEdges() {
 		return roadGraph.edgeSet();
 	}
@@ -225,9 +227,44 @@ public class RoboGraph {
 	public List<String> getShortesPath(String robotId, String destination) {
 		RoboNode sourceNode = getRobotById(robotId);
 		String start = sourceNode.getNodeId();
+		RoboGraph tempGraph = creatUnoccupiedGraph(sourceNode);
+		return tempGraph.executeDijkstraShortestPathAlgo(start, destination);
+	}
+	
+	private List<String> executeDijkstraShortestPathAlgo(String start, String destination) {
 		DijkstraShortestPath<String, RoboEdge> shortestPathAlgo = new DijkstraShortestPath<String, RoboEdge>(roadGraph);
 		GraphPath<String, RoboEdge> path = shortestPathAlgo.getPath(start, destination);
 		return path.getVertexList();
+	}
+
+	private RoboGraph creatUnoccupiedGraph(RoboNode exception) {
+		List<RoboNode> occupiedNodes = this.getListOfOccupiedNodes();
+		occupiedNodes.remove(exception);
+		RoboGraph tempGraph = new RoboGraph(this.getRowCount(), this.getColumnCount());
+		tempGraph.deleteNodes(occupiedNodes);
+		return tempGraph;
+	}
+
+	private void deleteNodes(List<RoboNode> nodes) {
+		for(RoboNode node: nodes) {
+			deleteNode(node.getNodeId());
+		}
+	}
+
+	private void deleteNode(String nodeId) {
+		roadGraph.removeVertex(nodeId);
+		this.roboNodeMap.remove(nodeId);
+	}
+
+	private List<RoboNode> getListOfOccupiedNodes() {
+		Collection<RoboNode> nodes = getAllNodes();
+		List<RoboNode> occupiedNodes = new LinkedList<RoboNode>();
+		for(RoboNode node: nodes) {
+			if(!node.isEmpty()) {
+				occupiedNodes.add(node);
+			}
+		}
+		return occupiedNodes;		
 	}
 	
 }
