@@ -267,4 +267,9 @@ public class RoboGraph {
 		return occupiedNodes;		
 	}
 	
+	public boolean isNodeEmpty(String nodeId) {
+		RoboNode node = getNode(nodeId);
+		return node.isEmpty();
+	}
+	
 }

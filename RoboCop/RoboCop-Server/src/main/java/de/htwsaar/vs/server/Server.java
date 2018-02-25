@@ -83,29 +83,36 @@ public class Server implements ServerInterface{
 	public void driveRobotTo(String robotId, String destination) {
 		String position = roboGraph.getRobotPosition(robotId);
 		List<String> path = roboGraph.getShortesPath(robotId, destination);
-		path.remove(0);
+		
 		//Der folgende algorithmus ist arbeit für einen eigenen Thread/Worker, sodass die pfade gleichzeitg für mehrere roboter abgearbeitet werden können
-		for(String nodeId: path) {
+		while(path.size() > 2) {
+			path = roboGraph.getShortesPath(robotId, destination);
+			String nodeId = path.get(1);
 			
 			int rotationsNeeded = roboGraph.getNeededRotation(robotId, nodeId);
-			switch(rotationsNeeded) {
-				case 1: turnRobotRightGui(robotId);
-						break;
-				case 2: turnRobotRightGui(robotId);
-						turnRobotRightGui(robotId);
-						break;
-				case 3: turnRobotLeftGui(robotId);
-						break;
-				case -1:turnRobotLeftGui(robotId);
-						break;
-				case -2:turnRobotLeftGui(robotId);
-						turnRobotLeftGui(robotId);
-						break;
-				case -3:turnRobotRightGui(robotId);
-						break;
-				default:break;
-			}
+			turnRobot(rotationsNeeded, robotId);
+			
 			moveRobotForwardGui(robotId);
+		}
+	}
+	
+	private void turnRobot(int rotationsNeeded, String robotId) {
+		switch(rotationsNeeded) {
+			case 1: turnRobotRightGui(robotId);
+					break;
+			case 2: turnRobotRightGui(robotId);
+					turnRobotRightGui(robotId);
+					break;
+			case 3: turnRobotLeftGui(robotId);
+					break;
+			case -1:turnRobotLeftGui(robotId);
+					break;
+			case -2:turnRobotLeftGui(robotId);
+					turnRobotLeftGui(robotId);
+					break;
+			case -3:turnRobotRightGui(robotId);
+					break;
+			default:break;
 		}
 	}
 	
