@@ -9,7 +9,7 @@ import FileSystem.FileSystem;
 import logic.Roboter;
 
 public class RoboServer implements RoboServerInterface{
-	private Roboter robo;
+	private static Roboter robo;
 	private static double dm;
 	private static double kp;
 	private static double ki;
@@ -85,6 +85,7 @@ public class RoboServer implements RoboServerInterface{
 	@Override
 	public String getStatus() throws RemoteException {
 		// TODO Auto-generated method stub
+		System.out.println("Moin");
 		return null;
 	}
 	
@@ -95,10 +96,10 @@ public static void main(String args[]) {
 	 kp = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_p"));
 	 ki = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_i"));
 	 kd = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_d"));
-	 System.out.println(kp);
 	int port = Integer.parseInt(FileSystem.readProperties(ROBO_NUMBER, "RoboPort"));
 
-        
+	robo = new Roboter(dm,kp,ki,kd);    
+	
         try {
             RoboServerInterface obj = new RoboServer();
             RoboServerInterface stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0);
