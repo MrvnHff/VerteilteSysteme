@@ -1,6 +1,8 @@
 package FileSystem;
 
 import java.io.*;
+import java.util.ResourceBundle;
+
 import client.Client;
 
 /**
@@ -59,6 +61,18 @@ public class FileSystem {
 		} catch (Exception e) {
 			System.out.println("Fehler bei CSV Datei-Erstellung");
 		}
+	}
+	
+	public static String readProperties(int number, String s) {
+		ResourceBundle prop;
+		prop = ResourceBundle.getBundle("FileSystem/Robo"+ number);
+		return prop.getString(s);
+	}
+	
+	public static String readProperties(String s) {
+		ResourceBundle prop;
+		prop = ResourceBundle.getBundle("FileSystem/AllRobots");
+		return prop.getString(s);
 	}
 	
 	/**

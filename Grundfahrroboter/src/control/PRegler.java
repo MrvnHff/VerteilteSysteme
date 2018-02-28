@@ -21,4 +21,8 @@ public class PRegler {
 		//System.out.println(diff);
 		return diff * kp;
 	}
+	
+	public void setP(double kp) {
+		this.kp = kp;
+	}
 }

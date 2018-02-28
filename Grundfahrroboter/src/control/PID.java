@@ -44,6 +44,7 @@ public class PID extends Thread {
 		this.average = average;
 		this.s = s;
 		p = new PRegler(kp);
+		System.out.println(average);
 		i = new IRegler(ki, average);
 		d = new DRegler(kd);
 	}
@@ -85,5 +86,11 @@ public class PID extends Thread {
 	public void stopPID() {
 		drive.stopDriving();
 		stop = true;
+	}
+	
+	public void setPID(double kp, double ki, double kd) {
+		p.setP(kp);
+		i.setI(ki);
+		d.setD(kd);
 	}
 }

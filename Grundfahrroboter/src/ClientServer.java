@@ -11,14 +11,10 @@ public class ClientServer {
 		RoboServerInterface robo;		
 		
 		try {
-			Registry registry = LocateRegistry.getRegistry("192.168.178.26", 55555);
-			robo = (RoboServerInterface) registry.lookup("Robo");
+			Registry registry = LocateRegistry.getRegistry("192.168.178.20", 55555);
+			robo = (RoboServerInterface) registry.lookup("Robert");
 			
-			for (int i = 0; i < 2; i++) {
-				robo.driveCm(5, 20);
-				//robo.turnRight();
-				//robo.turnLeft();
-			}
+			robo.driveCm(20, 200);
 			
 		} catch (Exception e) {
 			System.out.println(e);

@@ -19,13 +19,13 @@ public class Main {
 		b = new EV3LargeRegulatedMotor(MotorPort.B);
 		c = new EV3LargeRegulatedMotor(MotorPort.C);
 		Lightsensor licht = new Lightsensor(1);
-		PID pid = new PID(50, licht, 2, 25, 20, b, c);
+		PID pid = new PID(50, licht, 1.5, 25, 20, b, c);
 		Audio audio = LocalEV3.get().getAudio();
 		audio.setVolume(20);
 		audio.playTone(1200, 100);
 		led.setPattern(7);
-		pid.drivePID(300);
-		WaitFor.Degree(b, 10000, ">=");
+		pid.drivePID(200);
+		WaitFor.Degree(b, 2000, ">=");
 		pid.stopPID();
 		System.exit(0);
 	}

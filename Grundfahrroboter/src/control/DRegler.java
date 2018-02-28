@@ -26,4 +26,8 @@ public class DRegler {
 		diffAlt = diff;
 		return d;
 	}
+	
+	public void setD(double kd) {
+		this.kd = kd;
+	}
 }

@@ -1,5 +1,4 @@
 package logic;
-import client.Client;
 import control.PID;
 import driving.Turn;
 import driving.Drive;
@@ -34,16 +33,19 @@ public class Roboter {
 	 * Ebenso werdem dem Roboter zwei PID-Regler für den Lichtsensor und den Gyrosensor zur Verfügung gestellt.
 	 * @param diameter, der Durchmesser der Reifen des Roboters zum Zeitpunkt des Aufrufs des Klassenobjektes.
 	 */
-	public Roboter (double diameter) {
-		//client = new Client("192.168.178.24", 6000);
+	public Roboter (double diameter, double p, double i, double d) {
 		this.setDiameter(diameter);
 		b = new EV3LargeRegulatedMotor(MotorPort.B);
 		c = new EV3LargeRegulatedMotor(MotorPort.C);
 		light1 = new Lightsensor(1);
 		gyro = new Gyrosensor(3);
-		pidLight = new PID(50, light1, 2, 25, 20, b, c);
+		pidLight = new PID(50, light1, p, i, d, b, c);
 		pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c);
 		drive = new Drive(b, c);
+	}
+	
+	public void setPID(double kp, double ki, double kd) {
+		pidLight.setPID(kp, ki, kd);
 	}
 	
 	public void pidLightCm(int speed, double cm) {

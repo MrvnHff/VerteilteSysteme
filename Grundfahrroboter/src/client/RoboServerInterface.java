@@ -28,6 +28,8 @@ public interface RoboServerInterface extends Remote {
 	
 	public void stopDrive() throws RemoteException;
 	
+	public void driveNextPoint(int speed) throws RemoteException;
+	
 	public String getStatus() throws RemoteException;
 }
 

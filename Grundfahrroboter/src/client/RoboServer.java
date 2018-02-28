@@ -5,13 +5,19 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import FileSystem.FileSystem;
 import logic.Roboter;
 
 public class RoboServer implements RoboServerInterface{
-	private Roboter robo = new Roboter(43);
+	private Roboter robo;
+	private static double dm;
+	private static double kp;
+	private static double ki;
+	private static double kd;
 
 	@Override
 	public void driveCm(double cm, int speed) throws RemoteException {
+		robo.setDiameter(dm);
 		robo.driveCm(cm, speed);		
 	}
 
@@ -28,11 +34,13 @@ public class RoboServer implements RoboServerInterface{
 
 	@Override
 	public void driveBackCm(double cm, int speed) throws RemoteException {
+		robo.setDiameter(dm);
 		robo.driveCm(cm, -speed);		
 	}
 
 	@Override
 	public void driveBack(int cm, int speed) throws RemoteException {
+		robo.setDiameter(dm);
 		robo.drive(-speed);
 	}
 
@@ -53,12 +61,25 @@ public class RoboServer implements RoboServerInterface{
 
 	@Override
 	public void drivePID(int cm, int speed) throws RemoteException {
+		robo.setPID(kp, ki, kd);
+		robo.setDiameter(dm);
 		robo.pidLightCm(speed, cm);
 	}
 
 	@Override
 	public void stopDrive() throws RemoteException {
 		robo.stopDrive();
+	}
+	
+	@Override
+	public void driveNextPoint(int speed) throws RemoteException {
+		robo.setPID(kp, ki, kd);
+		robo.setDiameter(dm);
+		robo.driveCm(5, speed);
+		robo.pidGyroCm(speed, 65);
+		robo.driveCm(3, speed);
+		robo.driveUntilLight(speed, 5, "<=");
+		robo.driveCm(5, speed);
 	}
 
 	@Override
@@ -68,14 +89,23 @@ public class RoboServer implements RoboServerInterface{
 	}
 	
 public static void main(String args[]) {
+	final int ROBO_NUMBER = 2;
+	
+	 dm = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "Durchmesser"));
+	 kp = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_p"));
+	 ki = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_i"));
+	 kd = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_d"));
+	 System.out.println(kp);
+	int port = Integer.parseInt(FileSystem.readProperties(ROBO_NUMBER, "RoboPort"));
+
         
         try {
             RoboServerInterface obj = new RoboServer();
             RoboServerInterface stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0);
             //System.out.println(obj.toString());
-            LocateRegistry.createRegistry(55555);
-            Registry registry = LocateRegistry.getRegistry(55555);
-            registry.bind("Robo", stub);
+            LocateRegistry.createRegistry(port);
+            Registry registry = LocateRegistry.getRegistry(port);
+            registry.bind(FileSystem.readProperties(ROBO_NUMBER, "Name"), stub);
 
             System.err.println("Roboter bereit");
         } catch (Exception e) {
