@@ -85,14 +85,14 @@ public class Server implements ServerInterface{
 		List<String> path = roboGraph.getShortesPath(robotId, destination);
 		
 		//Der folgende algorithmus ist arbeit für einen eigenen Thread/Worker, sodass die pfade gleichzeitg für mehrere roboter abgearbeitet werden können
-		while(path.size() > 2) {
-			path = roboGraph.getShortesPath(robotId, destination);
+		while(path.size() > 1) {
 			String nodeId = path.get(1);
 			
 			int rotationsNeeded = roboGraph.getNeededRotation(robotId, nodeId);
 			turnRobot(rotationsNeeded, robotId);
 			
 			moveRobotForwardGui(robotId);
+			path = roboGraph.getShortesPath(robotId, destination);
 		}
 	}
 	
