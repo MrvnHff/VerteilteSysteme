@@ -20,7 +20,6 @@ public class Driving extends Thread {
 	private int speedB;
 	private int speedC;
 	private char direction;
-	private boolean regulate;
 	
 
 	/**
@@ -34,7 +33,6 @@ public class Driving extends Thread {
 		speedB = 0;
 		speedC = 0;
 		direction = FORWARD;
-		this.regulate = true;
 	}
 
 	
@@ -56,42 +54,17 @@ public class Driving extends Thread {
 		if (direction == BACKWARD) {
 			b.backward();
 			c.backward();
-			regulate = true;
 		}else if (direction == RIGHT) {
 			b.forward();
 			c.backward();
-			regulate = false;
 		}else if (direction == LEFT) {
 			b.backward();
 			c.forward();
-			regulate = false;
 		}else{
 			b.forward();
 			c.forward();
-			regulate = true;
 		}
-		while (!isInterrupted()) {
-			System.out.println(b.getSpeed());
-			if (regulate) {
-				if (b.getTachoCount() < c.getTachoCount()) {
-					b.setSpeed(speedB + 1);
-					c.setSpeed(speedC);
-				} else if (b.getTachoCount() > c.getTachoCount()) {
-					c.setSpeed(speedC + 1);
-					b.setSpeed(speedB);
-				} else {
-					b.setSpeed(speedB);
-					c.setSpeed(speedC);
-				}
-			}else {
-				b.setSpeed(speedB);
-				c.setSpeed(speedC);
-			}
-		}
-		//b.setSpeed(1);
-		//c.setSpeed(1);
-		//b.stop(true);
-		//c.stop(true);
+		while (!isInterrupted()) {}
 	}
 
 	/**
@@ -103,6 +76,8 @@ public class Driving extends Thread {
 		this.speedC = speed;
 		b.resetTachoCount();
 		c.resetTachoCount();
+		b.setSpeed(speed);
+		c.setSpeed(speed);
 		start();
 	}
 
@@ -117,21 +92,26 @@ public class Driving extends Thread {
 		this.speedC = speedC;
 		b.resetTachoCount();
 		c.resetTachoCount();
-		setRegulation(false);
+		b.setSpeed(speedB);
+		c.setSpeed(speedC);
 		start();
 	}
 
 	public void setSpeed(int speed) {
 		this.speedB = speed;
 		this.speedC = speed;
+		b.setSpeed(speed);
+		c.setSpeed(speed);
 	}
 
 	public void setSpeedB(int speed) {
 		this.speedB = speed;
+		b.setSpeed(speed);
 	}
 
 	public void setSpeedC(int speed) {
 		this.speedC = speed;
+		c.setSpeed(speed);
 	}
 
 	public int getSpeedB() {
@@ -141,17 +121,14 @@ public class Driving extends Thread {
 	public int getSpeedC() {
 		return speedC;
 	}
-
-	public void setRegulation(boolean regulate) {
-		this.regulate = regulate;
-	}
-	
-	public boolean getRegulation() {
-		return regulate;
-	}
 	
 	public void stopDriving() {
 		interrupt();
+		b.setSpeed(0);
+		c.setSpeed(0);
+		b.stop(true);
+		c.stop(true);
+		
 	}
 
 	public void setDirection(char d) {

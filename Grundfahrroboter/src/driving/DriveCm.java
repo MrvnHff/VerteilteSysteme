@@ -1,7 +1,6 @@
 package driving;
 
 import lejos.robotics.RegulatedMotor;
-import lejos.utility.Delay;
 import logic.DegreeCm;
 
 public class DriveCm {
@@ -9,10 +8,37 @@ public class DriveCm {
 	public static void driveCm(double cm, int speed, RegulatedMotor b, RegulatedMotor c, double diameter) {
 		Driving drive = new Driving(b, c);
 		
-		drive.start(speed);
-		while (Math.abs(b.getTachoCount()) < Math.abs(DegreeCm.getDegree(cm, diameter))){
-			
+		if (speed >= 0) {
+			drive.setDirection(Driving.FORWARD);
+			drive.start(speed);
+			while (Math.abs(b.getTachoCount()) < Math.abs(DegreeCm.getDegree(cm, diameter))){
+				if (b.getTachoCount() < c.getTachoCount()) {
+					b.setSpeed(speed + 1);
+					c.setSpeed(speed);
+				} else if (b.getTachoCount() > c.getTachoCount()) {
+					c.setSpeed(speed + 1);
+					b.setSpeed(speed);
+				} else {
+					b.setSpeed(speed);
+					c.setSpeed(speed);
+			}
 		}
+		}else {
+			drive.setDirection(Driving.BACKWARD);
+			drive.start(speed);
+			while (Math.abs(b.getTachoCount()) < Math.abs(DegreeCm.getDegree(cm, diameter))){
+				if (b.getTachoCount() > c.getTachoCount()) {
+					b.setSpeed(speed - 1);
+					c.setSpeed(speed);
+				} else if (b.getTachoCount() < c.getTachoCount()) {
+					c.setSpeed(speed - 1);
+					b.setSpeed(speed);
+				} else {
+					b.setSpeed(speed);
+					c.setSpeed(speed);
+			}
+		}
+	}
 		
 		
 		
