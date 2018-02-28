@@ -28,3 +28,5 @@ Dateiabfrage/client/cmake-build-debug/
 Dateiabfrage/server/\.idea/
 
 Dateiabfrage/server/cmake-build-debug/
+
+\.metadata/
