@@ -1,5 +1,6 @@
 package de.htwsaar.vs.server.graph;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -227,7 +228,14 @@ public class RoboGraph {
 	public List<String> getShortesPath(String robotId, String destination) {
 		RoboNode sourceNode = getRobotById(robotId);
 		String start = sourceNode.getNodeId();
-		RoboGraph tempGraph = creatUnoccupiedGraph(sourceNode);
+		List<RoboNode> exceptions = new ArrayList<RoboNode>();
+		exceptions.add(sourceNode);
+		exceptions.add(getNode(destination));
+		RoboGraph tempGraph = creatUnoccupiedGraph(exceptions);
+		RoboNode node = tempGraph.getNode(destination);
+		if(node == null) {
+			throw new NoValidTargetNodeException();
+		}
 		return tempGraph.executeDijkstraShortestPathAlgo(start, destination);
 	}
 	
@@ -237,9 +245,9 @@ public class RoboGraph {
 		return path.getVertexList();
 	}
 
-	private RoboGraph creatUnoccupiedGraph(RoboNode exception) {
+	private RoboGraph creatUnoccupiedGraph(List<RoboNode> exceptions) {
 		List<RoboNode> occupiedNodes = this.getListOfOccupiedNodes();
-		occupiedNodes.remove(exception);
+		occupiedNodes.removeAll(exceptions);
 		RoboGraph tempGraph = new RoboGraph(this.getRowCount(), this.getColumnCount());
 		tempGraph.deleteNodes(occupiedNodes);
 		return tempGraph;

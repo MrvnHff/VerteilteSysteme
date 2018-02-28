@@ -4,6 +4,7 @@ import java.rmi.registry.Registry;
 import java.util.List;
 
 import de.htwsaar.vs.gui.Gui;
+import de.htwsaar.vs.server.exceptions.TargetIsOccupiedException;
 import de.htwsaar.vs.server.graph.RoboGraph;
 
 public class Server implements ServerInterface{
@@ -68,8 +69,20 @@ public class Server implements ServerInterface{
 	}
 	
 	public void moveRobotForwardGui(String robotId) {
-		String destination = moveRobotForward(robotId);
-		gui.setRobotPosition(robotId, destination);
+		try {
+				String destination = moveRobotForward(robotId);
+				gui.setRobotPosition(robotId, destination);
+		} catch (TargetIsOccupiedException e) {
+			System.out.println(e);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException f) {
+				// TODO Auto-generated catch block
+				f.printStackTrace();
+			}
+			moveRobotForwardGui(robotId);
+		}
+		
 		//wartezeit dient nur dazu, das man den Pfad in der gui nachverfolgen kann
 		try {
 			Thread.sleep(2000);
@@ -84,9 +97,14 @@ public class Server implements ServerInterface{
 		String position = roboGraph.getRobotPosition(robotId);
 		List<String> path = roboGraph.getShortesPath(robotId, destination);
 		
+		
+		
 		//Der folgende algorithmus ist arbeit für einen eigenen Thread/Worker, sodass die pfade gleichzeitg für mehrere roboter abgearbeitet werden können
 		while(path.size() > 1) {
 			String nodeId = path.get(1);
+			if((path.size() == 2) && (nodeId == destination)) {
+				gui.addRobotTextMessage(robotId, "bääähhh");
+			}
 			
 			int rotationsNeeded = roboGraph.getNeededRotation(robotId, nodeId);
 			turnRobot(rotationsNeeded, robotId);
