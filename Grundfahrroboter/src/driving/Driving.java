@@ -17,7 +17,6 @@ public class Driving extends Thread {
 	
 	private RegulatedMotor b;
 	private RegulatedMotor c;	
-	private boolean stop;
 	private int speedB;
 	private int speedC;
 	private char direction;
@@ -32,7 +31,6 @@ public class Driving extends Thread {
 	public Driving(RegulatedMotor b, RegulatedMotor c) {
 		this.b = b;
 		this.c = c;
-		stop = false;
 		speedB = 0;
 		speedC = 0;
 		direction = FORWARD;
@@ -49,7 +47,8 @@ public class Driving extends Thread {
 	 */
 	//TODO Regulierung auch für die Drehung einbauen!
 	public void run() {
-		stop = false;
+		b.stop(false);
+		c.stop(false);
 		b.resetTachoCount();
 		c.resetTachoCount();
 		b.setSpeed(speedB);
@@ -72,6 +71,7 @@ public class Driving extends Thread {
 			regulate = true;
 		}
 		while (!isInterrupted()) {
+			System.out.println(b.getSpeed());
 			if (regulate) {
 				if (b.getTachoCount() < c.getTachoCount()) {
 					b.setSpeed(speedB + 1);
@@ -88,10 +88,10 @@ public class Driving extends Thread {
 				c.setSpeed(speedC);
 			}
 		}
-		b.setSpeed(0);
-		c.setSpeed(0);
-		b.stop(true);
-		c.stop(true);
+		//b.setSpeed(1);
+		//c.setSpeed(1);
+		//b.stop(true);
+		//c.stop(true);
 	}
 
 	/**
@@ -152,7 +152,6 @@ public class Driving extends Thread {
 	
 	public void stopDriving() {
 		interrupt();
-		stop = true;
 	}
 
 	public void setDirection(char d) {

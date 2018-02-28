@@ -33,7 +33,7 @@ public class Turn {
 		drive.start(speed);
 		while (grad - Math.abs(gyro.getValue()) > 1) {
 			speed = grad - Math.abs(gyro.getValue()) + 50;
-			System.out.println(gyro.getValue());
+			//System.out.println(gyro.getValue());
 			drive.setSpeed(speed);
 		}
 		drive.stopDriving();

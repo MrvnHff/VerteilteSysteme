@@ -37,7 +37,7 @@ public class IRegler {
 		}
 		
 		diffAlt = diff;
-		return (diffSum/133.33) * ki * (Math.abs(diff)/mittelwert);
+		return (diffSum/133.33) * ki * (Math.abs(diff/50));
 	}
 	
 	public void setI(double ki) {

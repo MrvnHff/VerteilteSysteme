@@ -4,6 +4,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import FileSystem.FileSystem;
 import logic.Roboter;
@@ -28,7 +30,8 @@ public class RoboServer implements RoboServerInterface{
 
 	@Override
 	public void driveUntilBlack(int speed) throws RemoteException {
-		robo.driveUntilLight(speed, 5, "<=");
+		robo.driveUntilLight(speed, 15, "<=");
+		System.out.println("Linie gefunden!");
 		
 	}
 
@@ -90,7 +93,7 @@ public class RoboServer implements RoboServerInterface{
 	}
 	
 public static void main(String args[]) {
-	final int ROBO_NUMBER = 2;
+	final int ROBO_NUMBER = 4;
 	
 	 dm = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "Durchmesser"));
 	 kp = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_p"));
@@ -103,12 +106,14 @@ public static void main(String args[]) {
         try {
             RoboServerInterface obj = new RoboServer();
             RoboServerInterface stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0);
-            //System.out.println(obj.toString());
             LocateRegistry.createRegistry(port);
             Registry registry = LocateRegistry.getRegistry(port);
             registry.bind(FileSystem.readProperties(ROBO_NUMBER, "Name"), stub);
+            
+            InetAddress ipAddr = InetAddress.getLocalHost();
+            System.out.println(ipAddr.getHostAddress());
 
-            System.err.println("Roboter bereit");
+            System.err.println(FileSystem.readProperties(ROBO_NUMBER, "Name") + " bereit!");
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();

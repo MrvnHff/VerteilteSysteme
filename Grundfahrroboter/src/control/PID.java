@@ -44,7 +44,6 @@ public class PID extends Thread {
 		this.average = average;
 		this.s = s;
 		p = new PRegler(kp);
-		System.out.println(average);
 		i = new IRegler(ki, average);
 		d = new DRegler(kd);
 	}
