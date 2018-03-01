@@ -30,3 +30,5 @@ Dateiabfrage/server/\.idea/
 Dateiabfrage/server/cmake-build-debug/
 
 *.class
+
+Grundfahrroboter/bin
