@@ -23,7 +23,6 @@ public class PowerRegulation {
 		if (speed < 0) {
 			motorspeed *= -1;
 		}
-		System.out.println(motorspeed);
 		return motorspeed;
 	}
 }

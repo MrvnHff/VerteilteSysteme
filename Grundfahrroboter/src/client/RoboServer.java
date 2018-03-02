@@ -1,5 +1,6 @@
 package client;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,6 +18,9 @@ public class RoboServer implements RoboServerInterface{
 	private static double kp;
 	private static double ki;
 	private static double kd;
+	
+	private WorkerInterface worker;
+	private Registry registryW;
 
 	@Override
 	public void driveCm(double cm, int speed) throws RemoteException{
@@ -136,7 +140,21 @@ public class RoboServer implements RoboServerInterface{
 	public String getStatus() throws RemoteException {
 		// TODO Auto-generated method stub
 		System.out.println("Moin");
-		return null;
+		return robo.getStatus();
+	}
+	
+	@Override
+	public void registerWorker(String name, String ip, int port) throws RemoteException {
+	    registryW = LocateRegistry.getRegistry(ip, port);
+		try {
+			//Roboter sucht nach Worker im System. Erst jetzt steht fest kennt der Worker den Roboter und der Roboter den Worker.
+			worker = (WorkerInterface) registryW.lookup(name);
+			System.out.println("Mit Worker "+ name + " verbunden!");
+			worker.setWay("", "");
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 public static void main(String args[]) {
@@ -147,25 +165,34 @@ public static void main(String args[]) {
 	 ki = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_i"));
 	 kd = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_d"));
 	int port = Integer.parseInt(FileSystem.readProperties(ROBO_NUMBER, "RoboPort"));
+	String name = FileSystem.readProperties(ROBO_NUMBER, "Name");
 
 	try {
 		robo = new Roboter(dm,kp,ki,kd);
 	} catch (RobotException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
-	}    
+	}     
 	
         try {
+        	//Roboter registriert sich im System mit seinem Namen und dem Port 55555
             RoboServerInterface obj = new RoboServer();
             RoboServerInterface stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0);
             LocateRegistry.createRegistry(port);
             Registry registry = LocateRegistry.getRegistry(port);
-            registry.bind(FileSystem.readProperties(ROBO_NUMBER, "Name"), stub);
+            registry.bind(name, stub);
             
-            InetAddress ipAddr = InetAddress.getLocalHost();
+            //Roboter sucht im System nach dem Listener
+            ListenerInterface listener;
+            Registry registryS = LocateRegistry.getRegistry("192.168.178.24", 55555);
+			listener = (ListenerInterface) registryS.lookup("Listener");
+			
+			InetAddress ipAddr = InetAddress.getLocalHost();
             System.out.println(ipAddr.getHostAddress());
+			
+			listener.registerRobot(name, ipAddr.getHostAddress(), 55555);
 
-            System.err.println(FileSystem.readProperties(ROBO_NUMBER, "Name") + " bereit!");
+            System.err.println(name + " bereit!");
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
