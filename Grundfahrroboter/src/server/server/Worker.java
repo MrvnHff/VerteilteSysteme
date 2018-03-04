@@ -1,4 +1,4 @@
-package client;
+package server.server;
 
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
@@ -8,6 +8,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
+
+import client.RoboServerInterface;
 
 public class Worker implements WorkerInterface{
 	private WorkerInterface stub;

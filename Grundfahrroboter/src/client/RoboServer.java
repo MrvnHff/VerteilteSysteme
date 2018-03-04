@@ -12,6 +12,8 @@ import Exceptions.RobotException;
 import java.net.InetAddress;
 import FileSystem.FileSystem;
 import logic.Roboter;
+import server.server.ListenerInterface;
+import server.server.WorkerInterface;
 
 public class RoboServer implements RoboServerInterface{
 	private static Roboter robo;
