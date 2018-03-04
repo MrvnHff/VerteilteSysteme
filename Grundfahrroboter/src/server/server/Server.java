@@ -91,6 +91,11 @@ public class Server implements ServerInterface{
 		gui.addRobot(robotId, position);
 	}
 	
+	/*###############################################
+	 * # 	Funktionen zum Steuern der Roboter		#
+	 * ##############################################
+	 */
+	
 	/**
 	 * Dreht den Roboter im RoboGraph und gibt den Befehl an den physischen roboter weiter
 	 */
@@ -110,7 +115,7 @@ public class Server implements ServerInterface{
 	 */
 	public void turnRobotRight(String robotId) {
 		roboGraph.turnRobotRight(robotId);
-		//toDo: methode die die bewegung an den physichen roboter kommuniziert
+		//worker[findRobot(robotId)].turnRight();
 	}
 	
 	public void turnRobotRightGui(String robotId) {
@@ -120,7 +125,8 @@ public class Server implements ServerInterface{
 	
 	public String moveRobotForward(String robotId) {
 		String destination = roboGraph.moveRobotForward(robotId);
-		//toDo: methode die die bewegung an den physichen roboter kommuniziert
+		//TODO Geschwindigkeit nicht fest an Roboter �bergeben
+		//worker[findRobot(robotId)].driveNextPoint(50);
 		return destination;
 	}
 	
@@ -139,11 +145,10 @@ public class Server implements ServerInterface{
 			moveRobotForwardGui(robotId);
 		}
 		
-		//wartezeit dient nur dazu, das man den Pfad in der gui nachverfolgen kann
+		// TODO Wartezeit dient nur dazu, das man den Pfad in der gui nachverfolgen kann
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -192,12 +197,13 @@ public class Server implements ServerInterface{
 	
 	public void setGui(Gui gui) {
 		this.gui = gui;
+		//TODO roboter in der GUI registrieren
 		//Wird momentan hier nur zum testen hinzugefügt. die Roboter sollen später natürlich dynamisch hinzugefügt werden sobald sie sich mit dem Server verbinden
-		addRobot("George");
-		addRobot("Jane");
-		gui.addServerTextMessage("Hello World");
-		gui.addRobotTextMessage("George", "Hello George");
-		gui.addRobotTextMessage("Jane", "Hello Jane");
+		//addRobot("George");
+		//addRobot("Jane");
+		//gui.addServerTextMessage("Hello World");
+		//gui.addRobotTextMessage("George", "Hello George");
+		//gui.addRobotTextMessage("Jane", "Hello Jane");
 	}
 	
 	/**

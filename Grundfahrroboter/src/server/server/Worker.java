@@ -101,37 +101,31 @@ public class Worker extends Thread implements WorkerInterface{
 	}
 
 	public void driveBack(int cm, int speed) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		robo.driveBack(cm, speed);
 	}
 
 	public void turnLeft() throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		robo.turnLeft();
 	}
 
 	public void turnRight() throws RemoteException {
-		// TODO Auto-generated method stub
+		robo.turnRight();
 		
 	}
 
 	public void stopDrive() throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		robo.stopDrive();
 	}
 
 	public void driveNextPoint(int speed) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		robo.driveNextPoint(speed);
 	}
 
 	public String getStatus() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		return robo.getStatus();
 	}
 
 	public String getError() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		return robo.getError();
 	}	
 }

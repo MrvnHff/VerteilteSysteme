@@ -38,7 +38,6 @@ public class Listener extends Thread implements ListenerInterface{
 
 	@Override
 	public void registerRobot(String roboName, String roboIp, int roboPort) throws RemoteException {
-		// TODO Auto-generated method stub 
 		System.out.println("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
 		if (server.isAllowedToAddWorker()) {
 			int index = server.getNextFreeWorkerNumber();

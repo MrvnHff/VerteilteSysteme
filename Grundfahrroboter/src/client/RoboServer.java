@@ -30,7 +30,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.driveCm(cm, speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -42,7 +41,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.drive(speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -54,7 +52,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.driveUntilLight(speed, 15, "<=");
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -66,7 +63,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.driveCm(cm, -speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -78,7 +74,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.drive(-speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -90,7 +85,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.turn(90, false);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -102,7 +96,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.turn(90, true);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -114,7 +107,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.turn(180, false);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -126,7 +118,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.pidLightCm(speed, cm);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -138,7 +129,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.stopDrive();
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -154,7 +144,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.driveCm(5, speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		

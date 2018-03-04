@@ -26,6 +26,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
 public class Gui extends Application {
+	
+	//TODO Server anhalten, wenn das Fenster geschlossen wird
 
 	private static final String CONFIG_FILENAME = "resources/config/config";
 	private static final String FXML_BUNDLE_FILENAME = "resources/config/fxml_files";
