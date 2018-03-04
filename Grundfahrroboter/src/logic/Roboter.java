@@ -10,6 +10,7 @@ import lejos.robotics.RegulatedMotor;
 import sensors.Gyrosensor;
 import sensors.Lightsensor;
 import wait.WaitFor;
+import lejos.utility.Delay;
 
 /**
  * Die Roboter-Klasse vereint alle Eigenschaften und Klassen des Roboters. Sie soll ein digitales Abbild des Roboters darstellen und alle Funktionen zur Verfügung stellen,
@@ -160,5 +161,9 @@ public class Roboter {
 	
 	public String getError() {
 		return error;
+	}
+	
+	public void waitMs(long ms) {
+		Delay.msDelay(ms);
 	}
 }

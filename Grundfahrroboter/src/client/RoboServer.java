@@ -1,5 +1,6 @@
 package client;
 
+import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -14,21 +15,22 @@ import logic.Roboter;
 
 public class RoboServer implements RoboServerInterface{
 	private static Roboter robo;
-	private static double dm;
-	private static double kp;
-	private static double ki;
-	private static double kd;
-	
 	private WorkerInterface worker;
 	private Registry registryW;
+	
+	private static String robotName;
+	private static boolean shutdown;
+	private final static int MAXTRY = 10;
 
 	@Override
 	public void driveCm(double cm, int speed) throws RemoteException{
 		try {
 			robo.driveCm(cm, speed);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}		
 	}
 
@@ -36,9 +38,11 @@ public class RoboServer implements RoboServerInterface{
 	public void drive(int speed) throws RemoteException{
 		try {
 			robo.drive(speed);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}
 	}
 
@@ -46,9 +50,11 @@ public class RoboServer implements RoboServerInterface{
 	public void driveUntilBlack(int speed) throws RemoteException{
 		try {
 			robo.driveUntilLight(speed, 15, "<=");
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}		
 	}
 
@@ -56,9 +62,11 @@ public class RoboServer implements RoboServerInterface{
 	public void driveBackCm(double cm, int speed) throws RemoteException{
 		try {
 			robo.driveCm(cm, -speed);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}		
 	}
 
@@ -66,9 +74,11 @@ public class RoboServer implements RoboServerInterface{
 	public void driveBack(int cm, int speed) throws RemoteException{
 		try {
 			robo.drive(-speed);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}
 	}
 
@@ -76,9 +86,11 @@ public class RoboServer implements RoboServerInterface{
 	public void turnLeft() throws RemoteException{
 		try {
 			robo.turn(90, false);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}
 	}
 
@@ -86,9 +98,11 @@ public class RoboServer implements RoboServerInterface{
 	public void turnRight() throws RemoteException{
 		try {
 			robo.turn(90, true);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}		
 	}
 
@@ -96,9 +110,11 @@ public class RoboServer implements RoboServerInterface{
 	public void turnAround() throws RemoteException{
 		try {
 			robo.turn(180, false);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}
 	}
 
@@ -106,9 +122,11 @@ public class RoboServer implements RoboServerInterface{
 	public void drivePID(int cm, int speed) throws RemoteException{
 		try {
 			robo.pidLightCm(speed, cm);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}
 	}
 
@@ -116,9 +134,11 @@ public class RoboServer implements RoboServerInterface{
 	public void stopDrive() throws RemoteException{
 		try {
 			robo.stopDrive();
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}
 	}
 	
@@ -130,17 +150,24 @@ public class RoboServer implements RoboServerInterface{
 			robo.driveCm(3, speed);
 			robo.driveUntilLight(speed, 5, "<=");
 			robo.driveCm(5, speed);
+			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			worker.printStatus(robo.getError());
 		}		
 	}
 
 	@Override
 	public String getStatus() throws RemoteException {
 		// TODO Auto-generated method stub
-		System.out.println("Moin");
 		return robo.getStatus();
+	}
+	
+	@Override
+	public String getError() throws RemoteException {
+		// TODO Auto-generated method stub
+		return robo.getError();
 	}
 	
 	@Override
@@ -150,6 +177,8 @@ public class RoboServer implements RoboServerInterface{
 			//Roboter sucht nach Worker im System. Erst jetzt steht fest kennt der Worker den Roboter und der Roboter den Worker.
 			worker = (WorkerInterface) registryW.lookup(name);
 			System.out.println("Mit Worker "+ name + " verbunden!");
+			worker.printStatus(robotName + " bereit!");
+			System.out.println(robotName + " bereit!");
 			worker.setWay("", "");
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
@@ -157,15 +186,28 @@ public class RoboServer implements RoboServerInterface{
 		}
 	}
 	
+	@Override
+	public void closeConnection() throws RemoteException{
+		worker.printStatus("Aufwiedersehen!\nBeende mein Programm!");
+		shutdown = true;
+	}
+	
 public static void main(String args[]) {
 	final int ROBO_NUMBER = 2;
 	
-	 dm = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "Durchmesser"));
-	 kp = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_p"));
-	 ki = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_i"));
-	 kd = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_d"));
+	double dm = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "Durchmesser"));
+	double kp = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_p"));
+	double ki = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_i"));
+	double kd = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_d"));
 	int port = Integer.parseInt(FileSystem.readProperties(ROBO_NUMBER, "RoboPort"));
-	String name = FileSystem.readProperties(ROBO_NUMBER, "Name");
+	robotName = FileSystem.readProperties(ROBO_NUMBER, "Name");
+	shutdown = false;
+	
+	RoboServerInterface obj;
+	RoboServerInterface stub;
+	Registry registryR;
+	ListenerInterface listener;
+	Registry registryL;
 
 	try {
 		robo = new Roboter(dm,kp,ki,kd);
@@ -174,29 +216,33 @@ public static void main(String args[]) {
 		e1.printStackTrace();
 	}     
 	
-        try {
-        	//Roboter registriert sich im System mit seinem Namen und dem Port 55555
-            RoboServerInterface obj = new RoboServer();
-            RoboServerInterface stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0);
-            LocateRegistry.createRegistry(port);
-            Registry registry = LocateRegistry.getRegistry(port);
-            registry.bind(name, stub);
-            
-            //Roboter sucht im System nach dem Listener
-            ListenerInterface listener;
-            Registry registryS = LocateRegistry.getRegistry("192.168.178.24", 55555);
-			listener = (ListenerInterface) registryS.lookup("Listener");
-			
-			InetAddress ipAddr = InetAddress.getLocalHost();
-            System.out.println(ipAddr.getHostAddress());
-			
-			listener.registerRobot(name, ipAddr.getHostAddress(), 55555);
-
-            System.err.println(name + " bereit!");
+		try {
+			//Roboter registriert sich im System mit seinem Namen und dem Port 55555
+    		obj = new RoboServer();
+    		stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0);
+    		LocateRegistry.createRegistry(port);
+    		registryR = LocateRegistry.getRegistry(port);
+    		registryR.bind(robotName, stub);
+    		
+			for (int i = 0; i < MAXTRY; ++i) {
+				try {            
+            		//Roboter sucht im System nach dem Listener
+            		registryL = LocateRegistry.getRegistry("192.168.178.24", 55555);
+            		listener = (ListenerInterface) registryL.lookup("Listener");
+            		i = MAXTRY;
+					InetAddress ipAddr = InetAddress.getLocalHost();
+					System.out.println(ipAddr.getHostAddress());			
+					listener.registerRobot(robotName, ipAddr.getHostAddress(), 55555);
+        		} catch (ConnectException e) {
+        			System.out.println("Server/Listener nicht erreichbar!");
+        			robo.waitMs(2000);
+        			if (i >= MAXTRY-1) {System.exit(0);}
+        		}
+			}
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
         }
-    }
-	
+		if (shutdown){System.exit(0);}
+    }	
 }
