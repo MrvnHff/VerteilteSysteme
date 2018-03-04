@@ -95,5 +95,43 @@ public class Worker extends Thread implements WorkerInterface{
 		listener.closeWorker(workerName);
 		this.interrupt();
 	}
-	
+
+	public void drive(int speed) throws RemoteException {
+		robo.drive(speed);
+	}
+
+	public void driveBack(int cm, int speed) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void turnLeft() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void turnRight() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void stopDrive() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void driveNextPoint(int speed) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getStatus() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getError() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 }

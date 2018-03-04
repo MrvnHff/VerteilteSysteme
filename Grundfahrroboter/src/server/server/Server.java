@@ -37,21 +37,25 @@ public class Server implements ServerInterface{
 		anzahl = 0;
 	}
 	
-	public void addWorker(Worker worker) {
-		this.worker[anzahl] = worker;
+	public void addWorker(Worker worker, int position) {
+		this.worker[position] = worker;
 		anzahl++;
 	}
 	
 	public void removeWorker(String workerName) {
 		int i = findWorker(workerName);
-		int j;
-		if (i >= 0) {
-			for (j = i; j < MAXWORKER-1; j++) {
-				worker[j] = worker[j+1];
-			}
-			worker[MAXWORKER-1] = null;
-			anzahl--;
+		worker[i] = null;
+	}
+	
+	private int findEmpty() {
+		for (int i = 0; i < MAXWORKER; i++) {
+			if (worker[i] == null) {return i;}
 		}
+		return -1;
+	}
+	
+	public int getNextFreeWorkerNumber() {
+		return findEmpty();
 	}
 	
 	private int findWorker(String workerName) {
@@ -93,7 +97,6 @@ public class Server implements ServerInterface{
 	public void turnRobotLeft(String robotId) {
 		roboGraph.turnRobotLeft(robotId);
 		//worker[findRobot(robotId)].turnLeft();
-		//toDo: methode die die bewegung an den physichen roboter kommuniziert
 	}
 	
 	
@@ -242,9 +245,18 @@ public class Server implements ServerInterface{
 	
 	/**
 	 * Zum Stoppen des Servers
+	 * @throws NotBoundException 
+	 * @throws RemoteException 
 	 */
 	public void stopServer() {
-		
+		listener.stopListener();
+		for (int i = 0; i < MAXWORKER; i++) {
+			if (worker[i] != null) {
+				try {
+					worker[i].closeConnection();
+				} catch (RemoteException | NotBoundException e) {}
+			}
+		}
 	}
 	
 	/**

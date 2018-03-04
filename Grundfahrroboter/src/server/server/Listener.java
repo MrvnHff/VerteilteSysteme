@@ -11,7 +11,6 @@ public class Listener extends Thread implements ListenerInterface{
 	private Worker worker;
 	private String ip;
 	private int port;
-	private int anzahl;
 	private Server server;
 	
 	public Listener(Server server, int max) {
@@ -24,7 +23,6 @@ public class Listener extends Thread implements ListenerInterface{
 			e.printStackTrace();
 		}
 		port = 55555;
-		anzahl = 0;
 		start();
 	}
 	
@@ -43,10 +41,10 @@ public class Listener extends Thread implements ListenerInterface{
 		// TODO Auto-generated method stub 
 		System.out.println("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
 		if (server.isAllowedToAddWorker()) {
-			anzahl++;
-			worker = new Worker(this, "Worker" + anzahl, roboName, ip, roboIp, port+anzahl, roboPort);
+			int index = server.getNextFreeWorkerNumber();
+			worker = new Worker(this, "Worker" + (index + 1), roboName, ip, roboIp, (port + index + 1), roboPort);
 			if (server != null) {
-				server.addWorker(worker);
+				server.addWorker(worker, index);
 			}
 		}else{
 			System.out.println("Maximale Anzahl an Workern ist erreicht! Es kann kein Roboter mehr dazukommen!");
@@ -74,7 +72,11 @@ public class Listener extends Thread implements ListenerInterface{
 		worker = null;
 		server.removeWorker(workerName);
 		System.out.println("Worker " + workerName + " beendet!\n");
-		anzahl--;
+	}
+	
+	@Override
+	public void stopListener() {
+		interrupted();
 	}
 }
 
