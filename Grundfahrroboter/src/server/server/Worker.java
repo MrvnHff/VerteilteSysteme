@@ -47,6 +47,9 @@ public class Worker implements WorkerInterface{
 	private void sayHello() throws RemoteException {
 		robo.registerWorker(workerName, workerIp, workerPort);		
 	}
+	
+	public String getRoboName() {return roboName;}
+	public String getWorkerName() {return workerName;}
 
 	@Override
 	public void setWay(String point1, String point2) throws RemoteException {

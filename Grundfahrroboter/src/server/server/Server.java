@@ -15,28 +15,58 @@ public class Server implements ServerInterface{
 	private Gui gui;
 	
 	private String serverLog;
-	private Registry registry;
 	private String robotLog;
 	private boolean robotFlag;
 	private boolean serverFlag;
-	private RoboServerInterface robo;
+	
+	private ListenerInterface listener;
+	private Worker[] worker;
+	private int anzahl;
 	
 	private RoboGraph roboGraph;
+	
+	private final static int MAXWORKER = 4;
 	
 	/**
 	 * Konstruktor
 	 */
 	public Server() {
-		roboGraph = new RoboGraph(3, 3);
-		/*try {
-			registry = LocateRegistry.getRegistry("192.168.178.26", 55555);
-			robo = (RoboServerInterface) registry.lookup("Robo2");
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}*/
-		
+		//roboGraph = new RoboGraph(3, 3);
+		listener = new Listener(this, MAXWORKER);
+		worker = new Worker[MAXWORKER];
+		anzahl = 0;
+	}
+	
+	public void addWorker(Worker worker) {
+		this.worker[anzahl] = worker;
+		anzahl++;
+	}
+	
+	public void removeWorker(Worker worker) {
+		int i = findWorker(worker);
+		int j;
+		if (i >= 0) {
+			for (j = i; j < MAXWORKER-1; j++) {
+				this.worker[j] = this.worker[j+1];
+			}
+			this.worker[j+1] = null;
+			anzahl--;
+		}
+	}
+	
+	private int findWorker(Worker worker) {
+		int i = 0;
+		for (i = 0; i < MAXWORKER; i++) {
+			if (this.worker[i].getWorkerName() == worker.getWorkerName()) {return i;}
+		}
+		return -1;
+	}
+	
+	public boolean isAllowedToAddWorker() {
+		if (anzahl < MAXWORKER) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
