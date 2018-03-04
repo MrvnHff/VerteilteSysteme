@@ -190,7 +190,7 @@ public class RoboServer implements RoboServerInterface{
 	
 	@Override
 	public void closeConnection() throws RemoteException{
-		worker.printStatus("Aufwiedersehen!\nBeende mein Programm!");
+		worker.printStatus("Aufwiedersehen! Beende mein Programm!");
 		shutdown = true;
 	}
 	

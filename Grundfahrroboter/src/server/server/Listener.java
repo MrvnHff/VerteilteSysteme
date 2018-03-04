@@ -67,6 +67,7 @@ public class Listener implements ListenerInterface{
 	
 	public void closeWorker(String workerName) {
 		worker = null;
+		server.removeWorker(workerName);
 		System.out.println("Worker " + workerName + " beendet!\n");
 		anzahl--;
 	}

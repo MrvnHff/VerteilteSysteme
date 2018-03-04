@@ -11,7 +11,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import client.RoboServerInterface;
 
-public class Worker implements WorkerInterface{
+public class Worker extends Thread implements WorkerInterface{
 	private WorkerInterface stub;
 	private RoboServerInterface robo;
 	private Registry registryW;
@@ -33,15 +33,19 @@ public class Worker implements WorkerInterface{
 		this.roboIp = roboIp;
 		this.roboName = roboName;
 		this.roboPort = roboPort;
-		
+		start();
+	}
+	
+	public void run() {
 		try {
-			registerWorker();
+			registerWorker();		
 			registerRobot();
-			closeConnection();
+			//closeConnection();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		while (!isInterrupted()) {}
 	}
 
 	private void sayHello() throws RemoteException {
@@ -85,10 +89,11 @@ public class Worker implements WorkerInterface{
 		sayHello();
 	}
 	
-	private void closeConnection() throws RemoteException, NotBoundException {
+	public void closeConnection() throws RemoteException, NotBoundException {
 		robo.closeConnection();
 		registryW.unbind(workerName);
 		listener.closeWorker(workerName);
+		this.interrupt();
 	}
 	
 }
