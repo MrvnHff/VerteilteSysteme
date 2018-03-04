@@ -14,6 +14,7 @@ public interface ServerInterface {
 	public void turnRobotLeftGui(String robotId);
 	public void moveRobotForwardGui(String robotId);
 	public void driveRobotTo(String robotId, String destination);
+	
 	public String getRoboErrorLog();
 	public String getRoboLog();
 	public void printRoboErrorLog(String roboErrorLog);

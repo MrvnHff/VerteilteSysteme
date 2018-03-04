@@ -38,32 +38,52 @@ public class Server implements ServerInterface{
 		
 	}
 
+	/**
+	 * gibt die Fehler des Roboters zurück.
+	 * @return roboErrorLog
+	 */
 	public String getRoboErrorLog() {
 		return this.roboErrorLog;
 	}
-
-
-
+	
+	/**
+	 * gibt den Log des Roboters zurück
+	 * @return roboLog
+	 */
 	public String getRoboLog() {
 		return this.roboLog;
 	}
 	
+	/**
+	 * Diese Methode schreibt Fehler kommend vom Roboter.
+	 * @param roboErrorLog
+	 */
 	public void printRoboErrorLog(String roboErrorLog) {
 		this.roboErrorLog = roboErrorLog;
 	}
-
-
-
+	
+	/**
+	 * Zum Schreiben von Log(Meldungen) des Roboters.
+	 * @param roboLog
+	 */
 	public void printRoboLog(String roboLog) {
 		this.roboLog = roboLog;
 	}
 
 
+	/**
+	 * Gibt den Log des Servers zurück.
+	 * @return serverLog
+	 */
 	public String getServerLog() {
 		return this.serverLog;
 	}
 
 
+	/**
+	 * Zum Schreiben von Server logs
+	 * @param serverLog
+	 */
 	public void printServerLog(String serverLog) {
 		this.serverLog = serverLog;
 	}
@@ -86,7 +106,10 @@ public class Server implements ServerInterface{
 		//toDo: methode die die bewegung an den physichen roboter kommuniziert
 	}
 	
-	
+	/**
+	 * 
+	 * @param robotId
+	 */
 	public void turnRobotLeftGui(String robotId) {
 		turnRobotLeft(robotId);
 		gui.turnRobotLeft(robotId);
@@ -100,17 +123,29 @@ public class Server implements ServerInterface{
 		//toDo: methode die die bewegung an den physichen roboter kommuniziert
 	}
 	
+	/**
+	 * 
+	 * @param robotId
+	 */
 	public void turnRobotRightGui(String robotId) {
 		turnRobotRight(robotId);
 		gui.turnRobotRight(robotId);
 	}
 	
+	/**
+	 * 
+	 * @param robotId
+	 */
 	public String moveRobotForward(String robotId) {
 		String destination = roboGraph.moveRobotForward(robotId);
 		//toDo: methode die die bewegung an den physichen roboter kommuniziert
 		return destination;
 	}
 	
+	/**
+	 * 
+	 * @param robotId
+	 */
 	public void moveRobotForwardGui(String robotId) {
 		try {
 				String destination = moveRobotForward(robotId);
@@ -135,7 +170,10 @@ public class Server implements ServerInterface{
 		}
 	}
 	
-	
+	/**
+	 * @param robotId
+	 * @param destination
+	 */
 	public void driveRobotTo(String robotId, String destination) {
 		String position = roboGraph.getRobotPosition(robotId);
 		List<String> path = roboGraph.getShortesPath(robotId, destination);
@@ -157,6 +195,11 @@ public class Server implements ServerInterface{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param rotationsNeeded
+	 * @param robotId
+	 */
 	private void turnRobot(int rotationsNeeded, String robotId) {
 		switch(rotationsNeeded) {
 			case 1: turnRobotRightGui(robotId);
@@ -177,6 +220,10 @@ public class Server implements ServerInterface{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param gui
+	 */
 	public void setGui(Gui gui) {
 		this.gui = gui;
 		//Wird momentan hier nur zum testen hinzugefÃ¼gt. die Roboter sollen spÃ¤ter natÃ¼rlich dynamisch hinzugefÃ¼gt werden sobald sie sich mit dem Server verbinden

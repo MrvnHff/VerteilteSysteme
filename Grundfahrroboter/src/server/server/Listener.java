@@ -12,6 +12,7 @@ public class Listener implements ListenerInterface{
 	private String ip;
 	private int port;
 	private int anzahl;
+	
 	private Listener() {
 		InetAddress ipAddr;
 		try {
