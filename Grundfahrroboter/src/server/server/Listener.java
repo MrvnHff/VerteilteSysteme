@@ -7,7 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Listener implements ListenerInterface{
+public class Listener extends Thread implements ListenerInterface{
 	private Worker worker;
 	private String ip;
 	private int port;
@@ -25,7 +25,12 @@ public class Listener implements ListenerInterface{
 		}
 		port = 55555;
 		anzahl = 0;
+		start();
+	}
+	
+	public void run(){
 		registerListener();
+		while (!isInterrupted()) {}
 	}
 
 //	public static void main(String args[]) {
