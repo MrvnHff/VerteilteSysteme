@@ -25,4 +25,7 @@ public interface ServerInterface {
 	public void startServer();
 	public void stopServer();
 	public void printRobotLog(String log, boolean flag);
+	
+	public void addRobotTextMessage(String robotId, String message);
+	public void addServerTextMessage(String message);
 }

@@ -27,7 +27,7 @@ import javafx.stage.Stage;
 
 public class Gui extends Application {
 	
-	//TODO Server anhalten, wenn das Fenster geschlossen wird
+	//FIXME Server anhalten, wenn das Fenster geschlossen wird
 
 	private static final String CONFIG_FILENAME = "resources/config/config";
 	private static final String FXML_BUNDLE_FILENAME = "resources/config/fxml_files";
@@ -71,6 +71,7 @@ public class Gui extends Application {
 		this.primaryStage.setTitle(config.getString("general.title"));
 		
 		initRootLayout();
+		
 		server.setGui(this);
 		
 	}
@@ -130,6 +131,11 @@ public class Gui extends Application {
 	public void addRobot(String robotId, String position) {
 		flow.getChildren().add(buildRobotPane(robotId, position));
 		rl.moveRobotTo(robotId, position);
+	}
+	
+	public void removeRobot(String robotId) {
+		//FIXME removeRobot-Methode in der GUI implementieren
+		return;
 	}
 	
 	private BorderPane buildRobotPane(String robotId, String position) {

@@ -22,45 +22,74 @@ public class Server implements ServerInterface{
 	private ListenerInterface listener;
 	private Worker[] worker;
 	private int anzahl;
+	private int maxWorker;
 	
 	private RoboGraph roboGraph;
 	
-	private final static int MAXWORKER = 4;
+	private final static int STD_MAXWORKER = 4;
+	private final static int STD_LISTENER_PORT = 55555;
+	private final static int STD_GRAPH_ROWS = 3;
+	private final static int STD_GRAPH_COMLUMNS = 3;
 	
 	/**
-	 * Konstruktor
+	 * Standard-Konstruktor erzeugt einen Standard-Graphen (3x3),
+	 * startet einen Listener am Standard Port (55555) an,
+	 * legt den Standardwert für die maximale Workerzahl fest (4)
 	 */
 	public Server() {
-		roboGraph = new RoboGraph(3, 3);
-		listener = new Listener(this, MAXWORKER);
-		worker = new Worker[MAXWORKER];
+		this(STD_GRAPH_ROWS, STD_GRAPH_COMLUMNS, STD_LISTENER_PORT, STD_MAXWORKER);
+	}
+	
+	/**
+	 * Konstruktor der einen Server mit den angegebenen Parametern startet
+	 * @param graphRows Anzahl der vertikalen Knoten des Graphen
+	 * @param graphColumns Anzahl der horizontalen Knoten des Graphen
+	 * @param port Port, an dem der Listener gestartet werden soll
+	 * @param maxWorker Maximale Anzahl an Worker (und somit auch an registrierbaren Robotern)
+	 */
+	public Server(int graphRows, int graphColumns, int port, int maxWorker) {
+		roboGraph = new RoboGraph(graphRows, graphColumns);
+		listener = new Listener(this, port);
+		worker = new Worker[maxWorker];
 		anzahl = 0;
 	}
 	
+	/**
+	 * Registriert einen neuen Worker beim Server und fügt den Roboter dem Graphen hinzu
+	 * @param worker Das Worker Objekt
+	 * @param position Die Position, an die der Worker geschrieben werden soll
+	 */
 	public void addWorker(Worker worker, int position) {
 		this.worker[position] = worker;
 		anzahl++;
+		addRobot(this.worker[position].getRoboName());
 	}
 	
+	/**
+	 * Entfernt den Worker und den Roboter aus dem Graphen
+	 * @param workerName
+	 */
 	public void removeWorker(String workerName) {
 		int i = findWorker(workerName);
+		removeRobot(this.worker[i].getRoboName());
 		worker[i] = null;
+		i--;
+		
 	}
+
 	
-	private int findEmpty() {
-		for (int i = 0; i < MAXWORKER; i++) {
-			if (worker[i] == null) {return i;}
+	public int getNextFreeWorkerNumber() {
+		for (int i = 0; i < maxWorker; i++) {
+			if (worker[i] == null) {
+				return i;
+			}
 		}
 		return -1;
 	}
 	
-	public int getNextFreeWorkerNumber() {
-		return findEmpty();
-	}
-	
 	private int findWorker(String workerName) {
 		int i = 0;
-		for (i = 0; i < MAXWORKER; i++) {
+		for (i = 0; i < maxWorker; i++) {
 			if (worker[i].getWorkerName() == workerName) {return i;}
 		}
 		return -1;
@@ -68,17 +97,14 @@ public class Server implements ServerInterface{
 	
 	private int findRobot(String robotName) {
 		int i = 0;
-		for (i = 0; i < MAXWORKER; i++) {
+		for (i = 0; i < maxWorker; i++) {
 			if (worker[i].getRoboName() == robotName) {return i;}
 		}
 		return -1;
 	}
 	
 	public boolean isAllowedToAddWorker() {
-		if (anzahl < MAXWORKER) {
-			return true;
-		}
-		return false;
+		return(anzahl < maxWorker);
 	}
 	
 	/**
@@ -89,6 +115,11 @@ public class Server implements ServerInterface{
 		String position;
 		position = roboGraph.addRobot(robotId);
 		gui.addRobot(robotId, position);
+	}
+	
+	private void removeRobot(String robotId) {
+		roboGraph.removeRobot(robotId);
+		gui.removeRobot(robotId);
 	}
 	
 	/*###############################################
@@ -197,7 +228,6 @@ public class Server implements ServerInterface{
 	
 	public void setGui(Gui gui) {
 		this.gui = gui;
-		//TODO roboter in der GUI registrieren
 		//Wird momentan hier nur zum testen hinzugefÃ¼gt. die Roboter sollen spÃ¤ter natÃ¼rlich dynamisch hinzugefÃ¼gt werden sobald sie sich mit dem Server verbinden
 		//addRobot("George");
 		//addRobot("Jane");
@@ -260,7 +290,7 @@ public class Server implements ServerInterface{
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		for (int i = 0; i < MAXWORKER; i++) {
+		for (int i = 0; i < maxWorker; i++) {
 			if (worker[i] != null) {
 				try {
 					worker[i].closeConnection();
@@ -286,6 +316,34 @@ public class Server implements ServerInterface{
     public void printRobotLog(String robotLog, boolean robotFlag){
     	this.robotFlag = robotFlag;
     	this.robotLog = robotLog;
+    }
+    
+    /**
+     * Fügt eine Meldung in das Textfeld eines Roboters in der GUI hinzu.
+     * Ist keine GUI registriert, wird die Ausgabe auf die Kommandozeile umgelenkt.
+     * @param robotId Die ID des Roboters
+     * @param message Die Meldung die hinzugefügt werden soll
+     */
+    public void addRobotTextMessage(String robotId, String message) {
+    	if(gui != null) {
+    		gui.addRobotTextMessage(robotId, message);
+    	} else {
+    		System.out.println("Keine GUI registriert. Meldung: " + robotId + ": " + message);
+    	}
+    }
+    
+    
+    /**
+     * Für eine Meldung in das Textfeld des Servers in der GUI hinzu.
+     * Ist keine GUI registriert, wird die Ausgabe auf die Kommandozeile umgelenkt.
+     * @param message Die Nachricht die hinzugefügt werden soll
+     */
+    public void addServerTextMessage(String message) {
+    	if(gui != null) {
+    		gui.addServerTextMessage(message);
+    	} else {
+    		System.out.println("Keine GUI registriert. Servermeldung: " + message);
+    	}
     }
 
 	

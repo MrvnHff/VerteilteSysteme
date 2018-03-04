@@ -13,7 +13,12 @@ public class Listener extends Thread implements ListenerInterface{
 	private int port;
 	private Server server;
 	
-	public Listener(Server server, int max) {
+	/**
+	 * Startmethode für den Listener
+	 * @param server Referenz auf den Server, für den der Listener gestartet wurde
+	 * @param port Port, an dem der Listener horchen soll
+	 */
+	public Listener(Server server, int port) {
 		this.server = server;
 		InetAddress ipAddr;
 		try {
@@ -22,7 +27,7 @@ public class Listener extends Thread implements ListenerInterface{
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		port = 55555;
+		this.port = port;
 		start();
 	}
 	
@@ -38,6 +43,7 @@ public class Listener extends Thread implements ListenerInterface{
 
 	@Override
 	public void registerRobot(String roboName, String roboIp, int roboPort) throws RemoteException {
+		server.addServerTextMessage("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
 		System.out.println("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
 		if (server.isAllowedToAddWorker()) {
 			int index = server.getNextFreeWorkerNumber();
@@ -46,10 +52,12 @@ public class Listener extends Thread implements ListenerInterface{
 				server.addWorker(worker, index);
 			}
 		}else{
+			server.addServerTextMessage("Maximale Anzahl an Workern ist erreicht! Es kann kein Roboter mehr dazukommen!");
 			System.out.println("Maximale Anzahl an Workern ist erreicht! Es kann kein Roboter mehr dazukommen!");
 		}
 	}
 	
+
 	private void registerListener() {
 		try {
 			//Listener meldet sich im System an unter Port 55555
@@ -61,7 +69,9 @@ public class Listener extends Thread implements ListenerInterface{
 	        try {
 				registry.bind("Listener", stub);
 			} catch (Exception e) {}
-			System.out.println("Listener bereit!");
+	        // TODO Meldung beim Server bringt eine NULL-Pointer, da die GUI zu diesem Zeitpunkt noch nicht registriert ist
+			System.out.println("Listener bereit! IP: " + ip + " Port: " + port);
+			server.addServerTextMessage("Listener gestartet. IP: " + ip + " Port: " + port);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
