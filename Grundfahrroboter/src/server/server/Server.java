@@ -31,7 +31,7 @@ public class Server implements ServerInterface{
 	 * Konstruktor
 	 */
 	public Server() {
-		//roboGraph = new RoboGraph(3, 3);
+		roboGraph = new RoboGraph(3, 3);
 		listener = new Listener(this, MAXWORKER);
 		worker = new Worker[MAXWORKER];
 		anzahl = 0;
@@ -249,7 +249,11 @@ public class Server implements ServerInterface{
 	 * @throws RemoteException 
 	 */
 	public void stopServer() {
-		listener.stopListener();
+		try {
+			listener.stopListener();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 		for (int i = 0; i < MAXWORKER; i++) {
 			if (worker[i] != null) {
 				try {
