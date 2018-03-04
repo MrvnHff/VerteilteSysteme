@@ -15,10 +15,9 @@ public class Server implements ServerInterface{
 	private Gui gui;
 	
 	private String serverLog;
+	private String roboErrorLog;
+	private String roboLog;
 	private Registry registry;
-	private String robotLog;
-	private boolean robotFlag;
-	private boolean serverFlag;
 	private RoboServerInterface robo;
 	
 	private RoboGraph roboGraph;
@@ -37,6 +36,36 @@ public class Server implements ServerInterface{
 			e.printStackTrace();
 		}*/
 		
+	}
+
+	public String getRoboErrorLog() {
+		return this.roboErrorLog;
+	}
+
+
+
+	public String getRoboLog() {
+		return this.roboLog;
+	}
+	
+	public void printRoboErrorLog(String roboErrorLog) {
+		this.roboErrorLog = roboErrorLog;
+	}
+
+
+
+	public void printRoboLog(String roboLog) {
+		this.roboLog = roboLog;
+	}
+
+
+	public String getServerLog() {
+		return this.serverLog;
+	}
+
+
+	public void printServerLog(String serverLog) {
+		this.serverLog = serverLog;
 	}
 	
 	/**
@@ -166,34 +195,6 @@ public class Server implements ServerInterface{
 		return this.roboGraph;
 	}
 	
-	public boolean getServerFlag() {
-		// TODO Auto-generated method stub
-		return this.serverFlag;
-	}
-
-	
-	public String getServerLog() {
-		// TODO Auto-generated method stub
-		return this.serverLog;
-	}
-	
-	
-	/**
-	 * Die Methode gibt den log des Roboters zurück
-	 * @return robotLog
-	 */
-	public String getRobotLog() {
-        return this.robotLog;
-    }
-	
-    /**
-     * Stellt den Art des Logs des Roboters fest.
-     * @return robotStatus
-     */
-    public boolean getRobotFlag() {
-        return this.robotFlag;
-    }
-    
 	/**
 	 * Zum Starten des Servers
 	 */
@@ -207,26 +208,6 @@ public class Server implements ServerInterface{
 	public void stopServer() {
 		
 	}
-	
-	/**
-	 * Zum Schreiben Des logs des Servers.
-	 * @param log
-	 */
-    private void printServerLog(String serverLog, boolean serverFlag){
-    	this.serverLog = serverLog;
-    	this.serverFlag = serverFlag;
-    }
-    
-    /**
-     * Zum Schreiben Des logs des Roboters.
-     * @param log
-     * @param flag
-     */
-    public void printRobotLog(String robotLog, boolean robotFlag){
-    	this.robotFlag = robotFlag;
-    	this.robotLog = robotLog;
-    }
-
 	
 	
 	public static void main(String[] args) {

@@ -14,14 +14,16 @@ public interface ServerInterface {
 	public void turnRobotLeftGui(String robotId);
 	public void moveRobotForwardGui(String robotId);
 	public void driveRobotTo(String robotId, String destination);
+	public String getRoboErrorLog();
+	public String getRoboLog();
+	public void printRoboErrorLog(String roboErrorLog);
+	public void printRoboLog(String roboLog);
+	public String getServerLog();
 	
 	public void setGui(Gui gui);
 	public RoboGraph getRoboGraph();
-	public String getRobotLog();
-	public boolean getRobotFlag();
-	public boolean getServerFlag();
-	public String getServerLog();
 	public void startServer();
 	public void stopServer();
-	public void printRobotLog(String log, boolean flag);
+	
+	
 }
