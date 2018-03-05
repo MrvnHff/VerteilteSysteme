@@ -64,12 +64,14 @@ public class Worker extends Thread implements WorkerInterface{
 
 	@Override
 	public void printStatus(String s) throws RemoteException {
-		System.out.println("Statusmeldung: " + s);		
+		System.out.println("Statusmeldung: " + s);	
+		server.addRobotTextMessage(roboName, s);
 	}
 
 	@Override
 	public void printError(String s) throws RemoteException {
 		System.out.println("Fehlermeldung: " + s);		
+		server.addRobotTextMessage(roboName, s);
 	}
 
 	private void registerWorker() throws AccessException, RemoteException, AlreadyBoundException {
