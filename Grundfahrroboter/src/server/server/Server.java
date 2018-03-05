@@ -63,26 +63,39 @@ public class Server implements ServerInterface{
 	 * @param position Die Position, an die der Worker geschrieben werden soll
 	 */
 	public void addWorker(Worker worker, int position) {
+		if(findWorker(worker.getName()) >= 0) {
+			removeWorker(worker.getName());
+		}
 		this.worker[position] = worker;
 		anzahl++;
 		addRobot(this.worker[position].getRoboName());
 	}
 	
 	/**
-	 * Entfernt den Worker und den Roboter aus dem Graphen
+	 * Entfernt den Worker und den Roboter aus dem Graphen anhand des Worker Namens
 	 * @param workerName
 	 */
 	public void removeWorker(String workerName) {
 		int i = findWorker(workerName);
-		removeRobot(this.worker[i].getRoboName());
+		removeWorker(i);
+	}
+	
+	/**
+	 * Entfernt den Worker und den Roboter aus dem Graphen anhand der Worker Position im Array
+	 * @param position Index des Worker Arrays, an welcher der Worker entfernt werden soll
+	 */
+	private void removeWorker(int position) {
+		//TODO Fehlerbehandlung für ungültigen Parameter
+		//Entfernen des Roboters aus dem Graphen
+		removeRobot(this.worker[position].getRoboName());
+		//Anhalten des Workers
 		try {
-			worker[i].closeConnection();
+			worker[position].closeConnection();
 		} catch (RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}
-		worker[i] = null;
-		i--;
-		
+		worker[position] = null;
+		anzahl--;		
 	}
 
 	
@@ -103,7 +116,7 @@ public class Server implements ServerInterface{
 		return -1;
 	}
 	
-	private int findRobot(String robotName) {
+	private int findWorkertoRobotId(String robotName) {
 		int i = 0;
 		for (i = 0; i < maxWorker; i++) {
 			if (worker[i].getRoboName() == robotName) {return i;}
@@ -141,7 +154,7 @@ public class Server implements ServerInterface{
 	public void turnRobotLeft(String robotId) {
 		roboGraph.turnRobotLeft(robotId);
 		try {
-			worker[findRobot(robotId)].turnLeft();
+			worker[findWorkertoRobotId(robotId)].turnLeft();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -160,7 +173,7 @@ public class Server implements ServerInterface{
 	public void turnRobotRight(String robotId) {
 		roboGraph.turnRobotRight(robotId);
 		try {
-			worker[findRobot(robotId)].turnRight();
+			worker[findWorkertoRobotId(robotId)].turnRight();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -176,7 +189,7 @@ public class Server implements ServerInterface{
 		String destination = roboGraph.moveRobotForward(robotId);
 		//TODO Geschwindigkeit nicht fest an Roboter übergeben
 		try {
-			worker[findRobot(robotId)].driveNextPoint(50);
+			worker[findWorkertoRobotId(robotId)].driveNextPoint(50);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -387,6 +400,7 @@ public class Server implements ServerInterface{
        			int port = Integer.parseInt(args[2]);
        			int workerMax = Integer.parseInt(args[3]);
        			Server server = new Server(rows, columns, port, workerMax);
+       			server.startServer();
        		} catch (ArrayIndexOutOfBoundsException e) {
        			System.out.println("Keinen Server gestartet. Zu wenige Parameter übergeben!");
        		} catch (NumberFormatException e) {
