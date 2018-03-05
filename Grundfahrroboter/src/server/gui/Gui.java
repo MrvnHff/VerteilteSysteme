@@ -75,6 +75,11 @@ public class Gui extends Application {
 		server.setGui(this);
 		
 	}
+	
+	@Override
+	public void stop() {
+		server.stopServer();
+	}
 
 	private void initRootLayout() {
 		try {
