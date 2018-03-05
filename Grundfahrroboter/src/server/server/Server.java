@@ -75,6 +75,11 @@ public class Server implements ServerInterface{
 	public void removeWorker(String workerName) {
 		int i = findWorker(workerName);
 		removeRobot(this.worker[i].getRoboName());
+		try {
+			worker[i].closeConnection();
+		} catch (RemoteException | NotBoundException e) {
+			e.printStackTrace();
+		}
 		worker[i] = null;
 		i--;
 		

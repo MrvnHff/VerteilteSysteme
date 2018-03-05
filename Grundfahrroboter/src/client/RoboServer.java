@@ -17,7 +17,7 @@ import server.server.WorkerInterface;
 
 public class RoboServer implements RoboServerInterface{
 	private static Roboter robo;
-	private WorkerInterface worker;
+	private static WorkerInterface worker;
 	private Registry registryW;
 	
 	private static String robotName;
@@ -181,6 +181,7 @@ public class RoboServer implements RoboServerInterface{
 	public void closeConnection() throws RemoteException{
 		worker.printStatus("Aufwiedersehen! Beende mein Programm!");
 		shutdown = true;
+		System.exit(0);
 	}
 	
 public static void main(String args[]) {
@@ -233,6 +234,11 @@ public static void main(String args[]) {
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
+            try {
+				worker.printError(e.toString());
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
         }
 		if (shutdown){System.exit(0);}
     }	
