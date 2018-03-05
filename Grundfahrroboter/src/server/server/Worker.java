@@ -34,6 +34,7 @@ public class Worker extends Thread implements WorkerInterface{
 		this.roboIp = roboIp;
 		this.roboName = roboName;
 		this.roboPort = roboPort;
+		this.server = server;
 		start();
 	}
 	
