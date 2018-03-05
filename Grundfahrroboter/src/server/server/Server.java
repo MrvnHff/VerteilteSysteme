@@ -348,8 +348,28 @@ public class Server implements ServerInterface{
 
 	
 	
+    /**
+	 * Main-Methode, um den Server als Standalone ohne GUI zu starten.
+	 * @param args Parameterliste: Leer um einen Server mit den Standardparametern zu starten, sonst: rowCount columnCount portNumber maxWorkers
+	 */
 	public static void main(String[] args) {
-        Server server = new Server();
+        if(args.length == 0) {
+        	Server server = new Server();
+        } else {
+       		try {
+       			int rows = Integer.parseInt(args[0]);
+       			int columns = Integer.parseInt(args[1]);
+       			int port = Integer.parseInt(args[2]);
+       			int workerMax = Integer.parseInt(args[3]);
+       			Server server = new Server(rows, columns, port, workerMax);
+       		} catch (ArrayIndexOutOfBoundsException e) {
+       			System.out.println("Keinen Server gestartet. Zu wenige Parameter übergeben!");
+       		} catch (NumberFormatException e) {
+       			System.out.println("Keinen Server gestartet. Parameter in ungültigem Format eingegeben!");
+       		} finally {
+       			System.out.println("Zu übergebende Parameterliste: rowCount columnCount portNumber maxWorkers");
+       		} 	
+        }
     }
 	
 }
