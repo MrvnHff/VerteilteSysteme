@@ -32,3 +32,5 @@ Dateiabfrage/server/cmake-build-debug/
 *.class
 
 Grundfahrroboter/bin
+
+*.jar
