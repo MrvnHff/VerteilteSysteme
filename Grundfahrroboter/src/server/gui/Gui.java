@@ -73,6 +73,7 @@ public class Gui extends Application {
 		initRootLayout();
 		
 		server.setGui(this);
+		server.startServer();
 		
 	}
 	

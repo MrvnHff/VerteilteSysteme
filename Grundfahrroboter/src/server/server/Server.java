@@ -26,6 +26,8 @@ public class Server implements ServerInterface{
 	
 	private RoboGraph roboGraph;
 	
+	private int port;
+	
 	private final static int STD_MAXWORKER = 4;
 	private final static int STD_LISTENER_PORT = 55555;
 	private final static int STD_GRAPH_ROWS = 3;
@@ -49,10 +51,10 @@ public class Server implements ServerInterface{
 	 */
 	public Server(int graphRows, int graphColumns, int port, int maxWorker) {
 		roboGraph = new RoboGraph(graphRows, graphColumns);
-		listener = new Listener(this, port);
 		worker = new Worker[maxWorker];
 		this.maxWorker = maxWorker;
 		anzahl = 0;
+		this.port= port;
 	}
 	
 	/**
@@ -277,7 +279,7 @@ public class Server implements ServerInterface{
 	 * Zum Starten des Servers
 	 */
 	public void startServer() {
-		
+		listener = new Listener(this, port);
 	}
 	
 	/**
