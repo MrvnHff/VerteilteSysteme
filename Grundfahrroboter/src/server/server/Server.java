@@ -290,7 +290,8 @@ public class Server implements ServerInterface{
 	public void stopServer() {
 		try {
 			listener.stopListener();
-		} catch (RemoteException e) {
+			listener = null;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		for (int i = 0; i < maxWorker; i++) {

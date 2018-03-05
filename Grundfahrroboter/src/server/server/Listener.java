@@ -2,6 +2,7 @@ package server.server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -12,6 +13,7 @@ public class Listener extends Thread implements ListenerInterface{
 	private String ip;
 	private int port;
 	private Server server;
+	private Registry registry;
 	
 	/**
 	 * Startmethode für den Listener
@@ -65,7 +67,7 @@ public class Listener extends Thread implements ListenerInterface{
 	        try {
 				LocateRegistry.createRegistry(port);
 			} catch (Exception e) {}
-	        Registry registry = LocateRegistry.getRegistry(port);
+	        registry = LocateRegistry.getRegistry(port);
 	        try {
 				registry.bind("Listener", stub);
 			} catch (Exception e) {}
@@ -85,7 +87,7 @@ public class Listener extends Thread implements ListenerInterface{
 	
 	@Override
 	public void stopListener() {
-		interrupted();
+		this.interrupt();
 	}
 }
 
