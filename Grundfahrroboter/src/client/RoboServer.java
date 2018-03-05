@@ -184,7 +184,7 @@ public class RoboServer implements RoboServerInterface{
 	}
 	
 public static void main(String args[]) {
-	final int ROBO_NUMBER = 2;
+	final int ROBO_NUMBER = 1;
 	
 	double dm = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "Durchmesser"));
 	double kp = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_p"));
