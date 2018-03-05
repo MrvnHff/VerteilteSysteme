@@ -47,7 +47,7 @@ public class Listener extends Thread implements ListenerInterface{
 		System.out.println("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
 		if (server.isAllowedToAddWorker()) {
 			int index = server.getNextFreeWorkerNumber();
-			worker = new Worker(this, "Worker" + (index + 1), roboName, ip, roboIp, (port + index + 1), roboPort);
+			worker = new Worker(this.server, this, "Worker" + (index + 1), roboName, ip, roboIp, (port + index + 1), roboPort);
 			if (server != null) {
 				server.addWorker(worker, index);
 			}

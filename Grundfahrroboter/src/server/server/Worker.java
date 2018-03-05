@@ -17,6 +17,7 @@ public class Worker extends Thread implements WorkerInterface{
 	private Registry registryW;
 	private Registry registryR;
 	private Listener listener;
+	private Server server;
 	
 	private String workerIp;
 	private int workerPort;
@@ -25,7 +26,7 @@ public class Worker extends Thread implements WorkerInterface{
 	private String workerName;
 	private String roboName;
 	
-	public Worker(Listener listener, String workerName, String roboName, String workerIp, String roboIp, int workerPort, int roboPort) {
+	public Worker(Server server, Listener listener, String workerName, String roboName, String workerIp, String roboIp, int workerPort, int roboPort) {
 		this.listener = listener;
 		this.workerIp = workerIp;
 		this.workerName = workerName;
@@ -57,7 +58,7 @@ public class Worker extends Thread implements WorkerInterface{
 
 	@Override
 	public void setWay(String point1, String point2) throws RemoteException {
-		robo.driveCm(10, 20);
+		//robo.driveCm(10, 20);
 		System.out.println("Statusabruf: " + robo.getStatus());
 	}
 

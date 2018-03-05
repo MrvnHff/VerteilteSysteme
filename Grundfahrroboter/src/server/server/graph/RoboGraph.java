@@ -133,6 +133,8 @@ public class RoboGraph {
 	
 	public void removeRobot(String robotId) {
 		//FIXME removeRobot-Methode im Graph implementieren
+		RoboNode node = this.getRobotById(robotId);
+		node.setRobotId(null);
 		return;
 	}
 	

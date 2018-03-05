@@ -15,6 +15,7 @@ import server.gui.layout.grid.GridLayout;
 import server.gui.layout.robot.RobotLayout;
 import server.server.Server;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -134,13 +135,20 @@ public class Gui extends Application {
 		rootLayout.setCenter(splitPane2);
 	}
 	
-	public void addRobot(String robotId, String position) {
-		flow.getChildren().add(buildRobotPane(robotId, position));
-		rl.moveRobotTo(robotId, position);
+	public void addRobot(final String robotId, final String position) {
+		Platform.runLater(new Runnable() {
+            @Override public void run() {
+            	flow.getChildren().add(buildRobotPane(robotId, position));
+        		rl.moveRobotTo(robotId, position);
+            }
+        });
+		
 	}
 	
 	public void removeRobot(String robotId) {
 		//FIXME removeRobot-Methode in der GUI implementieren
+		//graph.getModel().removeCell();
+		graph.endUpdate();
 		return;
 	}
 	

@@ -135,7 +135,12 @@ public class Server implements ServerInterface{
 	 */
 	public void turnRobotLeft(String robotId) {
 		roboGraph.turnRobotLeft(robotId);
-		//worker[findRobot(robotId)].turnLeft();
+		try {
+			worker[findRobot(robotId)].turnLeft();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -149,7 +154,12 @@ public class Server implements ServerInterface{
 	 */
 	public void turnRobotRight(String robotId) {
 		roboGraph.turnRobotRight(robotId);
-		//worker[findRobot(robotId)].turnRight();
+		try {
+			worker[findRobot(robotId)].turnRight();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void turnRobotRightGui(String robotId) {
@@ -160,7 +170,12 @@ public class Server implements ServerInterface{
 	public String moveRobotForward(String robotId) {
 		String destination = roboGraph.moveRobotForward(robotId);
 		//TODO Geschwindigkeit nicht fest an Roboter �bergeben
-		//worker[findRobot(robotId)].driveNextPoint(50);
+		try {
+			worker[findRobot(robotId)].driveNextPoint(50);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return destination;
 	}
 	
@@ -233,6 +248,7 @@ public class Server implements ServerInterface{
 		this.gui = gui;
 		//Wird momentan hier nur zum testen hinzugefügt. die Roboter sollen später natürlich dynamisch hinzugefügt werden sobald sie sich mit dem Server verbinden
 		//addRobot("George");
+		//this.removeRobot("George");
 		//addRobot("Jane");
 		//gui.addServerTextMessage("Hello World");
 		//gui.addRobotTextMessage("George", "Hello George");
