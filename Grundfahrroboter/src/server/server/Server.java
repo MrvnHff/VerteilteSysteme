@@ -55,8 +55,8 @@ public class Server implements ServerInterface{
 	 */
 	public Server(int graphRows, int graphColumns, int port, int maxWorker) {
 		roboGraph = new RoboGraph(graphRows, graphColumns);
-		worker = new Worker[maxWorker];
 		this.maxWorker = maxWorker;
+		worker = new Worker[maxWorker];
 		anzahl = 0;
 		this.port= port;
 	}

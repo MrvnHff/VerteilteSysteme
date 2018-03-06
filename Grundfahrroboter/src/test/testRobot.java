@@ -40,7 +40,7 @@ public class testRobot implements RoboServerInterface{
 		// Initialisieren des Roboters
 		shutdown = false;
 		
-		//RoboServerInterface obj;
+		RoboServerInterface obj;
 		RoboServerInterface stub;
 		Registry registryR;
 		ListenerInterface listener;
@@ -49,23 +49,25 @@ public class testRobot implements RoboServerInterface{
 		//Beim Server registrieren
 		try {
 			//Roboter registriert sich im System mit seinem Namen und dem Port 55555
-    		//obj = new RoboServer();
-    		stub = (RoboServerInterface) UnicastRemoteObject.exportObject(this, 55554);
-    		LocateRegistry.createRegistry(roboterPort); //? Roboter Port ?
+			// Roboter stellt sich selbst als Server im Netzwerk bereit
+    		obj = this;
+    		stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0); //Behelfs Port
+    		LocateRegistry.createRegistry(roboterPort); 
     		registryR = LocateRegistry.getRegistry(roboterPort);
     		registryR.bind(robotName, stub);
     		
+    		//Versuch des Verbindungsaufbaus mit dem Listener 
 			for (int i = 0; i < MAXTRY; ++i) {
 				try {            
             		//Roboter sucht im System nach dem Listener
-            		registryL = LocateRegistry.getRegistry("0.0.0.0", serverPort);
+            		registryL = LocateRegistry.getRegistry("192.168.178.27", serverPort);
             		listener = (ListenerInterface) registryL.lookup("Listener");
             		i = MAXTRY;
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					System.out.println(ipAddr.getHostAddress());			
-					listener.registerRobot(robotName, ipAddr.getHostAddress(), serverPort);
+					listener.registerRobot(robotName, ipAddr.getHostAddress(), roboterPort);
         		} catch (ConnectException e) {
-        			System.out.println("Server/Listener nicht erreichbar!");
+        			System.out.println("Server/Listener nicht erreichbar! Weitere Versuche:" + (MAXTRY - i - 1));
         			TimeUnit.SECONDS.sleep(2);
         			if (i >= MAXTRY-1) {System.exit(0);}
         		}
@@ -92,6 +94,51 @@ public class testRobot implements RoboServerInterface{
 			System.out.println("1 <= WaitTime <= 10 (Zeit in Sekunden, bis eine Fahrt als ausgeführt gilt");
 		}
 	}
+	
+	//########################################
+	//## 		Verbindungsmethoden			##
+	//########################################
+	
+	
+	@Override
+	public void registerWorker(String name, String ip, int port) throws RemoteException {
+	    registryW = LocateRegistry.getRegistry(ip, port);
+		try {
+			//Roboter sucht nach Worker im System. Erst jetzt steht fest kennt der Worker den Roboter und der Roboter den Worker.
+			worker = (WorkerInterface) registryW.lookup(name);
+			System.out.println("Mit Worker "+ name + " verbunden!");
+			worker.printStatus(robotName + " bereit!");
+			System.out.println(robotName + " bereit!");
+			worker.setWay("", "");
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+
+	@Override
+	public String getStatus() throws RemoteException {
+		return "getStatus from robot";
+	}
+
+
+
+	@Override
+	public String getError() throws RemoteException {
+		return "getError from robot";
+	}
+
+
+
+	@Override
+	public void closeConnection() throws RemoteException {
+		worker.printStatus("Aufwiedersehen! Beende mein Programm!");
+		shutdown = true;
+		System.exit(0);
+	}
+	
 	
 	//########################################
 	//## 		Fahrmethoden				##
@@ -216,41 +263,7 @@ public class testRobot implements RoboServerInterface{
 			e.printStackTrace();
 			worker.printStatus("Fehler bei driveNextPoint!");
 		}		
-	
-
-}
-
-
-
-	@Override
-	public void registerWorker(String name, String ip, int port) throws RemoteException {
-		// TODO Auto-generated method stub
-		
 	}
 
-
-
-	@Override
-	public String getStatus() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	@Override
-	public String getError() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	@Override
-	public void closeConnection() throws RemoteException {
-		// TODO Auto-generated method stub
-		worker.printStatus("Aufwiedersehen! Beende mein Programm!");
-		shutdown = true;
-	}
 }
 
