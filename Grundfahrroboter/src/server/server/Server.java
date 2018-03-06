@@ -4,12 +4,15 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import client.RoboServerInterface;
 import server.gui.Gui;
 import server.server.exceptions.TargetIsOccupiedException;
 import server.server.graph.RoboGraph;
+
 
 public class Server implements ServerInterface{
 	private Gui gui;
@@ -25,6 +28,7 @@ public class Server implements ServerInterface{
 	private int maxWorker;
 	
 	private RoboGraph roboGraph;
+	private Map<String, Thread> robotMode = new HashMap<String, Thread>();
 	
 	private int port;
 	
@@ -158,6 +162,9 @@ public class Server implements ServerInterface{
 	private void removeRobot(String robotId) {
 		roboGraph.removeRobot(robotId);
 		gui.removeRobot(robotId);
+		if(isRobotInAutoMode(robotId)) {
+			deactivateAutoDst(robotId);
+		}
 	}
 	
 	/*###############################################
@@ -235,6 +242,67 @@ public class Server implements ServerInterface{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	//###################################################
+	//# 	Automatische Steuerung der Roboter			#
+	//###################################################
+	
+	public String generateRndDestination() {
+		int x;
+		int y;
+		x = (int) (Math.random()* roboGraph.getColumnCount());
+		y = (int) (Math.random()* roboGraph.getRowCount());
+		
+		return (x + "/" + y);
+	}
+	
+	/**
+	 * Startet einen Thread, der dem angegebenen Roboter in einer Endlosschleife driveRobotTo 
+	 * mit zufällig generierten Zielen ausführt.
+	 * @param robotId Die ID des Roboters
+	 */
+	public void activateAutoDst(String robotId) {		
+		if(!isRobotInAutoMode(robotId)) {
+			// Starte Thread für Roboter Auto Destination Mode
+			Thread t = new Thread( new AutoDestinationThread(robotId, this));
+			t.run();
+			robotMode.put(robotId, t);
+			addRobotTextMessage(robotId, "Automodus gestartet in Thread " + t.getName());
+		} else {
+			addRobotTextMessage(robotId, "Roboter ist bereits in AUTO-MODE");
+		}
+		return ; 
+	}
+	
+	/**
+	 * Beendet den Thread der dem Roboter automatisch neue Ziele zuweist
+	 * @param robotId Die ID des Roboters
+	 */
+	public void deactivateAutoDst(String robotId) {
+		if(isRobotInAutoMode(robotId)) {
+			Thread t = robotMode.get(robotId);
+			t.interrupt();
+			robotMode.remove(robotId);
+			addRobotTextMessage(robotId, "AUTO-MODE beendet (hoffentlich)");
+		} else {
+			addRobotTextMessage(robotId, "Roboter ist bereits in MAN-MODE");
+		}
+		return ;
+	}
+	
+	/**
+	 * Überprüft, ob der Roboter im Auto-Modus ist
+	 * @param robotId Die ID des Roboters, der geprüft werden soll
+	 * @return True, wenn der AUTO-Mode aktive ist, sonst false
+	 */
+	public boolean isRobotInAutoMode(String robotId) {
+		// Frage Wert in der Verwaltung ab
+		//true falls AUTO aktiv, sonst false
+		if(robotMode.get(robotId) == null) {
+			return false;
+		}
+		return true;
 	}
 	
 	
