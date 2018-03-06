@@ -2,6 +2,7 @@ package server.server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -88,6 +89,13 @@ public class Listener extends Thread implements ListenerInterface{
 	@Override
 	public void stopListener() {
 		this.interrupt();
+		try {
+			UnicastRemoteObject.unexportObject(this, true); //Listener tatsächlich anhalten
+		} catch (NoSuchObjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Listener beendet");
 	}
 }
 
