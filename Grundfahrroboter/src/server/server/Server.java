@@ -33,12 +33,10 @@ public class Server implements ServerInterface{
 	private int port;
 	
 	private final static int STD_MAXWORKER = 4;
-	private final static int STD_MAXWORKER = 40;
 	private final static int STD_LISTENER_PORT = 55555;
 	private final static int STD_GRAPH_ROWS = 3;
 	private final static int STD_GRAPH_COMLUMNS = 3;
-	private final static int STD_GRAPH_ROWS = 10;
-	private final static int STD_GRAPH_COMLUMNS = 10;
+
 	
 	/**
 	 * Standard-Konstruktor erzeugt einen Standard-Graphen (3x3),
@@ -278,7 +276,7 @@ public class Server implements ServerInterface{
 	 */
 	public void activateAutoDst(String robotId) {
 		robotMode.put(robotId, true);
-		while(robotMode.get(robotId) == true) {
+		while(isRobotInAutoMode(robotId)) {
 			String destination = generateRndDestination();
 			gui.setRobotDestinationTextField(robotId, destination);
 			driveRobotTo(robotId, destination);
@@ -296,16 +294,7 @@ public class Server implements ServerInterface{
 	 * @param robotId Die ID des Roboters
 	 */
 	public void deactivateAutoDst(String robotId) {
-		/*if(isRobotInAutoMode(robotId)) {
-			Thread t = robotMode.get(robotId);
-			t.interrupt();
-			robotMode.remove(robotId);
-			addRobotTextMessage(robotId, "AUTO-MODE beendet (hoffentlich)");
-		} else {
-			addRobotTextMessage(robotId, "Roboter ist bereits in MAN-MODE");
-		}
-		return ;*/
-		this.robotMode.put(robotId, false);
+		this.robotMode.remove(robotId);
 	}
 	
 	/**
