@@ -15,6 +15,7 @@ public class Listener extends Thread implements ListenerInterface{
 	private int port;
 	private Server server;
 	private Registry registry;
+	private Registry returnOfCreateRegistry;
 	
 	/**
 	 * Startmethode für den Listener
@@ -66,7 +67,7 @@ public class Listener extends Thread implements ListenerInterface{
 			//Listener meldet sich im System an unter Port 55555
 			ListenerInterface stub = (ListenerInterface) UnicastRemoteObject.exportObject(this, 0);
 	        try {
-				LocateRegistry.createRegistry(port);
+				returnOfCreateRegistry = LocateRegistry.createRegistry(port);
 			} catch (Exception e) {}
 	        registry = LocateRegistry.getRegistry(port);
 	        try {
@@ -90,12 +91,11 @@ public class Listener extends Thread implements ListenerInterface{
 	public void stopListener() {
 		this.interrupt();
 		try {
-			UnicastRemoteObject.unexportObject(this, true); //Listener tatsächlich anhalten
+			UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true); //Listener tatsächlich anhalten
 		} catch (NoSuchObjectException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Listener beendet");
 	}
 }
 

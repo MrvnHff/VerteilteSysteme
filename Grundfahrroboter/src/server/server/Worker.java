@@ -16,6 +16,7 @@ public class Worker extends Thread implements WorkerInterface{
 	private RoboServerInterface robo;
 	private Registry registryW;
 	private Registry registryR;
+	private Registry returnOfCreateRegistry;
 	private Listener listener;
 	private Server server;
 	
@@ -95,6 +96,7 @@ public class Worker extends Thread implements WorkerInterface{
 	
 	public void closeConnection() throws RemoteException, NotBoundException {
 		robo.closeConnection();
+		UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
 		registryW.unbind(workerName);
 		listener.closeWorker(workerName);
 		this.interrupt();
