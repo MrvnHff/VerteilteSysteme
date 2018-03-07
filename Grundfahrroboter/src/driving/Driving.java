@@ -70,6 +70,9 @@ public class Driving extends Thread{
 	 * @param speed, die Geschwindigkeit
 	 */
 	public void start(int speed) {
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {}
 		this.speedB = speed;
 		this.speedC = speed;
 		b.resetTachoCount();
@@ -86,6 +89,9 @@ public class Driving extends Thread{
 	 * @param speedC, Geschwindigkeit für Motor C
 	 */
 	public void start(int speedB, int speedC) {
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {}
 		this.speedB = speedB;
 		this.speedC = speedC;
 		b.resetTachoCount();
