@@ -152,13 +152,13 @@ public class Roboter {
 		gyro.reset();
 		drive.setDirection(Driving.LEFT);
 		drive.start(PowerRegulation.getSpeed(10, b));
-		while (!Compare.Sensor(gyro, -20, "<=") || !Compare.Sensor(light1, 10, "<=")) {}
+		while (!Compare.Sensor(gyro, -20, "<=") && !Compare.Sensor(light1, 10, "<=")) {}
 		drive.stopDriving();
 		drive = new Driving(b, c);
 		gyro.reset();
-		drive.setDirection(Driving.LEFT);
+		drive.setDirection(Driving.RIGHT);
 		drive.start(PowerRegulation.getSpeed(15, b));
-		while (!Compare.Sensor(gyro, 40, ">=") || !Compare.Sensor(light1, 10, "<=")) {}
+		while (!Compare.Sensor(gyro, 40, ">=") && !Compare.Sensor(light1, 10, "<=")) {}
 		drive.stopDriving();
 	}
 

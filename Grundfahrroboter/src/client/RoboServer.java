@@ -138,6 +138,7 @@ public class RoboServer implements RoboServerInterface{
 	public void driveNextPoint(int speed) throws RemoteException{
 		try {
 			robo.driveCm(2, speed);
+			robo.searchLine();
 			robo.pidLightCm(speed, 68);
 			robo.driveCm(6, speed);
 			robo.driveUntilLight(speed, 10, "<=");
