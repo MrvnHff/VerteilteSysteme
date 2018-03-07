@@ -28,14 +28,17 @@ public class Server implements ServerInterface{
 	private int maxWorker;
 	
 	private RoboGraph roboGraph;
-	private Map<String, Thread> robotMode = new HashMap<String, Thread>();
+	private Map<String, Boolean> robotMode = new HashMap<String, Boolean>();
 	
 	private int port;
 	
 	private final static int STD_MAXWORKER = 4;
+	private final static int STD_MAXWORKER = 40;
 	private final static int STD_LISTENER_PORT = 55555;
 	private final static int STD_GRAPH_ROWS = 3;
 	private final static int STD_GRAPH_COMLUMNS = 3;
+	private final static int STD_GRAPH_ROWS = 10;
+	private final static int STD_GRAPH_COMLUMNS = 10;
 	
 	/**
 	 * Standard-Konstruktor erzeugt einen Standard-Graphen (3x3),
@@ -65,7 +68,7 @@ public class Server implements ServerInterface{
 	 * Registriert einen neuen Worker beim Server und fï¿½gt den Roboter dem Graphen hinzu
 	 * @param worker Das Worker Objekt
 	 * @param position Die Position, an die der Worker geschrieben werden soll
-	 * @throws Exception Wird geworfen, wenn die versucht wird mehr worker als zulässig hinzuzufügen
+	 * @throws Exception Wird geworfen, wenn die versucht wird mehr worker als zulï¿½ssig hinzuzufï¿½gen
 	 */
 	public void addWorker(String roboName, String roboIp, int roboPort) throws Exception {
 		// Wenn ein Worker zu dieser Roboter ID existiert, beende diesen.
@@ -270,20 +273,22 @@ public class Server implements ServerInterface{
 	
 	/**
 	 * Startet einen Thread, der dem angegebenen Roboter in einer Endlosschleife driveRobotTo 
-	 * mit zufällig generierten Zielen ausführt.
+	 * mit zufï¿½llig generierten Zielen ausfï¿½hrt.
 	 * @param robotId Die ID des Roboters
 	 */
-	public void activateAutoDst(String robotId) {		
-		if(!isRobotInAutoMode(robotId)) {
-			// Starte Thread für Roboter Auto Destination Mode
-			Thread t = new Thread( new AutoDestinationThread(robotId, this));
-			t.run();
-			robotMode.put(robotId, t);
-			addRobotTextMessage(robotId, "Automodus gestartet in Thread " + t.getName());
-		} else {
-			addRobotTextMessage(robotId, "Roboter ist bereits in AUTO-MODE");
-		}
-		return ; 
+	public void activateAutoDst(String robotId) {
+		robotMode.put(robotId, true);
+		while(robotMode.get(robotId) == true) {
+			String destination = generateRndDestination();
+			gui.setRobotDestinationTextField(robotId, destination);
+			driveRobotTo(robotId, destination);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			addRobotTextMessage(robotId, "Ziel erreicht");
+		} 
 	}
 	
 	/**
@@ -291,7 +296,7 @@ public class Server implements ServerInterface{
 	 * @param robotId Die ID des Roboters
 	 */
 	public void deactivateAutoDst(String robotId) {
-		if(isRobotInAutoMode(robotId)) {
+		/*if(isRobotInAutoMode(robotId)) {
 			Thread t = robotMode.get(robotId);
 			t.interrupt();
 			robotMode.remove(robotId);
@@ -299,12 +304,13 @@ public class Server implements ServerInterface{
 		} else {
 			addRobotTextMessage(robotId, "Roboter ist bereits in MAN-MODE");
 		}
-		return ;
+		return ;*/
+		this.robotMode.put(robotId, false);
 	}
 	
 	/**
-	 * Überprüft, ob der Roboter im Auto-Modus ist
-	 * @param robotId Die ID des Roboters, der geprüft werden soll
+	 * ï¿½berprï¿½ft, ob der Roboter im Auto-Modus ist
+	 * @param robotId Die ID des Roboters, der geprï¿½ft werden soll
 	 * @return True, wenn der AUTO-Mode aktive ist, sonst false
 	 */
 	public boolean isRobotInAutoMode(String robotId) {
