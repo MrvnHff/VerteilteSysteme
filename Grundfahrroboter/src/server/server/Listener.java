@@ -2,6 +2,7 @@ package server.server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -14,6 +15,7 @@ public class Listener extends Thread implements ListenerInterface{
 	private int port;
 	private Server server;
 	private Registry registry;
+	private Registry returnOfCreateRegistry;
 	
 	/**
 	 * Startmethode für den Listener
@@ -65,7 +67,7 @@ public class Listener extends Thread implements ListenerInterface{
 			//Listener meldet sich im System an unter Port 55555
 			ListenerInterface stub = (ListenerInterface) UnicastRemoteObject.exportObject(this, 0);
 	        try {
-				LocateRegistry.createRegistry(port);
+				returnOfCreateRegistry = LocateRegistry.createRegistry(port);
 			} catch (Exception e) {}
 	        registry = LocateRegistry.getRegistry(port);
 	        try {
@@ -88,6 +90,12 @@ public class Listener extends Thread implements ListenerInterface{
 	@Override
 	public void stopListener() {
 		this.interrupt();
+		try {
+			UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true); //Listener tatsächlich anhalten
+		} catch (NoSuchObjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
 
