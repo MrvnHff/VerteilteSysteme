@@ -18,13 +18,8 @@ public interface ServerInterface {
 	
 	public void setGui(Gui gui);
 	public RoboGraph getRoboGraph();
-	public String getRobotLog();
-	public boolean getRobotFlag();
-	public boolean getServerFlag();
-	public String getServerLog();
 	public void startServer();
 	public void stopServer();
-	public void printRobotLog(String log, boolean flag);
 	
 	public void addRobotTextMessage(String robotId, String message);
 	public void addServerTextMessage(String message);
