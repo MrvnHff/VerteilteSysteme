@@ -17,19 +17,18 @@ public class Main4 {
 		audio.playTone(1200, 100);
 		led.setPattern(7);
 
-//		robo.driveUntilLight(20, 10, "<=");
-//		robo.driveCm(9.5, 20);
-//		
-//		for (int i = 0; i < 4; i++) {		
-//		robo.turn(90, false);
-//		robo.driveCm(2, 20);
-//		robo.pidLightCm(20, 68);
-//		robo.driveCm(6, 20);
-//		robo.driveUntilLight(20, 10, "<=");
-//		robo.driveCm(9.5, 20);
-//		}
-		robo.pidLightCm(20, 20);
-		robo.pidLightCm(20, 20);
+		robo.driveUntilLight(20, 10, "<=");
+		robo.driveCm(9.5, 20);
+		
+		for (int i = 0; i < 4; i++) {		
+		robo.turn(90, false);
+		robo.driveCm(2, 20);
+		robo.pidLightCm(20, 68);
+		robo.driveCm(6, 20);
+		robo.driveUntilLight(20, 10, "<=");
+		robo.driveCm(9.5, 20);
+		}
+
 		
 		System.exit(0);
 	}

@@ -120,10 +120,10 @@ public class Driving extends Thread{
 		return speedC;
 	}
 	
-	public void stopDriving() {
-		interrupt();
+	public void stopDriving() {		
 		b.setSpeed(0);
 		c.setSpeed(0);
+		interrupt();
 	}
 
 	public void setDirection(char d) {

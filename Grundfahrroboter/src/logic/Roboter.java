@@ -21,14 +21,12 @@ import lejos.utility.Delay;
  */
 public class Roboter {
 	private double diameter;
-	private PID pidLight;
-	private PID pidGyro;
 	private Driving drive;
 	private RegulatedMotor b;
 	private RegulatedMotor c;
 	private Lightsensor light1;
 	private Gyrosensor gyro;
-	//private Client client;
+	private double kp, ki, kd;
 	
 	private String status;
 	private String error;
@@ -40,7 +38,7 @@ public class Roboter {
 	 * @param diameter, der Durchmesser der Reifen des Roboters zum Zeitpunkt des Aufrufs des Klassenobjektes.
 	 * @throws RobotException 
 	 */
-	public Roboter (double diameter, double p, double i, double d) throws RobotException {
+	public Roboter (double diameter, double kp, double ki, double kd) throws RobotException {
 		try {
 			this.setDiameter(diameter);
 			b = new EV3LargeRegulatedMotor(MotorPort.B);
@@ -48,8 +46,9 @@ public class Roboter {
 			drive = new Driving(b, c);
 			light1 = new Lightsensor(1);
 			gyro = new Gyrosensor(3);
-			pidLight = new PID(50, light1, p, i, d, b, c, drive);
-			pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c, drive);			
+			this.kp = kp;
+			this.ki = ki;
+			this.kd = kd;
 			status = "Roboter initialisiert!";
 			error = "Kein Fehler!";
 		} catch (Exception e) {
@@ -59,11 +58,14 @@ public class Roboter {
 	}
 	
 	public void setPID(double kp, double ki, double kd) {
-		pidLight.setPID(kp, ki, kd);
+		this.kp = kp;
+		this.ki = ki;
+		this.kd = kd;
 	}
 	
 	public void pidLightCm(int speed, double cm) throws RobotException {
 		try {
+			PID pidLight = new PID(50, light1, kp, ki, kd, b, c);
 			pidLight.drivePID(PowerRegulation.getSpeed(speed, b));
 			WaitFor.Degree(b, DegreeCm.getDegree(cm, diameter), ">=");
 			pidLight.stopPID();
@@ -77,6 +79,7 @@ public class Roboter {
 	
 	public void pidGyroCm(int speed, double cm) throws RobotException {
 		try {
+			PID pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c);
 			pidGyro.drivePID(PowerRegulation.getSpeed(speed, b));
 			WaitFor.Degree(b, DegreeCm.getDegree(cm, diameter), ">=");
 			pidGyro.stopPID();

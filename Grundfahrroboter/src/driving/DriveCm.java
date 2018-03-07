@@ -7,7 +7,7 @@ public class DriveCm {
 
 	public static void driveCm(double cm, int speed, RegulatedMotor b, RegulatedMotor c, double diameter) {
 		Driving drive = new Driving(b, c);
-		
+		System.out.println("Start");
 		if (speed >= 0) {
 			drive.setDirection(Driving.FORWARD);
 			drive.start(speed);
@@ -67,5 +67,6 @@ public class DriveCm {
 //		}
 		drive.stopDriving();
 		drive = null;
+		System.out.println("Ende");
 	}
 }
