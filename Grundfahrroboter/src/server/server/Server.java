@@ -224,7 +224,7 @@ public class Server implements ServerInterface{
 		String destination = roboGraph.moveRobotForward(robotId);
 		//TODO Geschwindigkeit nicht fest an Roboter �bergebe		
 		try {
-			worker[findWorkerToRobotId(robotId)].driveNextPoint(50);
+			worker[findWorkerToRobotId(robotId)].driveNextPoint(20);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
