@@ -151,7 +151,7 @@ public class Roboter {
 		Driving drive = new Driving(b, c);
 		gyro.reset();
 		drive.setDirection(Driving.LEFT);
-		drive.start(PowerRegulation.getSpeed(15, b));
+		drive.start(PowerRegulation.getSpeed(10, b));
 		while (!Compare.Sensor(gyro, -20, "<=") || !Compare.Sensor(light1, 10, "<=")) {}
 		drive.stopDriving();
 		drive = new Driving(b, c);
