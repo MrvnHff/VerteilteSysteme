@@ -16,85 +16,106 @@ import server.server.ListenerInterface;
 import server.server.WorkerInterface;
 import client.RoboServerInterface;
 
-public class testRobot implements RoboServerInterface{
+/**
+ * Virtueller Roboter, der das RoboServerInterface implementiert und eine Verbindung zu einem Server 
+ * im Netzwerk aufbaut. Dieser Roboter hat den vollen Methodenumfang eines echten Roboters und kann so
+ * zum Testen des Servers genutzt werden.
+ * @author Janek Dahl
+ *
+ */
+public class VirtualRobot extends Thread implements RoboServerInterface{
+	//Attribute des Roboters zum Verhalten / zur Verbindung
+	private String serverIp;
 	private int serverPort;
 	private int roboterPort;
 	private int waitTime;
 	private String robotName;
 	
+	public static final int MAXTRY = 10;
+	//Attribute für Roboter-Server / Server-Server / Listener / Worker
 	private WorkerInterface worker;
 	private Registry registryW;
-	private static boolean shutdown;
-	public static final int MAXTRY = 10;
+	private Registry returnOfCreateRegistry;
+	private RoboServerInterface obj;
+	private RoboServerInterface stub;
+	private Registry registryR;
+	private ListenerInterface listener;
+	private Registry registryL;
 	
-	public testRobot(int serverPort, int robotPort, int waitTime, String robotId){
+	public VirtualRobot(String serverIp, int serverPort, int robotPort, int waitTime, String robotId){
+		this.serverIp = serverIp;
 		this.serverPort = serverPort;
 		this.roboterPort = robotPort;
 		this.robotName = robotId;
-		if( waitTime >= 1 && waitTime <= 10){
+		if( waitTime >= 0 && waitTime <= 10){
 			this.waitTime = waitTime;
 		}else{
-			this.waitTime = (int)(Math.random()*10 + 1);
-		}
-		
+			this.waitTime = (int)(Math.random()*11);
+		}		
+	}
+	
+	@Override
+	public void run() {
 		// Initialisieren des Roboters
-		shutdown = false;
-		
-		RoboServerInterface obj;
-		RoboServerInterface stub;
-		Registry registryR;
-		ListenerInterface listener;
-		Registry registryL;
-		
+
+				
 		//Beim Server registrieren
-		try {
-			//Roboter registriert sich im System mit seinem Namen und dem Port 55555
+		try {			
 			// Roboter stellt sich selbst als Server im Netzwerk bereit
     		obj = this;
     		stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0); //Behelfs Port
-    		LocateRegistry.createRegistry(roboterPort); 
+    		returnOfCreateRegistry = LocateRegistry.createRegistry(roboterPort); 
     		registryR = LocateRegistry.getRegistry(roboterPort);
     		registryR.bind(robotName, stub);
     		
-    		//Versuch des Verbindungsaufbaus mit dem Listener 
+    		//Versuch des Verbindungsaufbaus mit dem Listener des Server-servers
 			for (int i = 0; i < MAXTRY; ++i) {
 				try {            
             		//Roboter sucht im System nach dem Listener
-            		registryL = LocateRegistry.getRegistry("192.168.178.27", serverPort);
+            		registryL = LocateRegistry.getRegistry(serverIp, serverPort);
             		listener = (ListenerInterface) registryL.lookup("Listener");
             		i = MAXTRY;
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					System.out.println(ipAddr.getHostAddress());			
+					//Registriert sich beim Listener des Server-servers
 					listener.registerRobot(robotName, ipAddr.getHostAddress(), roboterPort);
         		} catch (ConnectException e) {
-        			System.out.println("Server/Listener nicht erreichbar! Weitere Versuche:" + (MAXTRY - i - 1));
-        			TimeUnit.SECONDS.sleep(2);
-        			if (i >= MAXTRY-1) {System.exit(0);}
+        			System.out.println("VirtualRobot: " + robotName + ": Server/Listener nicht erreichbar! Weitere Versuche:" + (MAXTRY - i - 1));
+        			Thread.sleep(2 * 1000);
+        			if (i >= MAXTRY-1) { 
+        				closeConnection();
+		 			}
         		}
 			}
         } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
+            System.err.println("VirtualRobot Exception: " + e.toString());
             e.printStackTrace();
         }
-		
 	}
 	
-	
-
+	/**
+	 * Startet einen Virtuellen Roboter von der Konsole aus mit den angegeben Parameter.
+	 * Der Roboter wird als Thread gestartet und die Main geht in sleep() um den Roboter zu erhalten.
+	 * @param args ServerIP ServerPort RoboterPort WaitTime RobotID
+	 */
 	public static void main(String[] args){
 		try{
-			int serverPort = Integer.parseInt(args[0]);
-			int robotPort = Integer.parseInt(args[1]);
-			int waitTime = Integer.parseInt(args[2]);
-			String robotId = args[3];
-			testRobot bot = new testRobot(serverPort, robotPort, waitTime, robotId);
+			String serverIp = args[0];
+			int serverPort = Integer.parseInt(args[1]);
+			int robotPort = Integer.parseInt(args[2]);
+			int waitTime = Integer.parseInt(args[3]);
+			String robotId = args[4];
+			VirtualRobot bot = new VirtualRobot(serverIp, serverPort, robotPort, waitTime, robotId);
+			bot.start();
+			System.out.println("VirtualRobot: " + robotId + " angelegt." );
+			Thread.sleep(Integer.MAX_VALUE);
 		} catch (Exception e){
 			System.out.println("Fehlerhafte Eingabe. Keinen Roboter gestartet.");
-			System.out.println("Eingabeparameter: Serverport Roboterport WaitTime RobotID");
-			System.out.println("1 <= WaitTime <= 10 (Zeit in Sekunden, bis eine Fahrt als ausgefÃ¼hrt gilt");
+			System.out.println("Eingabeparameter: ServerIp Serverport Roboterport WaitTime RobotID");
+			System.out.println("0 <= WaitTime <= 10 (Ausführungsdauer einer Fahroperation in Sekunden. Zufallsdauer falls ungültig.");
 		}
 	}
-	
+
 	//########################################
 	//## 		Verbindungsmethoden			##
 	//########################################
@@ -106,9 +127,9 @@ public class testRobot implements RoboServerInterface{
 		try {
 			//Roboter sucht nach Worker im System. Erst jetzt steht fest kennt der Worker den Roboter und der Roboter den Worker.
 			worker = (WorkerInterface) registryW.lookup(name);
-			System.out.println("Mit Worker "+ name + " verbunden!");
+			System.out.println("VirtualRobot: Mit Worker "+ name + " verbunden!");
 			worker.printStatus(robotName + " bereit!");
-			System.out.println(robotName + " bereit!");
+			System.out.println("VirtualRobot: " + robotName + " bereit!");
 			worker.setWay("", "");
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
@@ -120,23 +141,27 @@ public class testRobot implements RoboServerInterface{
 
 	@Override
 	public String getStatus() throws RemoteException {
-		return "getStatus from robot";
+		return "getStatus from Virtualrobot";
 	}
 
 
 
 	@Override
 	public String getError() throws RemoteException {
-		return "getError from robot";
+		return "getError from Virtualrobot";
 	}
 
 
-
+	/**
+	 * Meldet den Roboter überall ab, schließt den Port und beendet den Thread.
+	 */
 	@Override
 	public void closeConnection() throws RemoteException {
-		worker.printStatus("Aufwiedersehen! Beende mein Programm!");
-		shutdown = true;
-		System.exit(0);
+		//FIXME Roboter überall abmelden und Fehler abfangen
+		UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
+		//worker.printStatus("Aufwiedersehen! Beende mein Programm!");
+		System.out.println("VirtualRobot: " + robotName + " connection closed.");
+		interrupt();
 	}
 	
 	
@@ -144,7 +169,7 @@ public class testRobot implements RoboServerInterface{
 	//## 		Fahrmethoden				##
 	//########################################
 	
-		@Override
+	@Override
 	public void driveCm(double cm, int speed) throws RemoteException{
 		try {
 			TimeUnit.SECONDS.sleep(waitTime);;
