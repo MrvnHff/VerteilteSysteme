@@ -138,8 +138,8 @@ public class RoboServer implements RoboServerInterface{
 	public void driveNextPoint(int speed) throws RemoteException{
 		try {
 			robo.driveCm(2, speed);
-			robo.pidLightCm(speed, 65);
-			robo.driveCm(3, speed);
+			robo.pidLightCm(speed, 68);
+			robo.driveCm(6, speed);
 			robo.driveUntilLight(speed, 10, "<=");
 			robo.driveCm(9.5, speed);
 			worker.printStatus("Habe den Punkt erreicht!");
@@ -219,7 +219,7 @@ public static void main(String args[]) {
 			for (int i = 0; i < MAXTRY; ++i) {
 				try {            
             		//Roboter sucht im System nach dem Listener
-            		registryL = LocateRegistry.getRegistry("192.168.178.21", 55555);
+            		registryL = LocateRegistry.getRegistry("192.168.178.24", 55555);
             		listener = (ListenerInterface) registryL.lookup("Listener");
             		i = MAXTRY;
 					InetAddress ipAddr = InetAddress.getLocalHost();
