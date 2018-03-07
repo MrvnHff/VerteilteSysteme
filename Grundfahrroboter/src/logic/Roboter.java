@@ -4,6 +4,7 @@ import control.PID;
 import driving.Turn;
 import driving.Drive;
 import driving.DriveCm;
+import driving.Driving;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.robotics.RegulatedMotor;
@@ -22,7 +23,7 @@ public class Roboter {
 	private double diameter;
 	private PID pidLight;
 	private PID pidGyro;
-	private Drive drive;
+	private Driving drive;
 	private RegulatedMotor b;
 	private RegulatedMotor c;
 	private Lightsensor light1;
@@ -44,11 +45,11 @@ public class Roboter {
 			this.setDiameter(diameter);
 			b = new EV3LargeRegulatedMotor(MotorPort.B);
 			c = new EV3LargeRegulatedMotor(MotorPort.C);
+			drive = new Driving(b, c);
 			light1 = new Lightsensor(1);
 			gyro = new Gyrosensor(3);
-			pidLight = new PID(50, light1, p, i, d, b, c);
-			pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c);
-			drive = new Drive(b, c);
+			pidLight = new PID(50, light1, p, i, d, b, c, drive);
+			pidGyro = new PID(0, gyro, 0.5, 0.2, 0.8, b, c, drive);			
 			status = "Roboter initialisiert!";
 			error = "Kein Fehler!";
 		} catch (Exception e) {
@@ -100,7 +101,7 @@ public class Roboter {
 	
 	public void drive(int speed) throws RobotException {
 		try {
-			drive.drive(PowerRegulation.getSpeed(speed, b));
+			drive.start((PowerRegulation.getSpeed(speed, b)));
 			status = "Fahre!";
 			error = "Kein Fehler!";
 		} catch (Exception e) {
@@ -121,7 +122,8 @@ public class Roboter {
 	
 	public void driveUntilLight(int speed, int lightlvl, String compare) throws RobotException {
 		try {
-			drive.drive(PowerRegulation.getSpeed(speed, b));
+			Driving drive = new Driving(b, c);
+			drive.start(PowerRegulation.getSpeed(speed, b));
 			WaitFor.Sensor(light1, lightlvl, compare);
 			drive.stopDriving();
 			status = "Habe den Lichtwert " + lightlvl + " gefunden!";
