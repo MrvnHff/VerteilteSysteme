@@ -39,8 +39,8 @@ public class PID extends Thread {
 	 * @param b, Motor B
 	 * @param c, Motor C
 	 */
-	public PID(int average, DefaultSensor s, double kp, double ki, double kd,RegulatedMotor b, RegulatedMotor c) {		
-		drive = new Driving(b, c);
+	public PID(int average, DefaultSensor s, double kp, double ki, double kd,RegulatedMotor b, RegulatedMotor c, Driving drive) {			
+		this.drive = drive;
 		this.average = average;
 		this.s = s;
 		p = new PRegler(kp);
@@ -56,13 +56,14 @@ public class PID extends Thread {
 	 */
 	public void run() {
 		stop = false;
+		double control;
 		double px,ix,dx;
 		while (!stop) {
 			int diff = average - s.getValue();
 			px = p.regelP(diff);
 			ix = i.regelI(diff);
 			dx = d.regelD(diff);
-			double control = Math.round(px+ix+dx);
+			control = Math.round(px+ix+dx);
 			drive.setSpeedB((int) (speed - control));
 			drive.setSpeedC((int) (speed + control));
 		}

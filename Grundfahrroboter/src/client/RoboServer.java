@@ -137,11 +137,11 @@ public class RoboServer implements RoboServerInterface{
 	@Override
 	public void driveNextPoint(int speed) throws RemoteException{
 		try {
-			robo.driveCm(5, speed);
-			robo.pidGyroCm(speed, 65);
+			robo.driveCm(2, speed);
+			robo.pidLightCm(speed, 65);
 			robo.driveCm(3, speed);
-			robo.driveUntilLight(speed, 5, "<=");
-			robo.driveCm(5, speed);
+			robo.driveUntilLight(speed, 10, "<=");
+			robo.driveCm(9.5, speed);
 			worker.printStatus("Habe den Punkt erreicht!");
 		} catch (RobotException e) {
 			e.printStackTrace();
