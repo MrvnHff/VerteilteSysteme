@@ -41,7 +41,7 @@ public class Listener extends Thread implements ListenerInterface{
 
 
 	@Override
-	public void registerRobot(String roboName, String roboIp, int roboPort) throws RemoteException {
+	public synchronized void registerRobot(String roboName, String roboIp, int roboPort) throws RemoteException {
 		server.addServerTextMessage("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
 		System.out.println("Listener: Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
 		
@@ -69,7 +69,7 @@ public class Listener extends Thread implements ListenerInterface{
 	/**
 	 * 
 	 */
-	private void registerListener() {
+	private synchronized void registerListener() {
 		try {
 			//Starte lokalen Listener Server am angegebenen Port
 			ListenerInterface stub = (ListenerInterface) UnicastRemoteObject.exportObject(this, 0);

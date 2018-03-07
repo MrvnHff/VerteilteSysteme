@@ -68,7 +68,7 @@ public class Server implements ServerInterface{
 	 * @param position Die Position, an die der Worker geschrieben werden soll
 	 * @throws Exception Wird geworfen, wenn die versucht wird mehr worker als zul�ssig hinzuzuf�gen
 	 */
-	public void addWorker(String roboName, String roboIp, int roboPort) throws Exception {
+	public synchronized void addWorker(String roboName, String roboIp, int roboPort) throws Exception {
 		// Wenn ein Worker zu dieser Roboter ID existiert, beende diesen.
 		if(isAddWorkerAllowed()) {
 			int existingWorkerPosition = findWorkerToRobotId(roboName) ; 
