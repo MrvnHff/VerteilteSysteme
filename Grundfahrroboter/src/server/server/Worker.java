@@ -1,5 +1,7 @@
 package server.server;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
@@ -17,7 +19,6 @@ public class Worker extends Thread implements WorkerInterface{
 	private Registry registryW;
 	private Registry registryR;
 	private Registry returnOfCreateRegistry;
-	private Listener listener;
 	private Server server;
 	
 	private String workerIp;
@@ -27,28 +28,31 @@ public class Worker extends Thread implements WorkerInterface{
 	private String workerName;
 	private String roboName;
 	
-	public Worker(Server server, Listener listener, String workerName, String roboName, String workerIp, String roboIp, int workerPort, int roboPort) {
-		this.listener = listener;
-		this.workerIp = workerIp;
+	//FIXME Listener aus klasse entfernen
+	public Worker(Server server, String workerName, String roboName, String roboIp, int roboPort, int workerPort) {
 		this.workerName = workerName;
 		this.workerPort = workerPort;
 		this.roboIp = roboIp;
 		this.roboName = roboName;
 		this.roboPort = roboPort;
 		this.server = server;
+		try {
+			this.workerIp = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			System.out.print("Worker: Fehler beim auslesen der Host-IP: " + e);
+		}
+		
+		
 		start();
 	}
 	
 	public void run() {
 		try {
 			registerWorker();		
-			registerRobot();
-			//closeConnection();
+			registerRobot();			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		while (!isInterrupted()) {}
 	}
 
 	private void sayHello() throws RemoteException {
@@ -76,29 +80,34 @@ public class Worker extends Thread implements WorkerInterface{
 		server.addRobotTextMessage(roboName, s);
 	}
 
-	private void registerWorker() throws AccessException, RemoteException, AlreadyBoundException {
+	private void registerWorker() throws RemoteException, AlreadyBoundException {
 		stub = (WorkerInterface) UnicastRemoteObject.exportObject(this, 0);
-		try {
-			registryW = LocateRegistry.createRegistry(workerPort);
-		} catch (ExportException e) {}
+		returnOfCreateRegistry = LocateRegistry.createRegistry(workerPort);
 	    registryW = LocateRegistry.getRegistry(workerPort);
 	    registryW.bind(workerName, stub);
-	    
-	    System.out.println(workerName + " bereit!");
+	    /*stub = (WorkerInterface) UnicastRemoteObject.exportObject(this, 0); 
+        try { 
+            registryW = LocateRegistry.createRegistry(workerPort); 
+        } catch (ExportException e) {} 
+        registryW = LocateRegistry.getRegistry(workerPort); 
+        registryW.bind(workerName, stub);*/ 
+	    System.out.println("Worker: " + workerName + " bereit!");
 	}
 	
-	private void registerRobot() throws AccessException, RemoteException, NotBoundException {	    
+	private void registerRobot() throws AccessException, RemoteException, NotBoundException, AlreadyBoundException {
+
+        
 	    registryR = LocateRegistry.getRegistry(roboIp, roboPort);
 		robo = (RoboServerInterface) registryR.lookup(roboName);		
-		System.out.println(workerName + " verbunden mit Roboter " + roboName + "!");		
+		System.out.println("Worker: " + workerName + " verbunden mit Roboter " + roboName + "!");		
 		sayHello();
 	}
 	
 	public void closeConnection() throws RemoteException, NotBoundException {
+		//TODO Wenn Roboter nicht erreichbar wird Prozess nicht beendet
 		robo.closeConnection();
 		UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
 		registryW.unbind(workerName);
-		listener.closeWorker(workerName);
 		this.interrupt();
 	}
 
