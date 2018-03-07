@@ -198,6 +198,11 @@ public class Gui extends Application {
 		controller.rotateRobotRightServer();
 	}
 	
+	public void setRobotDestinationTextField(String robotId, String position) {
+		RobotController controller = robotControllers.get(robotId);
+		controller.setDestinationTextField(position);
+	}
+	
 	public static void main(String[] args) {
         launch(args);
     }
