@@ -71,7 +71,7 @@ public class Driving extends Thread{
 	 */
 	public void start(int speed) {
 		try {
-			Thread.sleep(200);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {}
 		this.speedB = speed;
 		this.speedC = speed;
@@ -90,7 +90,7 @@ public class Driving extends Thread{
 	 */
 	public void start(int speedB, int speedC) {
 		try {
-			Thread.sleep(200);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {}
 		this.speedB = speedB;
 		this.speedC = speedC;
