@@ -29,8 +29,8 @@ public class Worker extends Thread implements WorkerInterface{
 	private String roboName;
 	
 	//FIXME Listener aus klasse entfernen
-	public Worker(Server server, String workerName, String roboName, String roboIp, int roboPor, int workerPortt) {
-		this.workerName = roboName;
+	public Worker(Server server, String workerName, String roboName, String roboIp, int roboPort, int workerPort) {
+		this.workerName = workerName;
 		this.workerPort = workerPort;
 		this.roboIp = roboIp;
 		this.roboName = roboName;
@@ -56,7 +56,7 @@ public class Worker extends Thread implements WorkerInterface{
 	}
 
 	private void sayHello() throws RemoteException {
-		//robo.registerWorker(workerName, workerIp, workerPort);		
+		robo.registerWorker(workerName, workerIp, workerPort);		
 	}
 	
 	public String getRoboName() {return roboName;}

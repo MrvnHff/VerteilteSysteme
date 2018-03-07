@@ -75,7 +75,7 @@ public class Server implements ServerInterface{
 				removeWorker(existingWorkerPosition);
 			}
 			int nextFreePos = getNextFreeWorkerNumber();
-			this.worker[nextFreePos] = new Worker(this, "Worker_" + nextFreePos, roboName, roboIp, roboPort, (this.port - nextFreePos - 1));
+			this.worker[nextFreePos] = new Worker(this, "Worker_" + nextFreePos, roboName, roboIp, roboPort, (this.port + nextFreePos + 1));
 			anzahl++;
 			addRobot(roboName);
 		} else {
