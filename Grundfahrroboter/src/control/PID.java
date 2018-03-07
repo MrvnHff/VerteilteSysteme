@@ -85,6 +85,8 @@ public class PID extends Thread {
 	public void stopPID() {
 		drive.stopDriving();
 		stop = true;
+		this.interrupt();
+		this.stop();
 	}
 	
 	public void setPID(double kp, double ki, double kd) {

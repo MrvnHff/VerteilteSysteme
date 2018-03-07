@@ -17,10 +17,6 @@ public class Main4 {
 		audio.playTone(1200, 100);
 		led.setPattern(7);
 
-//		for (int i  = 0; i < 10; i++) {
-//			robo.driveUntilLight(20, 10, "<=");
-//			robo.driveCm(9.5, 20);
-//		}
 //		robo.driveUntilLight(20, 10, "<=");
 //		robo.driveCm(9.5, 20);
 //		
