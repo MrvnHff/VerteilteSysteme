@@ -2,7 +2,6 @@ package logic;
 import Exceptions.RobotException;
 import control.PID;
 import driving.Turn;
-import driving.Drive;
 import driving.DriveCm;
 import driving.Driving;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -146,6 +145,21 @@ public class Roboter {
 			error = e.toString();
 			throw new RobotException(error);
 		}
+	}
+	
+	public void searchLine() {
+		Driving drive = new Driving(b, c);
+		gyro.reset();
+		drive.setDirection(Driving.LEFT);
+		drive.start(PowerRegulation.getSpeed(15, b));
+		while (!Compare.Sensor(gyro, 20, ">=") || !Compare.Sensor(light1, 10, "<=")) {}
+		drive.stopDriving();
+		drive = new Driving(b, c);
+		gyro.reset();
+		drive.setDirection(Driving.LEFT);
+		drive.start(PowerRegulation.getSpeed(15, b));
+		while (!Compare.Sensor(gyro, 40, ">=") || !Compare.Sensor(light1, 10, "<=")) {}
+		drive.stopDriving();
 	}
 
 	public double getDiameter() {
