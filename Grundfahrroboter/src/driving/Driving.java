@@ -9,7 +9,7 @@ import lejos.robotics.RegulatedMotor;
  * @version 09.11.2017
  * @category Movement
  */
-public class Driving extends Thread {
+public class Driving extends Thread{
 	public final static char FORWARD = 'f';
 	public final static char BACKWARD = 'b';
 	public final static char LEFT = 'l';
@@ -45,8 +45,6 @@ public class Driving extends Thread {
 	 */
 	//TODO Regulierung auch für die Drehung einbauen!
 	public void run() {
-		b.stop(false);
-		c.stop(false);
 		b.resetTachoCount();
 		c.resetTachoCount();
 		b.setSpeed(speedB);
@@ -64,7 +62,7 @@ public class Driving extends Thread {
 			b.forward();
 			c.forward();
 		}
-		while (!isInterrupted()) {}
+		//while (!isInterrupted()) {}
 	}
 
 	/**
@@ -126,9 +124,6 @@ public class Driving extends Thread {
 		interrupt();
 		b.setSpeed(0);
 		c.setSpeed(0);
-		b.stop(true);
-		c.stop(true);
-		
 	}
 
 	public void setDirection(char d) {
