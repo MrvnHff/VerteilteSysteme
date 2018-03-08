@@ -73,13 +73,29 @@ public class RobotController implements Initializable{
 	}
 	
 	private void toggleMode() {
+		
+		
+		Thread t1 = null;
 		if(automatic == false) {
 			automatic = true;
 			modeButton.setText(bundle.getString("robot.automatic"));
+			
+			t1 = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					server.activateAutoDst(robotId);
+				}
+			});
+			
+			t1.start();
+			
+			
 		} else {
 			automatic = false;
-			this.modeButton.setText(bundle.getString("robot.manual"));
+			modeButton.setText(bundle.getString("robot.manual"));
+			server.deactivateAutoDst(robotId);
 		}
+		
 	}
 	
 	public void setRobotLayout(RobotLayout rl) {
@@ -157,6 +173,10 @@ public class RobotController implements Initializable{
 	private void setPosition(String position) {
 		this.position .setText(position);
 		robotLayout.moveRobotTo(robotId, position);
+	}
+	
+	public void setDestinationTextField(String position) {
+		this.destination.setText(position);
 	}
 
 	public void setPositionTextField(String position) {

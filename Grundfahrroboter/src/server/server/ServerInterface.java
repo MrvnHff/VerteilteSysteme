@@ -1,5 +1,6 @@
 package server.server;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -15,16 +16,11 @@ public interface ServerInterface {
 	public void moveRobotForwardGui(String robotId);
 	public void driveRobotTo(String robotId, String destination);
 	
-	public String getRoboErrorLog();
-	public String getRoboLog();
-	public void printRoboErrorLog(String roboErrorLog);
-	public void printRoboLog(String roboLog);
-	public String getServerLog();
-	
 	public void setGui(Gui gui);
 	public RoboGraph getRoboGraph();
 	public void startServer();
 	public void stopServer();
 	
-	
+	public void addRobotTextMessage(String robotId, String message);
+	public void addServerTextMessage(String message);
 }

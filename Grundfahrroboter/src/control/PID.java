@@ -26,7 +26,6 @@ public class PID extends Thread {
 	private PRegler p;
 	private IRegler i;
 	private DRegler d;
-	private boolean stop;
 
 	/**
 	 * Der Konstruktor initialisiert einen PID
@@ -39,7 +38,7 @@ public class PID extends Thread {
 	 * @param b, Motor B
 	 * @param c, Motor C
 	 */
-	public PID(int average, DefaultSensor s, double kp, double ki, double kd,RegulatedMotor b, RegulatedMotor c) {		
+	public PID(int average, DefaultSensor s, double kp, double ki, double kd,RegulatedMotor b, RegulatedMotor c) {			
 		drive = new Driving(b, c);
 		this.average = average;
 		this.s = s;
@@ -55,16 +54,17 @@ public class PID extends Thread {
 	 * Die Regelanteile werden aufaddiert und mit der Geschwindigkeit summiert und ergeben für jeden Motor eine neue Geschwindigkeit.
 	 */
 	public void run() {
-		stop = false;
+		double control;
 		double px,ix,dx;
-		while (!stop) {
-			int diff = average - s.getValue();
+		int diff;
+		while (!interrupted()) {
+			diff = average - s.getValue();
 			px = p.regelP(diff);
 			ix = i.regelI(diff);
 			dx = d.regelD(diff);
-			double control = Math.round(px+ix+dx);
+			control = Math.round(px+ix+dx);
 			drive.setSpeedB((int) (speed - control));
-			drive.setSpeedC((int) (speed + control));
+			drive.setSpeedC((int) (speed + control));			
 		}
 	}
 
@@ -83,7 +83,7 @@ public class PID extends Thread {
 	
 	public void stopPID() {
 		drive.stopDriving();
-		stop = true;
+		this.interrupt();
 	}
 	
 	public void setPID(double kp, double ki, double kd) {

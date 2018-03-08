@@ -17,7 +17,7 @@ import server.server.WorkerInterface;
 
 public class RoboServer implements RoboServerInterface{
 	private static Roboter robo;
-	private WorkerInterface worker;
+	private static WorkerInterface worker;
 	private Registry registryW;
 	
 	private static String robotName;
@@ -30,7 +30,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.driveCm(cm, speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -42,7 +41,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.drive(speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -54,7 +52,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.driveUntilLight(speed, 15, "<=");
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -66,7 +63,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.driveCm(cm, -speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -78,7 +74,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.drive(-speed);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -90,7 +85,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.turn(90, false);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -102,7 +96,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.turn(90, true);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -114,7 +107,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.turn(180, false);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -126,7 +118,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.pidLightCm(speed, cm);
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -138,7 +129,6 @@ public class RoboServer implements RoboServerInterface{
 			robo.stopDrive();
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}
@@ -147,14 +137,14 @@ public class RoboServer implements RoboServerInterface{
 	@Override
 	public void driveNextPoint(int speed) throws RemoteException{
 		try {
-			robo.driveCm(5, speed);
-			robo.pidGyroCm(speed, 65);
-			robo.driveCm(3, speed);
-			robo.driveUntilLight(speed, 5, "<=");
-			robo.driveCm(5, speed);
-			worker.printStatus(robo.getStatus());
+			robo.driveCm(2, speed);
+			robo.searchLine();
+			robo.pidLightCm(speed, 68);
+			robo.driveCm(6, speed);
+			robo.driveUntilLight(speed, 10, "<=");
+			robo.driveCm(9.5, speed);
+			worker.printStatus("Habe den Punkt erreicht!");
 		} catch (RobotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			worker.printStatus(robo.getError());
 		}		
@@ -190,8 +180,9 @@ public class RoboServer implements RoboServerInterface{
 	
 	@Override
 	public void closeConnection() throws RemoteException{
-		worker.printStatus("Aufwiedersehen!\nBeende mein Programm!");
+		worker.printStatus("Aufwiedersehen! Beende mein Programm!");
 		shutdown = true;
+		System.exit(0);
 	}
 	
 public static void main(String args[]) {
@@ -244,6 +235,11 @@ public static void main(String args[]) {
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
+            try {
+				worker.printError(e.toString());
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
         }
 		if (shutdown){System.exit(0);}
     }	

@@ -12,7 +12,7 @@ public class Main5 {
 		b = new EV3LargeRegulatedMotor(MotorPort.B);
 		c = new EV3LargeRegulatedMotor(MotorPort.C);
 		Lightsensor licht = new Lightsensor(1);
-		PID pid = new PID(50, licht, 0.5, 0.2, 0.8, b, c);
+		PID pid = new PID(50, licht, 0.5, 0.2, 0.8, b, c); 
 		pid.drivePID(150);
 		WaitFor.Degree(b, 1500, ">=");
 		pid.stopPID();

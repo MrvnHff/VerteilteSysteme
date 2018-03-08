@@ -2,25 +2,25 @@ package driving;
 
 import lejos.robotics.RegulatedMotor;
 
-public class Drive extends Thread{
-	private boolean stop;
-	Driving drive;
+public class Drive {
+	//private Driving drive;
+	private RegulatedMotor b;
+	private RegulatedMotor c;
 	public Drive(RegulatedMotor b, RegulatedMotor c) {
-		drive = new Driving(b, c);
-	}
-	
-	public void run() {
-		while(!stop) {}
-		drive.stopDriving();
+		//drive = new Driving(b, c);
+		this.b = b;
+		this.c = c;
 	}
 		
 	public void drive(int speed) {
-		stop = false;
-		drive.start(speed);
-		start();
+		b.forward();
+		c.forward();
+		b.setSpeed(speed);
+		c.setSpeed(speed);
 	}
 
 	public void stopDriving() {
-		stop = true;
+		b.setSpeed(0);
+		c.setSpeed(0);
 	}
 }

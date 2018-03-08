@@ -15,6 +15,7 @@ import server.gui.layout.grid.GridLayout;
 import server.gui.layout.robot.RobotLayout;
 import server.server.Server;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -26,6 +27,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
 public class Gui extends Application {
+	
+	//FIXME Server anhalten, wenn das Fenster geschlossen wird
 
 	private static final String CONFIG_FILENAME = "resources/config/config";
 	private static final String FXML_BUNDLE_FILENAME = "resources/config/fxml_files";
@@ -69,8 +72,15 @@ public class Gui extends Application {
 		this.primaryStage.setTitle(config.getString("general.title"));
 		
 		initRootLayout();
-		server.setGui(this);
 		
+		server.setGui(this);
+		server.startServer();
+		
+	}
+	
+	@Override
+	public void stop() {
+		server.stopServer();
 	}
 
 	private void initRootLayout() {
@@ -125,9 +135,21 @@ public class Gui extends Application {
 		rootLayout.setCenter(splitPane2);
 	}
 	
-	public void addRobot(String robotId, String position) {
-		flow.getChildren().add(buildRobotPane(robotId, position));
-		rl.moveRobotTo(robotId, position);
+	public void addRobot(final String robotId, final String position) {
+		Platform.runLater(new Runnable() {
+            @Override public void run() {
+            	flow.getChildren().add(buildRobotPane(robotId, position));
+        		rl.moveRobotTo(robotId, position);
+            }
+        });
+		
+	}
+	
+	public void removeRobot(String robotId) {
+		//FIXME removeRobot-Methode in der GUI implementieren
+		//graph.getModel().removeCell();
+		graph.endUpdate();
+		return;
 	}
 	
 	private BorderPane buildRobotPane(String robotId, String position) {
@@ -174,6 +196,11 @@ public class Gui extends Application {
 	public void turnRobotRight(String robotId) {
 		RobotController controller = robotControllers.get(robotId);
 		controller.rotateRobotRightServer();
+	}
+	
+	public void setRobotDestinationTextField(String robotId, String position) {
+		RobotController controller = robotControllers.get(robotId);
+		controller.setDestinationTextField(position);
 	}
 	
 	public static void main(String[] args) {

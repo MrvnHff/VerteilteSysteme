@@ -16,7 +16,7 @@ public class PowerRegulation {
 	public static int getSpeed(int speed, RegulatedMotor m) {
 		int motorspeed = 0;
 		if (Math.abs(speed) > 100) {
-			motorspeed = Math.round(m.getMaxSpeed());
+			motorspeed = Math.round(m.getMaxSpeed()/10)*10;
 		}else {
 			motorspeed = Math.round((m.getMaxSpeed()/100)*Math.abs(speed));
 		}
