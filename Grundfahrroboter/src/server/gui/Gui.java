@@ -121,7 +121,7 @@ public class Gui extends Application {
 		scrollPane.setFitToWidth(true);
 		scrollPane.setContent(flow);
 		
-		graph = new Graph(server.getRoboGraph());
+		graph = new Graph(server.getStreetGraph());
 		
 		GridLayout gl = new GridLayout(graph);
 		gl.setScale(200);

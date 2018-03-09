@@ -9,7 +9,7 @@ import java.util.Map;
 import server.gui.Gui;
 import server.server.exceptions.MaximumWorkersReachedException;
 import server.server.exceptions.TargetIsOccupiedException;
-import server.server.graph.RoboGraph;
+import server.server.graph.StreetGraph;
 
 
 public class Server implements ServerInterface{
@@ -25,8 +25,8 @@ public class Server implements ServerInterface{
 	private int anzahl;
 	private int maxWorker;
 	
-	private RoboGraph roboGraph;
-	private Map<String, Boolean> robotMode = new HashMap<String, Boolean>();
+	private StreetGraph streetGraph;
+	private Map<String, Boolean> vehicleMode = new HashMap<String, Boolean>();
 	
 	private int port;
 	
@@ -54,10 +54,10 @@ public class Server implements ServerInterface{
 	 * @param graphRows Anzahl der vertikalen Knoten des Graphen
 	 * @param graphColumns Anzahl der horizontalen Knoten des Graphen
 	 * @param port Port, an dem der Listener gestartet werden soll
-	 * @param maxWorker Maximale Anzahl an Worker (und somit auch an registrierbaren Robotern)
+	 * @param maxWorker Maximale Anzahl an Worker (und somit auch an registrierbaren Fahrzeugen)
 	 */
 	public Server(int graphRows, int graphColumns, int port, int maxWorker) {
-		roboGraph = new RoboGraph(graphRows, graphColumns);
+		streetGraph = new StreetGraph(graphRows, graphColumns);
 		this.maxWorker = maxWorker;
 		worker = new Worker[maxWorker];
 		anzahl = 0;
@@ -80,11 +80,11 @@ public class Server implements ServerInterface{
 	}
 	
 	/**
-	 * Gibt den RoboGraph objekt zurÃ¼ck.
-	 * @return roboGraph
+	 * Gibt den StreetGraph zurück.
+	 * @return streetGraph Der Straßengraph
 	 */
-	public RoboGraph getRoboGraph() {
-		return this.roboGraph;
+	public StreetGraph getStreetGraph() {
+		return this.streetGraph;
 	}
 	
     
@@ -108,7 +108,7 @@ public class Server implements ServerInterface{
 
 		for (int i = 0; i < maxWorker; i++) {
 			if (worker[i] != null) {
-				removeWorker(worker[i].getRoboId());
+				removeWorker(worker[i].getVehicleId());
 			}
 		}
 	}
@@ -116,16 +116,16 @@ public class Server implements ServerInterface{
 
     
     /**
-     * Fï¿½gt eine Meldung in das Textfeld eines Roboters in der GUI hinzu.
+     * Fï¿½gt eine Meldung in das Textfeld eines Fahrzeuges in der GUI hinzu.
      * Ist keine GUI registriert, wird die Ausgabe auf die Kommandozeile umgelenkt.
-     * @param robotId Die ID des Roboters
+     * @param vehicleId Die ID des Fahrzeuges
      * @param message Die Meldung die hinzugefï¿½gt werden soll
      */
-    public void addRobotTextMessage(String robotId, String message) {
+    public void addVehicleTextMessage(String vehicleId, String message) {
     	if(gui != null) {
-    		gui.addRobotTextMessage(robotId, message);
+    		gui.addRobotTextMessage(vehicleId, message);
     	} else {
-    		System.out.println("Keine GUI registriert. Meldung: " + robotId + ": " + message);
+    		System.out.println("Keine GUI registriert. Meldung: " + vehicleId + ": " + message);
     	}
     }
     
@@ -151,26 +151,26 @@ public class Server implements ServerInterface{
 	
 	
 	/**
-	 * Registriert einen neuen Worker beim Server und fï¿½gt den Roboter dem Graphen hinzu
+	 * Registriert einen neuen Worker beim Server und fï¿½gt das Fahrzeug dem Straßengraphen und der GUI hinzu
 	 * @param worker Das Worker Objekt
 	 * @param position Die Position, an die der Worker geschrieben werden soll
 	 */
-	public synchronized void addWorker(String roboName, String roboIp, int roboPort) {
-		// Wenn ein Worker zu dieser Roboter ID existiert, beende diesen.
+	public synchronized void addWorker(String vehicleId, String vehicleIp, int vehiclePort) {
+		
 		if(isAddWorkerAllowed()) {
-			int existingWorkerPosition = findWorkerToRobotId(roboName) ; 
-			if(existingWorkerPosition >= 0) {
-				removeWorker(roboName);
+			int existingWorkerPosition = findWorkerToVehicleId(vehicleId) ; 
+			if(existingWorkerPosition >= 0) { // Wenn ein Worker zu dieser FahrzeugID existiert, beende diesen.
+				removeWorker(vehicleId);
 			}
 			int nextFreePos = getNextFreeWorkerNumber();
-			this.worker[nextFreePos] = new Worker(this, "Worker_" + nextFreePos, roboName, roboIp, roboPort, (this.port + nextFreePos + 1));
+			this.worker[nextFreePos] = new Worker(this, "Worker_" + nextFreePos, vehicleId, vehicleIp, vehiclePort, (this.port + nextFreePos + 1));
 			anzahl++;
 			
 			
 			//Fahrzeug dem Graphen und der GUI hinzufügen
 			String position;
-			position = roboGraph.addRobot(roboName);
-			gui.addRobot(roboName, position);
+			position = streetGraph.addRobot(vehicleId);
+			gui.addRobot(vehicleId, position);
 		} else {
 			throw new MaximumWorkersReachedException("Maximale Anzahl an Worker erreicht. Worker wurde nicht gestartet.");
 		}
@@ -179,22 +179,21 @@ public class Server implements ServerInterface{
 	
 	
 	
-	//TODO removeWorker in removeRobot umbenennen 
 	/**
-	 * Beendet den Worker und den entfernt den Roboter aus dem Graphen anhand der ID des Roboters
-	 * @param workerName
+	 * Beendet den Worker und den entfernt das Fahrzeug aus dem Graphen und der GUI anhand der ID des Fahrzeugs
+	 * @param vehicleId
 	 */
-	public void removeWorker(String robotId) {
+	public void removeWorker(String vehicleId) {
 		// Aus GUI und StreetGraph entfernen
-		roboGraph.removeRobot(robotId);
-		gui.removeRobot(robotId);
+		streetGraph.removeRobot(vehicleId);
+		gui.removeRobot(vehicleId);
 		//FIXME Mathias: kann ich vom Server aus den Roboter aus dem AUTO-Mode nehmen, so dass der zugehörige Thread auch beendet wird?
-		if(isRobotInAutoMode(robotId)) {
-			deactivateAutoDst(robotId);
+		if(isVehicleInAutoMode(vehicleId)) {
+			deactivateAutoDst(vehicleId);
 		}
 		
 		// Worker anhalten und dereferenzieren
-		int position = findWorkerToRobotId(robotId);
+		int position = findWorkerToVehicleId(vehicleId);
 		worker[position].closeConnection();
 		worker[position] = null;
 	}
@@ -216,14 +215,14 @@ public class Server implements ServerInterface{
 	
 	
 	/**
-	 * Sucht den Worker im Array zum Roboter Namen
-	 * @param robotName Name des Roboters
+	 * Sucht den Worker im Array zur Fahrzeug ID
+	 * @param vehicleId Name (ID) des Fahrzeuges
 	 * @return Index der Fundstelle, wenn nicht vorhanden -1
 	 */
-	private int findWorkerToRobotId(String robotName) {
+	private int findWorkerToVehicleId(String vehicleId) {
 		for (int i = 0; i < maxWorker; i++) {
 			try {
-				if (worker[i].getRoboName().equals(robotName)) {
+				if (worker[i].getVehicleId().equals(vehicleId)) {
 					return i;
 				}
 			} catch(NullPointerException e) {
@@ -252,49 +251,50 @@ public class Server implements ServerInterface{
 	public String generateRndDestination() {
 		int x;
 		int y;
-		x = (int) (Math.random()* roboGraph.getColumnCount());
-		y = (int) (Math.random()* roboGraph.getRowCount());
+		x = (int) (Math.random()* streetGraph.getColumnCount());
+		y = (int) (Math.random()* streetGraph.getRowCount());
 		
 		return (x + "/" + y);
 	}
 	
 	/**
-	 * Startet einen Thread, der dem angegebenen Roboter in einer Endlosschleife driveRobotTo 
+	 * Startet einen Thread, der dem angegebenen Fahrzeug in einer Endlosschleife driveVehicleTo() 
 	 * mit zufï¿½llig generierten Zielen ausfï¿½hrt.
-	 * @param robotId Die ID des Roboters
+	 * @param vehicleId Die ID des Fahrzeugs
 	 */
-	public void activateAutoDst(String robotId) {
-		robotMode.put(robotId, true);
-		while(isRobotInAutoMode(robotId)) {
+	public void activateAutoDst(String vehicleId) {
+		vehicleMode.put(vehicleId, true);
+		while(isVehicleInAutoMode(vehicleId)) {
 			String destination = generateRndDestination();
-			gui.setRobotDestinationTextField(robotId, destination);
-			driveRobotTo(robotId, destination);
+			gui.setRobotDestinationTextField(vehicleId, destination);
+			driveVehicletTo(vehicleId, destination);
+			addVehicleTextMessage(vehicleId, "Ziel erreicht");
+			// Warte 2 Sekunden, wenn am Ziel angekommen, dann wieder von vorne
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				//Keine weitere Behandlung notwendig
 			}
-			addRobotTextMessage(robotId, "Ziel erreicht");
 		} 
 	}
 	
 	/**
-	 * Beendet den Thread der dem Roboter automatisch neue Ziele zuweist
-	 * @param robotId Die ID des Roboters
+	 * Beendet den Thread der dem Fahrzeug automatisch neue Ziele zuweist
+	 * @param vehicleId Die ID des Fahrzeugs
 	 */
-	public void deactivateAutoDst(String robotId) {
-		this.robotMode.remove(robotId);
+	public void deactivateAutoDst(String vehicleId) {
+		this.vehicleMode.remove(vehicleId);
 	}
 	
 	/**
-	 * ï¿½berprï¿½ft, ob der Roboter im Auto-Modus ist
-	 * @param robotId Die ID des Roboters, der geprï¿½ft werden soll
-	 * @return True, wenn der AUTO-Mode aktive ist, sonst false
+	 * ï¿½berprï¿½ft, ob das Fahrzeug im Auto-Modus ist
+	 * @param vehicleId Die ID des Fahrzeuges, der geprï¿½ft werden soll
+	 * @return True, wenn der AUTO-Mode aktiv ist, sonst false
 	 */
-	public boolean isRobotInAutoMode(String robotId) {
+	public boolean isVehicleInAutoMode(String vehicleId) {
 		// Frage Wert in der Verwaltung ab
 		//true falls AUTO aktiv, sonst false
-		if(robotMode.get(robotId) == null) {
+		if(vehicleMode.get(vehicleId) == null) {
 			return false;
 		}
 		return true;
@@ -306,24 +306,24 @@ public class Server implements ServerInterface{
 	//###################################################
 	
 	
-	public void driveRobotTo(String robotId, String destination) {
-		String position = roboGraph.getRobotPosition(robotId); //TODO Variable Position notwendig??
-		List<String> path = roboGraph.getShortesPath(robotId, destination);
+	public void driveVehicletTo(String vehicleId, String destination) {
+		String position = streetGraph.getRobotPosition(vehicleId); //TODO Variable Position notwendig??
+		List<String> path = streetGraph.getShortesPath(vehicleId, destination);
 		
 		
 		
-		//Der folgende algorithmus ist arbeit fÃ¼r einen eigenen Thread/Worker, sodass die pfade gleichzeitg fÃ¼r mehrere roboter abgearbeitet werden kÃ¶nnen
+		//Der folgende algorithmus ist arbeit fÃ¼r einen eigenen Thread/Worker, sodass die pfade gleichzeitg fÃ¼r mehrere Fahrzeuge abgearbeitet werden kÃ¶nnen
 		while(path.size() > 1) {
 			String nodeId = path.get(1);
 			if((path.size() == 2) && (nodeId == destination)) {
-				gui.addRobotTextMessage(robotId, "bÃ¤Ã¤Ã¤hhh");
+				addVehicleTextMessage(vehicleId, "bÃ¤Ã¤Ã¤hhh");
 			}
 			
-			int rotationsNeeded = roboGraph.getNeededRotation(robotId, nodeId);
-			turnRobot(rotationsNeeded, robotId);
+			int rotationsNeeded = streetGraph.getNeededRotation(vehicleId, nodeId);
+			turnVehicle(rotationsNeeded, vehicleId);
 			
-			moveRobotForward(robotId);
-			path = roboGraph.getShortesPath(robotId, destination);
+			moveVehicleForward(vehicleId);
+			path = streetGraph.getShortesPath(vehicleId, destination);
 		}
 	}
 	
@@ -335,31 +335,23 @@ public class Server implements ServerInterface{
 	/**
 	 * 
 	 * @param rotationsNeeded
-	 * @param robotId
+	 * @param vehicleId
 	 */
-	private void turnRobot(int rotationsNeeded, String robotId) {
+	private void turnVehicle(int rotationsNeeded, String vehicleId) {
 		switch(rotationsNeeded) {
-			case 1: turnRobotRight(robotId);
-					System.out.println("Dreh soll: rechts");
+			case 1: turnVehicleRight(vehicleId);
 					break;
-			case 2: turnRobotRight(robotId);
-					turnRobotRight(robotId);
-					System.out.println("Dreh soll: rechts");
-					System.out.println("Dreh soll: rechts");
+			case 2: turnVehicleRight(vehicleId);
+					turnVehicleRight(vehicleId);
 					break;
-			case 3: turnRobotLeft(robotId);
-					System.out.println("Dreh soll: links");
+			case 3: turnVehicleLeft(vehicleId);
 					break;
-			case -1:turnRobotLeft(robotId);
-					System.out.println("Dreh soll: links");
+			case -1:turnVehicleLeft(vehicleId);
 					break;
-			case -2:turnRobotLeft(robotId);
-					turnRobotLeft(robotId);
-					System.out.println("Dreh soll: links");
-					System.out.println("Dreh soll: links");
+			case -2:turnVehicleLeft(vehicleId);
+					turnVehicleLeft(vehicleId);
 					break;
-			case -3:turnRobotRight(robotId);
-					System.out.println("Dreh soll: rechts");
+			case -3:turnVehicleRight(vehicleId);
 					break;
 			default:break;
 		}
@@ -367,64 +359,64 @@ public class Server implements ServerInterface{
 	
 	
 	/**
-	 * Gibt den Drehbefehl an den Roboter weiter und ändert anschließend die Ausrichtung im GUI und im Straßen-Graphen.
-	 * @param robotId ID des Fahrzeuges, das gedreht werden soll.
+	 * Gibt den Drehbefehl an das Fahrzeug weiter und ändert anschließend die Ausrichtung im GUI und im Straßen-Graphen.
+	 * @param vehicleId ID des Fahrzeuges, das gedreht werden soll.
 	 */
-	public void turnRobotLeft(String robotId) {
+	public void turnVehicleLeft(String vehicleId) {
 		
 		try {
-			worker[findWorkerToRobotId(robotId)].turnLeft();
+			worker[findWorkerToVehicleId(vehicleId)].turnLeft();
 		} catch (RemoteException e) {
 			System.err.println("Server: Fehler bei turnVehicleLeft remote Aufruf, " + 
 					"Fahrzeugdrehung abgebrochen.");
 			e.printStackTrace();
 			//return; //Wenn Fehler beim Remote, drehe nicht im Graphen oder in der GUI
 		}		
-		roboGraph.turnRobotLeft(robotId);
-		gui.turnRobotLeft(robotId);
+		streetGraph.turnRobotLeft(vehicleId);
+		gui.turnRobotLeft(vehicleId);
 	}
 	
 	/**
-	 * Dreht den Roboter im RoboGraph und gibt den Befehl an den physischen roboter weiter
+	 * Dreht das Fahrzeug im StreetGraph, in der GUI und gibt den Befehl an das Remote-Fahrzeug weiter
 	 */
-	public void turnRobotRight(String robotId) {
+	public void turnVehicleRight(String vehicleId) {
 		try {
-			worker[findWorkerToRobotId(robotId)].turnRight();
+			worker[findWorkerToVehicleId(vehicleId)].turnRight();
 		} catch (RemoteException e) {
 			System.err.println("Server: Fehler bei turnVehicleRight remote Aufruf, " + 
 					"Fahrzeugdrehung abgebrochen.");
 			e.printStackTrace();
 			//return; //Wenn Fehler beim Remote, drehe nicht im Graphen oder in der GUI
 		}
-		roboGraph.turnRobotRight(robotId);
-		gui.turnRobotRight(robotId);
+		streetGraph.turnRobotRight(vehicleId);
+		gui.turnRobotRight(vehicleId);
 	}
 	
 
 	
 	/**
 	 * 
-	 * @param robotId
+	 * @param vehicleId
 	 */
-	public String moveRobotForward(String robotId) {
+	public String moveVehicleForward(String vehicleId) {
 		String destination;
 		try {		
-			destination = roboGraph.moveRobotForward(robotId);
+			destination = streetGraph.moveRobotForward(vehicleId);
 		} catch(TargetIsOccupiedException e) {
 			System.out.println("Server: Zielknoten besetzt. Nächster Versuch kommt.");
-			// 2 Sekunden warten, bis zum erneuten versuch
+			// 4 Sekunden warten, bis zum erneuten versuch
 			try {
 				Thread.sleep(4000);
 			} catch (InterruptedException e1) {
 				// Keine Fehlerbehandlung notwendig
 			}
-			destination = moveRobotForward(robotId);
+			destination = moveVehicleForward(vehicleId);
 			return destination; // Rausspringen, bei ausgelöster Exception, sonst beim Rekursiven auflösen zu viele Befehle
 		}
 		
 		try {
-			//TODO Roboter keine Feste Geschwindigkeit übergeben
-			worker[findWorkerToRobotId(robotId)].driveNextPoint(20);
+			//TODO Fahrzeug keine Feste Geschwindigkeit übergeben
+			worker[findWorkerToVehicleId(vehicleId)].driveNextPoint(20);
 		} catch (RemoteException e) {
 			System.err.println("Server: Fehler bei moveVehicleForward remote Aufruf, " + 
 					"Fahrzeugbewegung abgebrochen.");
@@ -433,7 +425,7 @@ public class Server implements ServerInterface{
 			//TODO Bewegung auf den Graphen rückgängig machen, bei RemoteException, um auf den vorherigen Stand zu kommen, wie bei turn-Befehlen?
 		}
 		
-		gui.setRobotPosition(robotId, destination);
+		gui.setRobotPosition(vehicleId, destination);
 		return destination;
 	}
 		

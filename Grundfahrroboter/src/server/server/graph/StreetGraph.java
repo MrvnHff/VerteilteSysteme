@@ -20,21 +20,21 @@ import server.server.graph.nodes.RoboNode;
 import server.server.graph.nodes.RobotOrientation;
 import server.utils.IdUtils;
 
-public class RoboGraph {
+public class StreetGraph {
 	
 	private SimpleGraph<String, RoboEdge> roadGraph; 
 	private HashMap<String, RoboNode> roboNodeMap;
 	private int columnCount;
 	private int rowCount;
 	
-	public RoboGraph() {
+	public StreetGraph() {
 		roadGraph = new SimpleGraph<String, RoboEdge>(RoboEdge.class);
 		roboNodeMap = new HashMap<String, RoboNode>();
 		columnCount = 0;
 		rowCount = 0;
 	}
 	
-	public RoboGraph(int row, int col) {
+	public StreetGraph(int row, int col) {
 		this();
 		
 		columnCount = col;
@@ -238,7 +238,7 @@ public class RoboGraph {
 		List<RoboNode> exceptions = new ArrayList<RoboNode>();
 		exceptions.add(sourceNode);
 		exceptions.add(getNode(destination));
-		RoboGraph tempGraph = creatUnoccupiedGraph(exceptions);
+		StreetGraph tempGraph = creatUnoccupiedGraph(exceptions);
 		RoboNode node = tempGraph.getNode(destination);
 		if(node == null) {
 			throw new NoValidTargetNodeException();
@@ -252,10 +252,10 @@ public class RoboGraph {
 		return path.getVertexList();
 	}
 
-	private RoboGraph creatUnoccupiedGraph(List<RoboNode> exceptions) {
+	private StreetGraph creatUnoccupiedGraph(List<RoboNode> exceptions) {
 		List<RoboNode> occupiedNodes = this.getListOfOccupiedNodes();
 		occupiedNodes.removeAll(exceptions);
-		RoboGraph tempGraph = new RoboGraph(this.getRowCount(), this.getColumnCount());
+		StreetGraph tempGraph = new StreetGraph(this.getRowCount(), this.getColumnCount());
 		tempGraph.deleteNodes(occupiedNodes);
 		return tempGraph;
 	}

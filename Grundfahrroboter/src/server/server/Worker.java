@@ -15,34 +15,34 @@ import client.RoboServerInterface;
 
 public class Worker extends Thread implements WorkerInterface{
 	private WorkerInterface stub;
-	private RoboServerInterface robo;
+	private RoboServerInterface vehicle;
 	private Registry registryW;
-	private Registry registryR;
+	private Registry registryV;
 	private Registry returnOfCreateRegistry;
 	private Server server;
 	
 	private String workerIp;
 	private int workerPort;
-	private String roboIp;
-	private int roboPort;
-	private String workerName;
-	private String roboName;
+	private String workerId;
+	private String vehicleIp;
+	private int vehiclePort;
+	private String vehicleId;
 	
 	/**
 	 * Legt einen Worker mit den übergebenen Parametern an. Der Thread startet sich dann automatisch selbst.
 	 * @param server Referenz auf den dahinterstehenden Server.
-	 * @param workerName Name des Workers
-	 * @param roboName ID des Roboters
-	 * @param roboIp IP des Roboters
-	 * @param roboPort Port des Roboters
+	 * @param workerId Name des Workers
+	 * @param vehicleId ID des Fahrzeugs
+	 * @param vehicleIp IP des Fahrzeugs
+	 * @param vehiclePort Port des Fahrzeugs
 	 * @param workerPort Port des Workers, an dem der Worker laufen soll
 	 */
-	public Worker(Server server, String workerName, String roboName, String roboIp, int roboPort, int workerPort) {
-		this.workerName = workerName;
+	public Worker(Server server, String workerId, String vehicleId, String vehicleIp, int vehiclePort, int workerPort) {
+		this.workerId = workerId;
 		this.workerPort = workerPort;
-		this.roboIp = roboIp;
-		this.roboName = roboName;
-		this.roboPort = roboPort;
+		this.vehicleIp = vehicleIp;
+		this.vehicleId = vehicleId;
+		this.vehiclePort = vehiclePort;
 		this.server = server;
 		try {
 			this.workerIp = InetAddress.getLocalHost().getHostAddress();
@@ -57,20 +57,20 @@ public class Worker extends Thread implements WorkerInterface{
 	public void run() {
 		try {
 			registerWorker();		
-			registerRobot();			
+			registerVehicle();			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void sayHello() throws RemoteException {
-		robo.registerWorker(workerName, workerIp, workerPort);		
+		vehicle.registerWorker(workerId, workerIp, workerPort);		
 	}
 	
-	public String getRoboName() {return roboName;}
-	public String getRoboId() {return this.roboIp;}
-	public int getRoboPort() {return this.roboPort;}
-	public String getWorkerName() {return workerName;}
+	public String getVehicleId() {return vehicleId;}
+	public String getVehicleIp() {return this.vehicleIp;}
+	public int getVehiclePort() {return this.vehiclePort;}
+	public String getWorkerId() {return workerId;}
 	public int getWorkerPort() {return this.workerPort;}
 	public String getWorkerIp() {return this.workerIp;}
 	
@@ -80,7 +80,7 @@ public class Worker extends Thread implements WorkerInterface{
 	//remoteReachable
 	@Override
 	public void setWay(String point1, String point2) throws RemoteException {
-		System.out.println("Statusabruf: " + robo.getStatus());
+		System.out.println("Statusabruf: " + vehicle.getStatus());
 	}
 
 	//Javadoc-Kommentar im Interface
@@ -88,7 +88,7 @@ public class Worker extends Thread implements WorkerInterface{
 	@Override
 	public void printStatus(String s) throws RemoteException {
 		System.out.println("Statusmeldung: " + s);	
-		server.addRobotTextMessage(roboName, s);
+		server.addVehicleTextMessage(vehicleId, s);
 	}
 
 	//Javadoc-Kommentar im Interface
@@ -96,7 +96,7 @@ public class Worker extends Thread implements WorkerInterface{
 	@Override
 	public void printError(String s) throws RemoteException {
 		System.out.println("Fehlermeldung: " + s);		
-		server.addRobotTextMessage(roboName, s);
+		server.addVehicleTextMessage(vehicleId, s);
 	}
 
 	/**
@@ -108,98 +108,90 @@ public class Worker extends Thread implements WorkerInterface{
 		stub = (WorkerInterface) UnicastRemoteObject.exportObject(this, 0);
 		returnOfCreateRegistry = LocateRegistry.createRegistry(workerPort);
 	    registryW = LocateRegistry.getRegistry(workerPort);
-	    registryW.bind(workerName, stub);
+	    registryW.bind(workerId, stub);
 	    /*stub = (WorkerInterface) UnicastRemoteObject.exportObject(this, 0); 
         try { 
             registryW = LocateRegistry.createRegistry(workerPort); 
         } catch (ExportException e) {} 
         registryW = LocateRegistry.getRegistry(workerPort); 
-        registryW.bind(workerName, stub);*/ 
-	    System.out.println("Worker: " + workerName + " bereit!");
+        registryW.bind(workerId, stub);*/ 
+	    System.out.println("Worker: " + workerId + " bereit!");
 	}
 	
 	
 	/**
-	 * Sucht nach dem Roboter im Netzwerk und speichert sich diesen ab, um darauf zugreifen zu können.
+	 * Sucht nach dem Fahrzeug im Netzwerk und speichert sich dieses ab, um darauf zugreifen zu können.
 	 * @throws AccessException
 	 * @throws RemoteException
 	 * @throws NotBoundException
 	 * @throws AlreadyBoundException
 	 */
-	private void registerRobot() throws AccessException, RemoteException, NotBoundException, AlreadyBoundException {        
-	    registryR = LocateRegistry.getRegistry(roboIp, roboPort);
-		robo = (RoboServerInterface) registryR.lookup(roboName);		
-		System.out.println("Worker: " + workerName + " verbunden mit Roboter " + roboName + "!");		
+	private void registerVehicle() throws AccessException, RemoteException, NotBoundException, AlreadyBoundException {        
+	    registryV = LocateRegistry.getRegistry(vehicleIp, vehiclePort);
+		vehicle = (RoboServerInterface) registryV.lookup(vehicleId);		
+		System.out.println("Worker: " + workerId + " verbunden mit Fahrzeug " + vehicleId + "!");		
 		sayHello();
 	}
 	
 	
 	/**
-	 * Ruft die closeConnection() des Roboters auf und und beendet den eigenen Worker-Thread.
+	 * Ruft die closeConnection() des Fahrzeugs auf und und beendet den eigenen Worker-Thread.
 	 * @throws RemoteException
 	 * @throws NotBoundException
 	 */
 	public void closeConnection() {
 		
 		try {
-			robo.closeConnection();			// Programm auf Roboter beenden
-			this.robo = null;				// Dereferenzieren
+			vehicle.closeConnection();			// Programm auf Fahrzeug beenden
+			this.vehicle = null;				// Dereferenzieren
 		} catch (RemoteException e) {
-			System.err.println("Worker: " + this.workerName + " Fehler beim Versuch Roboter zu beenden. Roboter: " + this.roboName);
+			System.err.println("Worker: " + this.workerId + " Fehler beim Versuch Fahrzeug zu beenden. Fahrzeug: " + this.vehicleId);
 			e.printStackTrace();
 		}
 		
 		try {
-			registryW.unbind(workerName);	// Das Binding des Workers zum Remote-Objekt-Stub aufheben
+			registryW.unbind(workerId);	// Das Binding des Workers zum Remote-Objekt-Stub aufheben
 		} catch (RemoteException | NotBoundException e) {
-			System.err.println("Worker: " + this.workerName + " Fehler beim unbind.");
+			System.err.println("Worker: " + this.workerId + " Fehler beim unbind.");
 			e.printStackTrace();
 		}
 				
 		try { 				// Den Port wieder freigeben 
 			UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
 		} catch (NoSuchObjectException e) {
-			System.err.println("Worker: " + this.workerName + " Fehler beim unexport.");
+			System.err.println("Worker: " + this.workerId + " Fehler beim unexport.");
 			e.printStackTrace();
 		}
 
-		this.robo = null;		//Dereferenzieren, damit der Garbage Collector die Objekte aufsammelt
+		this.vehicle = null;		//Dereferenzieren, damit der Garbage Collector die Objekte aufsammelt
 		this.server = null;
 		
-		System.out.println("Worker: " + this.workerName + " beendet. (Roboter war: " +  this.roboName + ")");
+		System.out.println("Worker: " + this.workerId + " beendet. (Fahrzeug war: " +  this.vehicleId + ")");
 	}
 
-	/*//FIXME Methoden entfallen 
-	public void drive(int speed) throws RemoteException {
-		robo.drive(speed);
-	}
-
-	public void driveBack(int cm, int speed) throws RemoteException {
-		robo.driveBack(cm, speed);
-	} */
 
 	public void turnLeft() throws RemoteException {
-		robo.turnLeft();
+		vehicle.turnLeft();
 	}
 
 	public void turnRight() throws RemoteException {
-		robo.turnRight();
+		vehicle.turnRight();
 		
 	}
 
 	public void stopDrive() throws RemoteException {
-		robo.stopDrive();
+		vehicle.stopDrive();
 	}
 
 	public void driveNextPoint(int speed) throws RemoteException {
-		robo.driveNextPoint(speed);
+		vehicle.driveNextPoint(speed);
 	}
 
 	public String getStatus() throws RemoteException {
-		return robo.getStatus();
+		return vehicle.getStatus();
 	}
 
 	public String getError() throws RemoteException {
-		return robo.getError();
+		return vehicle.getError();
 	}	
 }

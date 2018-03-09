@@ -111,7 +111,7 @@ public class RobotController implements Initializable{
 	 */
 	public void rotateRobotLeft() {
 		//rotateRobot(-90); //FIXME dreht doppelt, wenn einkommentiert und Robo manuell gesteuert
-		server.turnRobotLeft(robotId);
+		server.turnVehicleLeft(robotId);
 	}
 	
 	public void rotateRobotLeftServer() {
@@ -123,7 +123,7 @@ public class RobotController implements Initializable{
 	 */
 	public void rotateRobotRight() {
 		//rotateRobot(90); //FIXME dreht doppelt, wenn einkommentiert und Robo manuell gesteuert
-		server.turnRobotRight(robotId);
+		server.turnVehicleRight(robotId);
 	}
 	
 	public void rotateRobotRightServer() {
@@ -149,7 +149,7 @@ public class RobotController implements Initializable{
 	
 	public void moveRobotForward() {
 		try {
-			String destination = server.moveRobotForward(robotId);
+			String destination = server.moveVehicleForward(robotId);
 			robotLayout.moveRobotTo(robotId, destination);
 			position.setText(destination);
 		} catch (NoValidTargetNodeException e) {
@@ -187,7 +187,7 @@ public class RobotController implements Initializable{
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				server.driveRobotTo(robotId, destination);
+				server.driveVehicletTo(robotId, destination);
 			}
 		}).start();
 		

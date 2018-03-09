@@ -1,31 +1,29 @@
 package server.server;
 
 import server.gui.Gui;
-import server.server.graph.RoboGraph;
+import server.server.graph.StreetGraph;
 
 public interface ServerInterface {
 	
-	public void turnRobotLeft(String robotId);
-	public void turnRobotRight(String robotId);
-	public String moveRobotForward(String robotId);
-	//public void turnRobotLeftGui(String robotId);
-	//public void moveRobotForwardGui(String robotId);
-	public void driveRobotTo(String robotId, String destination);
+	public void turnVehicleLeft(String vehicleId);
+	public void turnVehicleRight(String vehicleId);
+	public String moveVehicleForward(String vehicleId);
+	public void driveVehicletTo(String vehicleId, String destination);
 	
 	public void setGui(Gui gui);
-	public RoboGraph getRoboGraph();
+	public StreetGraph getStreetGraph();
 	public void startServer();
 	public void stopServer();
 	
-	public void addRobotTextMessage(String robotId, String message);
+	public void addVehicleTextMessage(String vehicleId, String message);
 	public void addServerTextMessage(String message);
 	
 	
-	public void addWorker(String roboName, String roboIp, int roboPort);
-	public void removeWorker(String roboId);
+	public void addWorker(String vehicleId, String vehicleIp, int vehiclePort);
+	public void removeWorker(String vehicleId);
 	
-	public void activateAutoDst(String roboId);
-	public void deactivateAutoDst(String roboId);
-	public boolean isRobotInAutoMode(String roboId);
+	public void activateAutoDst(String vehicleId);
+	public void deactivateAutoDst(String vehicleId);
+	public boolean isVehicleInAutoMode(String vehicleId);
 	
 }
