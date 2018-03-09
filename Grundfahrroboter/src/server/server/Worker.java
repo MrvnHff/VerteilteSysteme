@@ -28,7 +28,15 @@ public class Worker extends Thread implements WorkerInterface{
 	private String workerName;
 	private String roboName;
 	
-	//FIXME Listener aus klasse entfernen
+	/**
+	 * Legt einen Worker mit den übergebenen Parametern an. Der Thread startet sich dann automatisch selbst.
+	 * @param server Referenz auf den dahinterstehenden Server.
+	 * @param workerName Name des Workers
+	 * @param roboName ID des Roboters
+	 * @param roboIp IP des Roboters
+	 * @param roboPort Port des Roboters
+	 * @param workerPort Port des Workers, an dem der Worker laufen soll
+	 */
 	public Worker(Server server, String workerName, String roboName, String roboIp, int roboPort, int workerPort) {
 		this.workerName = workerName;
 		this.workerPort = workerPort;
@@ -60,11 +68,16 @@ public class Worker extends Thread implements WorkerInterface{
 	}
 	
 	public String getRoboName() {return roboName;}
+	public String getRoboId() {return this.roboIp;}
+	public int getRoboPort() {return this.roboPort;}
 	public String getWorkerName() {return workerName;}
+	public int getWorkerPort() {return this.workerPort;}
+	public String getWorkerIp() {return this.workerIp;}
+	
 
+	// TODO setWay umbenennen in etwas sinnvolles (Worker + Interface + RoboServer)
 	@Override
 	public void setWay(String point1, String point2) throws RemoteException {
-		//robo.driveCm(10, 20);
 		System.out.println("Statusabruf: " + robo.getStatus());
 	}
 
@@ -80,6 +93,11 @@ public class Worker extends Thread implements WorkerInterface{
 		server.addRobotTextMessage(roboName, s);
 	}
 
+	/**
+	 * Melde sich am Netzwerk an (Port öffnen)
+	 * @throws RemoteException
+	 * @throws AlreadyBoundException
+	 */
 	private void registerWorker() throws RemoteException, AlreadyBoundException {
 		stub = (WorkerInterface) UnicastRemoteObject.exportObject(this, 0);
 		returnOfCreateRegistry = LocateRegistry.createRegistry(workerPort);

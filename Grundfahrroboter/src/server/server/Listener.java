@@ -10,10 +10,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Listener extends Thread implements ListenerInterface{
-	//private Worker worker;
 	private String ip;
 	private int port;
-	private int anzahl;
 	
 	private Server server;
 	private Registry registry;
@@ -41,7 +39,9 @@ public class Listener extends Thread implements ListenerInterface{
 		registerListener();
 	}
 
-
+	/**
+	 * Ermöglicht es einem Roboter sich beim Listener anzumelden, um zum Server hinzugefügt zu werden.
+	 */
 	@Override
 	public synchronized void registerRobot(String roboName, String roboIp, int roboPort) throws RemoteException {
 		server.addServerTextMessage("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
@@ -51,25 +51,14 @@ public class Listener extends Thread implements ListenerInterface{
 			server.addWorker(roboName, roboIp, roboPort);
 		} catch (Exception e) {
 			server.addServerTextMessage("Fehler bei addWorker()" + e);
-			System.out.println("Listener: Fehler bei addWorker()" + e );
+			System.err.println("Listener: Fehler bei addWorker()" + e );
 		}
-		
-		/*
-		//FIXME ersetzen
-		if (server.isAllowedToAddWorker()) {
-			int index = server.getNextFreeWorkerNumber();
-//			worker = new Worker(this.server, this, "Worker" + (index + 1), roboName, ip, roboIp, (port + index + 1), roboPort);
-			if (server != null) {
-//				server.addWorker(worker, index);
-			}
-		}else{
-			server.addServerTextMessage("Maximale Anzahl an Workern ist erreicht! Es kann kein Roboter mehr dazukommen!");
-			System.out.println("Maximale Anzahl an Workern ist erreicht! Es kann kein Roboter mehr dazukommen!");
-		}*/
 	}
 	
+	
+	
 	/**
-	 * 
+	 * Startet die Netzwerkverbindung.
 	 */
 	private synchronized void registerListener() {
 		try {
@@ -86,26 +75,36 @@ public class Listener extends Thread implements ListenerInterface{
 	}
 	
 	
-	/*public void closeWorker(String workerName) {
-		server.removeWorker(workerName);
-		System.out.println("Worker " + workerName + " beendet!\n");
-	}*/
-	
+	/**
+	 * Beendet den Listener-Thread und gibt den Port an der Netzwerkschnittstelle wieder frei.
+	 */
 	@Override
 	public void stopListener() {
 		this.interrupt();
 		try {
-			UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true); //Listener tatsï¿½chlich anhalten
+			UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
 		} catch (NoSuchObjectException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	
+	/**
+	 * Gibt den Port zurück, an dem der Listener aktiv ist.
+	 * @return
+	 */
+	public int getPort() {
+		return this.port;
+	}
+	
+	
+	/**
+	 * Gibt die IP-Adresse zurück, auf der der Listener läuft.
+	 * @return
+	 */
+	public String getIpAddress() {
+		return this.ip;
+	}
 }
 
-//Registry registry = LocateRegistry.getRegistry("192.168.178.26", 55555);
-//robo = (RoboServerInterface) registry.lookup("Robo2");
-//robo.turnLeft();
-//robo.turnLeft();
-//robo.turnLeft();
-//robo.turnLeft();

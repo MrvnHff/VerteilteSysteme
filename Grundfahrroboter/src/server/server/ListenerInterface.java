@@ -6,5 +6,5 @@ import java.rmi.RemoteException;
 public interface ListenerInterface extends Remote {
 	
 	public void registerRobot(String name, String ip, int port) throws RemoteException;
-	public void stopListener() throws RemoteException;
+	public void stopListener() throws RemoteException; //TODO stopListener hier nötig?? Muss ja nicht im Netzwerk erreichbar sein
 }
