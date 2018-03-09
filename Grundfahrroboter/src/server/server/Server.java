@@ -2,14 +2,12 @@ package server.server;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import client.RoboServerInterface;
 import server.gui.Gui;
+import server.server.exceptions.MaximumWorkersReachedException;
 import server.server.exceptions.TargetIsOccupiedException;
 import server.server.graph.RoboGraph;
 
@@ -17,7 +15,7 @@ import server.server.graph.RoboGraph;
 public class Server implements ServerInterface{
 	private Gui gui;
 		
-	private ListenerInterface listener;
+	private Listener listener;
 	private Worker[] worker;
 	private int anzahl;
 	private int maxWorker;
@@ -57,13 +55,14 @@ public class Server implements ServerInterface{
 		this.port= port;
 	}
 	
+	
+	//TODO addWorker umbenennen in addRobot
 	/**
 	 * Registriert einen neuen Worker beim Server und f�gt den Roboter dem Graphen hinzu
 	 * @param worker Das Worker Objekt
 	 * @param position Die Position, an die der Worker geschrieben werden soll
-	 * @throws Exception Wird geworfen, wenn die versucht wird mehr worker als zul�ssig hinzuzuf�gen
 	 */
-	public synchronized void addWorker(String roboName, String roboIp, int roboPort) throws Exception {
+	public synchronized void addWorker(String roboName, String roboIp, int roboPort) {
 		// Wenn ein Worker zu dieser Roboter ID existiert, beende diesen.
 		if(isAddWorkerAllowed()) {
 			int existingWorkerPosition = findWorkerToRobotId(roboName) ; 
@@ -75,10 +74,12 @@ public class Server implements ServerInterface{
 			anzahl++;
 			addRobot(roboName);
 		} else {
-			throw new Exception("Maximale Anzahl an Worker erreicht. Worker wurde nicht gestartet.");
+			throw new MaximumWorkersReachedException("Maximale Anzahl an Worker erreicht. Worker wurde nicht gestartet.");
 		}
 	}
 	
+	
+	//TODO removeWorker in removeRobot umbenennen 
 	/**
 	 * Beendet den Worker und den entfernt den Roboter aus dem Graphen anhand der ID des Roboters
 	 * @param workerName
@@ -154,7 +155,7 @@ public class Server implements ServerInterface{
 	/**
 	 * Fügt neuen Roboter zum RoboGraph hinzu und in die GUI ein
 	 * @param robotId Id des neuen Roboters
-	 */
+	 */ //TODO diese addRobot in die addWorker eingliedern
 	private void addRobot(String robotId) {
 		String position;
 		position = roboGraph.addRobot(robotId);
@@ -164,7 +165,7 @@ public class Server implements ServerInterface{
 	
 	/**
 	 * Entfernt den Roboter aus der Verwaltungsstruktur, der GUI und dem AUTO-Modus, falls er sich darin befindet.
-	 */
+	 */ //TODO removeRobot in die removeWorker eingliedern
 	private void removeRobot(String robotId) {
 		roboGraph.removeRobot(robotId);
 		gui.removeRobot(robotId);
@@ -400,6 +401,7 @@ public class Server implements ServerInterface{
 	 */
 	public void stopServer() { //FIXME stopServer kontrollieren
 		try {
+			System.out.println(listener.getPort());
 			listener.stopListener();
 			listener = null;
 		} catch (Exception e) {

@@ -39,9 +39,7 @@ public class Listener extends Thread implements ListenerInterface{
 		registerListener();
 	}
 
-	/**
-	 * Ermöglicht es einem Roboter sich beim Listener anzumelden, um zum Server hinzugefügt zu werden.
-	 */
+	//JavaDoc Kommentar im Interface
 	@Override
 	public synchronized void registerRobot(String roboName, String roboIp, int roboPort) throws RemoteException {
 		server.addServerTextMessage("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
@@ -78,7 +76,6 @@ public class Listener extends Thread implements ListenerInterface{
 	/**
 	 * Beendet den Listener-Thread und gibt den Port an der Netzwerkschnittstelle wieder frei.
 	 */
-	@Override
 	public void stopListener() {
 		this.interrupt();
 		try {
@@ -87,11 +84,12 @@ public class Listener extends Thread implements ListenerInterface{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("Listener: Listener beendet.");
 	}
 	
 	
 	/**
-	 * Gibt den Port zurück, an dem der Listener aktiv ist.
+	 * Gibt den Port zurï¿½ck, an dem der Listener aktiv ist.
 	 * @return
 	 */
 	public int getPort() {
@@ -100,7 +98,7 @@ public class Listener extends Thread implements ListenerInterface{
 	
 	
 	/**
-	 * Gibt die IP-Adresse zurück, auf der der Listener läuft.
+	 * Gibt die IP-Adresse zurï¿½ck, auf der der Listener lï¿½uft.
 	 * @return
 	 */
 	public String getIpAddress() {
