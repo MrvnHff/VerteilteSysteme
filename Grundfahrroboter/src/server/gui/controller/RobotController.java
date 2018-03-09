@@ -110,7 +110,7 @@ public class RobotController implements Initializable{
 	 * Rotiert den Roboter in der Gui und im Server nach Links
 	 */
 	public void rotateRobotLeft() {
-		rotateRobot(-90);
+		//rotateRobot(-90); //FIXME dreht doppelt, wenn einkommentiert und Robo manuell gesteuert
 		server.turnRobotLeft(robotId);
 	}
 	
@@ -122,7 +122,7 @@ public class RobotController implements Initializable{
 	 * Rotiert den Roboter in der Gui und im Server nach Rechts
 	 */
 	public void rotateRobotRight() {
-		rotateRobot(90);
+		//rotateRobot(90); //FIXME dreht doppelt, wenn einkommentiert und Robo manuell gesteuert
 		server.turnRobotRight(robotId);
 	}
 	
