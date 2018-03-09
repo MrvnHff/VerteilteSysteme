@@ -16,12 +16,7 @@ import server.server.graph.RoboGraph;
 
 public class Server implements ServerInterface{
 	private Gui gui;
-	
-	private String serverLog;
-	private String robotLog;
-	private boolean robotFlag;
-	private boolean serverFlag;
-	
+		
 	private ListenerInterface listener;
 	private Worker[] worker;
 	private int anzahl;
@@ -48,7 +43,7 @@ public class Server implements ServerInterface{
 	}
 	
 	/**
-	 * Konstruktor der einen Server mit den angegebenen Parametern startet
+	 * Konstruktor der einen Server mit den angegebenen Parametern erstellt
 	 * @param graphRows Anzahl der vertikalen Knoten des Graphen
 	 * @param graphColumns Anzahl der horizontalen Knoten des Graphen
 	 * @param port Port, an dem der Listener gestartet werden soll
@@ -85,7 +80,7 @@ public class Server implements ServerInterface{
 	}
 	
 	/**
-	 * Entfernt den Worker und den Roboter aus dem Graphen anhand des Worker Namens
+	 * Beendet den Worker und den entfernt den Roboter aus dem Graphen anhand der ID des Roboters
 	 * @param workerName
 	 */
 	public void removeWorker(String robotId) {
@@ -113,6 +108,10 @@ public class Server implements ServerInterface{
 	}
 
 	
+	/**
+	 * Gibt die nächste freie Nummer im Worker Array zurück.
+	 * @return Die nächste freie Nummer, wenn noch eine frei ist, sonst -1.
+	 */
 	private int getNextFreeWorkerNumber() {
 		for (int i = 0; i < maxWorker; i++) {
 			if (worker[i] == null) {
@@ -122,21 +121,6 @@ public class Server implements ServerInterface{
 		return -1;
 	}
 	
-	/*
-	private int findWorker(String workerName) {
-		int i = 0;
-		for (i = 0; i < maxWorker; i++) {
-			try {
-				if (worker[i].getWorkerName() == workerName) {
-					return i;
-				}
-			}catch(NullPointerException e) {
-				//Wird geworfen, falls worker[i] = null ist
-				//keine weitere Behandlung notwendig
-			}
-		}
-		return -1;
-	}*/
 	
 	/**
 	 * Sucht den Worker im Array zum Roboter Namen
@@ -157,59 +141,15 @@ public class Server implements ServerInterface{
 		return -1;
 	}
 	
+	
+	/**
+	 * Prüft ob die maximale Anzahl an Worker erreicht ist.
+	 * @return true falls noch Worker hinzugefügt werden können, sonst false
+	 */
 	public boolean isAddWorkerAllowed() {
 		return(anzahl < maxWorker);
 	}
 
-	/**
-	 * gibt die Fehler des Roboters zurï¿½ck.
-	 * @return roboErrorLog
-	 */
-	public String getRoboErrorLog() {
-		return this.roboErrorLog;
-	}
-	
-	/**
-	 * gibt den Log des Roboters zurï¿½ck
-	 * @return roboLog
-	 */
-	public String getRoboLog() {
-		return this.roboLog;
-	}
-	
-	/**
-	 * Diese Methode schreibt Fehler kommend vom Roboter.
-	 * @param roboErrorLog
-	 */
-	public void printRoboErrorLog(String roboErrorLog) {
-		this.roboErrorLog = roboErrorLog;
-	}
-	
-	/**
-	 * Zum Schreiben von Log(Meldungen) des Roboters.
-	 * @param roboLog
-	 */
-	public void printRoboLog(String roboLog) {
-		this.roboLog = roboLog;
-	}
-
-
-	/**
-	 * Gibt den Log des Servers zurï¿½ck.
-	 * @return serverLog
-	 */
-	public String getServerLog() {
-		return this.serverLog;
-	}
-
-
-	/**
-	 * Zum Schreiben von Server logs
-	 * @param serverLog
-	 */
-	public void printServerLog(String serverLog) {
-		this.serverLog = serverLog;
-	}
 	
 	/**
 	 * FÃ¼gt neuen Roboter zum RoboGraph hinzu und in die GUI ein
@@ -221,6 +161,10 @@ public class Server implements ServerInterface{
 		gui.addRobot(robotId, position);
 	}
 	
+	
+	/**
+	 * Entfernt den Roboter aus der Verwaltungsstruktur, der GUI und dem AUTO-Modus, falls er sich darin befindet.
+	 */
 	private void removeRobot(String robotId) {
 		roboGraph.removeRobot(robotId);
 		gui.removeRobot(robotId);
@@ -424,7 +368,7 @@ public class Server implements ServerInterface{
 	}
 	
 	/**
-	 * 
+	 * Registriert die GUI beim Server, damit der Server GUI-funktionen aufrufen kann
 	 * @param gui
 	 */
 	public void setGui(Gui gui) {
@@ -441,14 +385,16 @@ public class Server implements ServerInterface{
 	
     
 	/**
-	 * Zum Starten des Servers
+	 * <b>Startet den Server</b>
+	 * (Startet den Listener und somit auch die Erreichbarkeit im Netzwerk)
 	 */
 	public void startServer() {
 		listener = new Listener(this, port);
 	}
 	
 	/**
-	 * Zum Stoppen des Servers
+	 * <b>Zum Stoppen des Servers.</b>
+	 * (Beenden den Listener und alle Worker und sie somit auch nicht mehr im Netzwerk erreichbar)
 	 * @throws NotBoundException 
 	 * @throws RemoteException 
 	 */
