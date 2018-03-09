@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import server.server.graph.RoboGraph;
-import server.server.graph.edges.RoboEdge;
-import server.server.graph.nodes.RoboNode;
+import server.server.graph.StreetGraph;
+import server.server.graph.edges.StreetEdge;
+import server.server.graph.nodes.StreetNode;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
@@ -46,14 +46,14 @@ public class Graph {
 
     }
     
-    public Graph(RoboGraph roboGraph) {
+    public Graph(StreetGraph vehicleGraph) {
     	this();
-    	RoboNode node;
-    	Collection<RoboNode> nodes = roboGraph.getAllNodes();
-    	RoboNode[] nodesArray = new RoboNode[nodes.size()];
+    	StreetNode node;
+    	Collection<StreetNode> nodes = vehicleGraph.getAllNodes();
+    	StreetNode[] nodesArray = new StreetNode[nodes.size()];
     	nodes.toArray(nodesArray);
-    	RoboEdge edge;
-    	Set<RoboEdge> edges;    	
+    	StreetEdge edge;
+    	Set<StreetEdge> edges;    	
     	
     	for(int i = 0; i < nodes.size(); i++) {
     		node = nodesArray[i];
@@ -62,10 +62,10 @@ public class Graph {
     	
     	for(int i = 0; i < nodes.size(); i++) {
     		node = nodesArray[i];
-    		edges = roboGraph.getEdgesOf(node.getNodeId());
-    		for(Iterator<RoboEdge> it = edges.iterator(); it.hasNext();) {
+    		edges = vehicleGraph.getEdgesOf(node.getNodeId());
+    		for(Iterator<StreetEdge> it = edges.iterator(); it.hasNext();) {
     			edge = it.next();
-    			model.addEdge(roboGraph.getEdgeSource(edge), roboGraph.getEdgeTarget(edge));
+    			model.addEdge(vehicleGraph.getEdgeSource(edge), vehicleGraph.getEdgeTarget(edge));
     			
     		}
     	}
@@ -93,11 +93,11 @@ public class Graph {
         // add components to graph pane
         getCellLayer().getChildren().addAll(model.getAddedEdges());
         getCellLayer().getChildren().addAll(model.getAddedCells());
-        getCellLayer().getChildren().addAll(model.getAddedRobotCells());
+        getCellLayer().getChildren().addAll(model.getAddedVehicleCells());
 
         // remove components from graph pane
         getCellLayer().getChildren().removeAll(model.getRemovedCells());
-        getCellLayer().getChildren().removeAll(model.getRemovedRobotCells());
+        getCellLayer().getChildren().removeAll(model.getRemovedVehicleCells());
         getCellLayer().getChildren().removeAll(model.getRemovedEdges());
 
         // enable dragging of cells

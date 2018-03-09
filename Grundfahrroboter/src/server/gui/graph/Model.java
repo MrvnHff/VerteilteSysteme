@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import server.gui.cells.RectangleCell;
-import server.gui.cells.RobotCell;
+import server.gui.cells.VehicleCell;
 import server.gui.cells.TriangleCell;
 
 public class Model {
@@ -17,16 +17,16 @@ public class Model {
     List<Cell> addedCells;
     List<Cell> removedCells;
     
-    List<RobotCell> allRobotCells;
-    List<RobotCell> addedRobotCells;
-    List<RobotCell> removedRobotCells;
+    List<VehicleCell> allVehicleCells;
+    List<VehicleCell> addedVehicleCells;
+    List<VehicleCell> removedVehicleCells;
 
     List<Edge> allEdges;
     List<Edge> addedEdges;
     List<Edge> removedEdges;
 
     Map<String,Cell> cellMap; // <id,cell>
-    Map<String, Cell> robotMap;
+    Map<String, Cell> vehicleMap;
 
     public Model() {
 
@@ -46,52 +46,52 @@ public class Model {
         addedEdges = new ArrayList<>();
         removedEdges = new ArrayList<>();
 
-        allRobotCells = new ArrayList<>();
-        addedRobotCells = new ArrayList<>();
-        removedRobotCells = new ArrayList<>();
+        allVehicleCells = new ArrayList<>();
+        addedVehicleCells = new ArrayList<>();
+        removedVehicleCells = new ArrayList<>();
         
-        addedRobotCells = new ArrayList<>();
+        addedVehicleCells = new ArrayList<>();
         cellMap = new HashMap<>(); // <id,cell>
-        robotMap = new HashMap<>();
+        vehicleMap = new HashMap<>();
 
     }
 
     public void clearAddedLists() {
         addedCells.clear();
         addedEdges.clear();
-        addedRobotCells.clear();
+        addedVehicleCells.clear();
     }
 
     public List<Cell> getAddedCells() {
         return addedCells;
     }
     
-    public List<RobotCell> getAddedRobotCells() {
-    	return addedRobotCells;
+    public List<VehicleCell> getAddedVehicleCells() {
+    	return addedVehicleCells;
     }
 
     public List<Cell> getRemovedCells() {
         return removedCells;
     }
 
-    public List<RobotCell> getRemovedRobotCells() {
-        return removedRobotCells;
+    public List<VehicleCell> getRemovedVehicleCells() {
+        return removedVehicleCells;
     }
     
     public List<Cell> getAllCells() {
         return allCells;
     }
     
-    public List<RobotCell> getAllRobotCells() {
-    	return allRobotCells;
+    public List<VehicleCell> getAllVehicleCells() {
+    	return allVehicleCells;
     }
     
     public Cell getCell(String id) {
     	return cellMap.get(id);
     }
     
-    public Cell getRobotCell(String id) {
-    	return robotMap.get(id);
+    public Cell getVehicleCell(String id) {
+    	return vehicleMap.get(id);
     }
 
     public List<Edge> getAddedEdges() {
@@ -119,9 +119,9 @@ public class Model {
             TriangleCell circleCell = new TriangleCell(id);
             addCell(circleCell);
             break;
-        case ROBOT:
-        	RobotCell robotCell = new RobotCell(id);
-        	addRobotCell(robotCell);
+        case VEHICLE:
+        	VehicleCell vehicleCell = new VehicleCell(id);
+        	addVehicleCell(vehicleCell);
         	break;
 
         default:
@@ -136,9 +136,9 @@ public class Model {
 
     }
     
-    private void addRobotCell(RobotCell cell) {
-    	addedRobotCells.add(cell);
-    	robotMap.put(cell.getCellId(), cell);
+    private void addVehicleCell(VehicleCell cell) {
+    	addedVehicleCells.add(cell);
+    	vehicleMap.put(cell.getCellId(), cell);
     }
 
     public void addEdge( String sourceId, String targetId) {
@@ -183,14 +183,14 @@ public class Model {
         allCells.addAll( addedCells);
         allCells.removeAll( removedCells);
         
-        allRobotCells.addAll(addedRobotCells);
-        allRobotCells.addAll(removedRobotCells);
+        allVehicleCells.addAll(addedVehicleCells);
+        allVehicleCells.addAll(removedVehicleCells);
 
         addedCells.clear();
         removedCells.clear();
         
-        addedRobotCells.clear();
-        removedRobotCells.clear();
+        addedVehicleCells.clear();
+        removedVehicleCells.clear();
 
         // edges
         allEdges.addAll( addedEdges);

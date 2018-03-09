@@ -15,21 +15,21 @@ import org.jgrapht.graph.SimpleGraph;
 
 import server.server.exceptions.NoValidTargetNodeException;
 import server.server.exceptions.TargetIsOccupiedException;
-import server.server.graph.edges.RoboEdge;
-import server.server.graph.nodes.RoboNode;
-import server.server.graph.nodes.RobotOrientation;
+import server.server.graph.edges.StreetEdge;
+import server.server.graph.nodes.StreetNode;
+import server.server.graph.nodes.VehicleOrientation;
 import server.utils.IdUtils;
 
 public class StreetGraph {
 	
-	private SimpleGraph<String, RoboEdge> roadGraph; 
-	private HashMap<String, RoboNode> roboNodeMap;
+	private SimpleGraph<String, StreetEdge> roadGraph; 
+	private HashMap<String, StreetNode> streetNodeMap;
 	private int columnCount;
 	private int rowCount;
 	
 	public StreetGraph() {
-		roadGraph = new SimpleGraph<String, RoboEdge>(RoboEdge.class);
-		roboNodeMap = new HashMap<String, RoboNode>();
+		roadGraph = new SimpleGraph<String, StreetEdge>(StreetEdge.class);
+		streetNodeMap = new HashMap<String, StreetNode>();
 		columnCount = 0;
 		rowCount = 0;
 	}
@@ -62,41 +62,41 @@ public class StreetGraph {
 	}
 	
 
-	public Set<RoboEdge> getAllEdges() {
+	public Set<StreetEdge> getAllEdges() {
 		return roadGraph.edgeSet();
 	}
 	
-	public Set<RoboEdge> getEdgesOf(String node) {
+	public Set<StreetEdge> getEdgesOf(String node) {
 		return roadGraph.edgesOf(node);
 	}
 	
-	public String getEdgeSource(RoboEdge edge) {
+	public String getEdgeSource(StreetEdge edge) {
 		return roadGraph.getEdgeSource(edge);
 	}
 	
-	public String getEdgeTarget(RoboEdge edge) {
+	public String getEdgeTarget(StreetEdge edge) {
 		return roadGraph.getEdgeTarget(edge);
 	}
 	
 	public void addNode(String nodeId) {
 		roadGraph.addVertex(nodeId);
-		roboNodeMap.put(nodeId, new RoboNode(nodeId));
+		streetNodeMap.put(nodeId, new StreetNode(nodeId));
 	}
 	
 	public void addEdge(String source, String target) {
 		roadGraph.addEdge(source, target);
 	}
 	
-	public RoboNode getNode(String nodeId) {
-		return roboNodeMap.get(nodeId);
+	public StreetNode getNode(String nodeId) {
+		return streetNodeMap.get(nodeId);
 	}
 	
-	public RoboEdge getEdge(String source, String target) {
+	public StreetEdge getEdge(String source, String target) {
 		return roadGraph.getEdge(source, target);
 	}
 	
-	public Collection<RoboNode> getAllNodes() {
-		return roboNodeMap.values();
+	public Collection<StreetNode> getAllNodes() {
+		return streetNodeMap.values();
 	}
 	
 	public int getColumnCount() {
@@ -111,17 +111,17 @@ public class StreetGraph {
 		return roadGraph.toString();
 	}
 	
-	public String addRobot(String robotId) {
+	public String addVehicle(String vehicleId) {
 		String position = findFreePosition();
-		RoboNode node = roboNodeMap.get(position);
-		node.setRobotId(robotId);
-		node.setOrientation(RobotOrientation.NORTH);
+		StreetNode node = streetNodeMap.get(position);
+		node.setVehicleId(vehicleId);
+		node.setOrientation(VehicleOrientation.NORTH);
 		return position;
 	}
 
 	private String findFreePosition() {
-		RoboNode node;
-		Iterator<RoboNode> it = roboNodeMap.values().iterator();
+		StreetNode node;
+		Iterator<StreetNode> it = streetNodeMap.values().iterator();
 		while(it.hasNext()) {
 			node = it.next();
 			if(node.isEmpty()) {
@@ -131,41 +131,41 @@ public class StreetGraph {
 		return null;
 	}
 	
-	public void removeRobot(String robotId) {
-		//FIXME removeRobot-Methode im Graph implementieren
-		RoboNode node = this.getRobotById(robotId);
-		node.setRobotId(null);
+	public void removeVehicle(String vehicleId) {
+		//FIXME removeVehicle-Methode im Graph implementieren
+		StreetNode node = this.getVehicleById(vehicleId);
+		node.setVehicleId(null);
 		return;
 	}
 	
-	public String getRobotPosition(String robotId) {
-		RoboNode node = getRobotById(robotId);
+	public String getVehiclePosition(String vehicleId) {
+		StreetNode node = getVehicleById(vehicleId);
 		return node.getNodeId();
 	}
 	
-	private RoboNode getRobotById(String robotId) {
-		RoboNode node;
-		Iterator<RoboNode> it = roboNodeMap.values().iterator();
+	private StreetNode getVehicleById(String vehicleId) {
+		StreetNode node;
+		Iterator<StreetNode> it = streetNodeMap.values().iterator();
 		while(it.hasNext()) {
 			node = it.next();
-			if(node.getRobotId() == robotId) {
+			if(node.getVehicleId() == vehicleId) {
 				return node;
 			}
 		}
 		return null;
 	}
 
-	public void turnRobotLeft(String robotId) {
-		RoboNode node = getRobotById(robotId);
+	public void turnVehicleLeft(String vehicleId) {
+		StreetNode node = getVehicleById(vehicleId);
 		node.turnLeft();
 	}
 
-	public void turnRobotRight(String robotId) {
-		RoboNode node = getRobotById(robotId);
+	public void turnVehicleRight(String vehicleId) {
+		StreetNode node = getVehicleById(vehicleId);
 		node.turnRight();
 	}
 	
-	private RoboNode findNodeInFrontOfRobot(RoboNode node) {
+	private StreetNode findNodeInFrontOfVehicle(StreetNode node) {
 		String targetNodeId;
 		int coordinates[] = IdUtils.extractCoordinates(node.getNodeId());
 		switch(node.getOrientation()) {
@@ -186,16 +186,16 @@ public class StreetGraph {
 	}
 	
 	/**
-	 * Liefert die benötigte drehung um den Robotor in Richtung des Zielknoten auszurichten. Nur für benachbarte Knoten geeignet
-	 * @param robotId Id des roboters
-	 * @param destination id des Zielknotens
+	 * Liefert die benötigte Drehung um das Fahrzeug in Richtung des Zielknoten auszurichten. Nur für benachbarte Knoten geeignet
+	 * @param vehicleId Id des Fahrzeugs
+	 * @param destination ID des Zielknotens
 	 * @return benötigte drehung, -1 für einmal links, 1 für einmal rechts, 2 für zweimal rechts und so weiter
 	 */
-	public int getNeededRotation(String robotId, String destination) {
-		RobotOrientation neededOrientation;
-		RobotOrientation nodeOrientation;
+	public int getNeededRotation(String vehicleId, String destination) {
+		VehicleOrientation neededOrientation;
+		VehicleOrientation nodeOrientation;
 		
-		RoboNode node = getRobotById(robotId);
+		StreetNode node = getVehicleById(vehicleId);
 		String nodeId = node.getNodeId();
 		nodeOrientation = node.getOrientation();
 		if(nodeId.equals(destination)) {
@@ -206,40 +206,40 @@ public class StreetGraph {
 		int Dest[] = IdUtils.extractCoordinates(destination);
 		
 		if((Node[0] + 1) == Dest[0] && Node[1] == Dest[1]) {
-			neededOrientation = RobotOrientation.SOUTH;
+			neededOrientation = VehicleOrientation.SOUTH;
 		} else if((Node[0] - 1) == Dest[0] && Node[1] == Dest[1]) {
-			neededOrientation = RobotOrientation.NORTH;
+			neededOrientation = VehicleOrientation.NORTH;
 		} else if(Node[0] == Dest[0] && (Node[1] - 1) == Dest[1]) {
-			neededOrientation = RobotOrientation.WEST;
+			neededOrientation = VehicleOrientation.WEST;
 		} else {
-			neededOrientation = RobotOrientation.EAST;
+			neededOrientation = VehicleOrientation.EAST;
 		}
 		return nodeOrientation.getDifference(neededOrientation);
 	}
 	
-	public String moveRobotForward(String robotId) {
-		RoboNode sourceNode = getRobotById(robotId);
-		RoboNode targetNode = findNodeInFrontOfRobot(sourceNode);
+	public String moveVehicleForward(String vehicleId) {
+		StreetNode sourceNode = getVehicleById(vehicleId);
+		StreetNode targetNode = findNodeInFrontOfVehicle(sourceNode);
 		if(targetNode == null) {
 			throw new NoValidTargetNodeException();
 		} else if(!targetNode.isEmpty()) {
 			throw new TargetIsOccupiedException();
 		} else {
-			sourceNode.setRobotId(null);
-			targetNode.setRobotId(robotId);
+			sourceNode.setVehicleId(null);
+			targetNode.setVehicleId(vehicleId);
 			targetNode.setOrientation(sourceNode.getOrientation());
 			return targetNode.getNodeId();
 		}
 	}
 
-	public List<String> getShortesPath(String robotId, String destination) {
-		RoboNode sourceNode = getRobotById(robotId);
+	public List<String> getShortesPath(String vehicleId, String destination) {
+		StreetNode sourceNode = getVehicleById(vehicleId);
 		String start = sourceNode.getNodeId();
-		List<RoboNode> exceptions = new ArrayList<RoboNode>();
+		List<StreetNode> exceptions = new ArrayList<StreetNode>();
 		exceptions.add(sourceNode);
 		exceptions.add(getNode(destination));
 		StreetGraph tempGraph = creatUnoccupiedGraph(exceptions);
-		RoboNode node = tempGraph.getNode(destination);
+		StreetNode node = tempGraph.getNode(destination);
 		if(node == null) {
 			throw new NoValidTargetNodeException();
 		}
@@ -247,34 +247,34 @@ public class StreetGraph {
 	}
 	
 	private List<String> executeDijkstraShortestPathAlgo(String start, String destination) {
-		DijkstraShortestPath<String, RoboEdge> shortestPathAlgo = new DijkstraShortestPath<String, RoboEdge>(roadGraph);
-		GraphPath<String, RoboEdge> path = shortestPathAlgo.getPath(start, destination);
+		DijkstraShortestPath<String, StreetEdge> shortestPathAlgo = new DijkstraShortestPath<String, StreetEdge>(roadGraph);
+		GraphPath<String, StreetEdge> path = shortestPathAlgo.getPath(start, destination);
 		return path.getVertexList();
 	}
 
-	private StreetGraph creatUnoccupiedGraph(List<RoboNode> exceptions) {
-		List<RoboNode> occupiedNodes = this.getListOfOccupiedNodes();
+	private StreetGraph creatUnoccupiedGraph(List<StreetNode> exceptions) {
+		List<StreetNode> occupiedNodes = this.getListOfOccupiedNodes();
 		occupiedNodes.removeAll(exceptions);
 		StreetGraph tempGraph = new StreetGraph(this.getRowCount(), this.getColumnCount());
 		tempGraph.deleteNodes(occupiedNodes);
 		return tempGraph;
 	}
 
-	private void deleteNodes(List<RoboNode> nodes) {
-		for(RoboNode node: nodes) {
+	private void deleteNodes(List<StreetNode> nodes) {
+		for(StreetNode node: nodes) {
 			deleteNode(node.getNodeId());
 		}
 	}
 
 	private void deleteNode(String nodeId) {
 		roadGraph.removeVertex(nodeId);
-		this.roboNodeMap.remove(nodeId);
+		this.streetNodeMap.remove(nodeId);
 	}
 
-	private List<RoboNode> getListOfOccupiedNodes() {
-		Collection<RoboNode> nodes = getAllNodes();
-		List<RoboNode> occupiedNodes = new LinkedList<RoboNode>();
-		for(RoboNode node: nodes) {
+	private List<StreetNode> getListOfOccupiedNodes() {
+		Collection<StreetNode> nodes = getAllNodes();
+		List<StreetNode> occupiedNodes = new LinkedList<StreetNode>();
+		for(StreetNode node: nodes) {
 			if(!node.isEmpty()) {
 				occupiedNodes.add(node);
 			}
@@ -283,7 +283,7 @@ public class StreetGraph {
 	}
 	
 	public boolean isNodeEmpty(String nodeId) {
-		RoboNode node = getNode(nodeId);
+		StreetNode node = getNode(nodeId);
 		return node.isEmpty();
 	}
 	

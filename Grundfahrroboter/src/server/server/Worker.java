@@ -11,11 +11,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-import client.RoboServerInterface;
+import client.RemoteVehicleInterface;
 
 public class Worker extends Thread implements WorkerInterface{
 	private WorkerInterface stub;
-	private RoboServerInterface vehicle;
+	private RemoteVehicleInterface vehicle;
 	private Registry registryW;
 	private Registry registryV;
 	private Registry returnOfCreateRegistry;
@@ -57,25 +57,38 @@ public class Worker extends Thread implements WorkerInterface{
 	public void run() {
 		try {
 			registerWorker();		
-			registerVehicle();			
+			registerVehicleInWorker();			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	private void sayHello() throws RemoteException {
-		vehicle.registerWorker(workerId, workerIp, workerPort);		
+	
+	public String getVehicleId() {
+		return vehicleId;
 	}
 	
-	public String getVehicleId() {return vehicleId;}
-	public String getVehicleIp() {return this.vehicleIp;}
-	public int getVehiclePort() {return this.vehiclePort;}
-	public String getWorkerId() {return workerId;}
-	public int getWorkerPort() {return this.workerPort;}
-	public String getWorkerIp() {return this.workerIp;}
+	public String getVehicleIp() {
+		return this.vehicleIp;
+	}
+	
+	public int getVehiclePort() {
+		return this.vehiclePort;
+	}
+	
+	public String getWorkerId() {
+		return workerId;
+	}
+	
+	public int getWorkerPort() {
+		return this.workerPort;
+	}
+	
+	public String getWorkerIp() {
+		return this.workerIp;
+	}
 	
 
-	// TODO setWay umbenennen in etwas sinnvolles (Worker + Interface + RoboServer) + Javadoc Kommentar anpassen
+	// TODO setWay umbenennen in etwas sinnvolles (Worker + Interface + VehicleServer) + Javadoc Kommentar anpassen
 	//Javadoc-Kommentar im Interface
 	//remoteReachable
 	@Override
@@ -126,11 +139,12 @@ public class Worker extends Thread implements WorkerInterface{
 	 * @throws NotBoundException
 	 * @throws AlreadyBoundException
 	 */
-	private void registerVehicle() throws AccessException, RemoteException, NotBoundException, AlreadyBoundException {        
+	private void registerVehicleInWorker() throws AccessException, RemoteException, NotBoundException, AlreadyBoundException {        
 	    registryV = LocateRegistry.getRegistry(vehicleIp, vehiclePort);
-		vehicle = (RoboServerInterface) registryV.lookup(vehicleId);		
+		vehicle = (RemoteVehicleInterface) registryV.lookup(vehicleId);		
 		System.out.println("Worker: " + workerId + " verbunden mit Fahrzeug " + vehicleId + "!");		
-		sayHello();
+		// Diesen Worker beim Fahrzeug anmelden
+		vehicle.registerWorkerInVehicle(workerId, workerIp, workerPort);
 	}
 	
 	

@@ -41,12 +41,12 @@ public class Listener extends Thread implements ListenerInterface{
 
 	//JavaDoc Kommentar im Interface
 	@Override
-	public synchronized void registerRobot(String roboName, String roboIp, int roboPort) throws RemoteException {
-		server.addServerTextMessage("Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
-		System.out.println("Listener: Roboter " + roboName + " hat sich unter der IP " + roboIp + " gemeldet!");
+	public synchronized void requestNewWorker(String vehicleId, String vehicleIp, int vehiclePort) throws RemoteException {
+		server.addServerTextMessage("Fahrzeug " + vehicleId + " hat sich unter der IP " + vehicleIp + " gemeldet!");
+		System.out.println("Listener: Fahrzeug " + vehicleId + " hat sich unter der IP " + vehicleIp + " gemeldet!");
 		
 		try {
-			server.addWorker(roboName, roboIp, roboPort);
+			server.addWorker(vehicleId, vehicleIp, vehiclePort);
 		} catch (Exception e) {
 			server.addServerTextMessage("Fehler bei addWorker()" + e);
 			System.err.println("Listener: Fehler bei addWorker()" + e );

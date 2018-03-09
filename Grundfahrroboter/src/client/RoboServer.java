@@ -15,7 +15,7 @@ import logic.Roboter;
 import server.server.ListenerInterface;
 import server.server.WorkerInterface;
 
-public class RoboServer implements RoboServerInterface{
+public class RoboServer implements RemoteVehicleInterface{
 	private static Roboter robo;
 	private static WorkerInterface worker;
 	private Registry registryW;
@@ -163,7 +163,7 @@ public class RoboServer implements RoboServerInterface{
 	}
 	
 	@Override
-	public void registerWorker(String name, String ip, int port) throws RemoteException {
+	public void registerWorkerInVehicle(String name, String ip, int port) throws RemoteException {
 	    registryW = LocateRegistry.getRegistry(ip, port);
 		try {
 			//Roboter sucht nach Worker im System. Erst jetzt steht fest kennt der Worker den Roboter und der Roboter den Worker.
@@ -196,8 +196,8 @@ public static void main(String args[]) {
 	robotName = FileSystem.readProperties(ROBO_NUMBER, "Name");
 	shutdown = false;
 	
-	RoboServerInterface obj;
-	RoboServerInterface stub;
+	RemoteVehicleInterface obj;
+	RemoteVehicleInterface stub;
 	Registry registryR;
 	ListenerInterface listener;
 	Registry registryL;
@@ -212,7 +212,7 @@ public static void main(String args[]) {
 		try {
 			//Roboter registriert sich im System mit seinem Namen und dem Port 55555
     		obj = new RoboServer();
-    		stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0);
+    		stub = (RemoteVehicleInterface) UnicastRemoteObject.exportObject(obj, 0);
     		LocateRegistry.createRegistry(port);
     		registryR = LocateRegistry.getRegistry(port);
     		registryR.bind(robotName, stub);
@@ -225,7 +225,7 @@ public static void main(String args[]) {
             		i = MAXTRY;
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					System.out.println(ipAddr.getHostAddress());			
-					listener.registerRobot(robotName, ipAddr.getHostAddress(), 55555);
+					listener.requestNewWorker(robotName, ipAddr.getHostAddress(), 55555);
         		} catch (ConnectException e) {
         			System.out.println("Server/Listener nicht erreichbar!");
         			robo.waitMs(2000);

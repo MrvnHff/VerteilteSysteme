@@ -123,7 +123,7 @@ public class Server implements ServerInterface{
      */
     public void addVehicleTextMessage(String vehicleId, String message) {
     	if(gui != null) {
-    		gui.addRobotTextMessage(vehicleId, message);
+    		gui.addVehicleTextMessage(vehicleId, message);
     	} else {
     		System.out.println("Keine GUI registriert. Meldung: " + vehicleId + ": " + message);
     	}
@@ -169,8 +169,8 @@ public class Server implements ServerInterface{
 			
 			//Fahrzeug dem Graphen und der GUI hinzufügen
 			String position;
-			position = streetGraph.addRobot(vehicleId);
-			gui.addRobot(vehicleId, position);
+			position = streetGraph.addVehicle(vehicleId);
+			gui.addVehicle(vehicleId, position);
 		} else {
 			throw new MaximumWorkersReachedException("Maximale Anzahl an Worker erreicht. Worker wurde nicht gestartet.");
 		}
@@ -185,8 +185,8 @@ public class Server implements ServerInterface{
 	 */
 	public void removeWorker(String vehicleId) {
 		// Aus GUI und StreetGraph entfernen
-		streetGraph.removeRobot(vehicleId);
-		gui.removeRobot(vehicleId);
+		streetGraph.removeVehicle(vehicleId);
+		gui.removeVehicle(vehicleId);
 		//FIXME Mathias: kann ich vom Server aus den Roboter aus dem AUTO-Mode nehmen, so dass der zugehörige Thread auch beendet wird?
 		if(isVehicleInAutoMode(vehicleId)) {
 			deactivateAutoDst(vehicleId);
@@ -266,7 +266,7 @@ public class Server implements ServerInterface{
 		vehicleMode.put(vehicleId, true);
 		while(isVehicleInAutoMode(vehicleId)) {
 			String destination = generateRndDestination();
-			gui.setRobotDestinationTextField(vehicleId, destination);
+			gui.setVehicleDestinationTextField(vehicleId, destination);
 			driveVehicletTo(vehicleId, destination);
 			addVehicleTextMessage(vehicleId, "Ziel erreicht");
 			// Warte 2 Sekunden, wenn am Ziel angekommen, dann wieder von vorne
@@ -307,7 +307,7 @@ public class Server implements ServerInterface{
 	
 	
 	public void driveVehicletTo(String vehicleId, String destination) {
-		String position = streetGraph.getRobotPosition(vehicleId); //TODO Variable Position notwendig??
+		String position = streetGraph.getVehiclePosition(vehicleId); //TODO Variable Position notwendig??
 		List<String> path = streetGraph.getShortesPath(vehicleId, destination);
 		
 		
@@ -372,8 +372,8 @@ public class Server implements ServerInterface{
 			e.printStackTrace();
 			//return; //Wenn Fehler beim Remote, drehe nicht im Graphen oder in der GUI
 		}		
-		streetGraph.turnRobotLeft(vehicleId);
-		gui.turnRobotLeft(vehicleId);
+		streetGraph.turnVehicleLeft(vehicleId);
+		gui.turnVehicleLeft(vehicleId);
 	}
 	
 	/**
@@ -388,8 +388,8 @@ public class Server implements ServerInterface{
 			e.printStackTrace();
 			//return; //Wenn Fehler beim Remote, drehe nicht im Graphen oder in der GUI
 		}
-		streetGraph.turnRobotRight(vehicleId);
-		gui.turnRobotRight(vehicleId);
+		streetGraph.turnVehicleRight(vehicleId);
+		gui.turnVehicleRight(vehicleId);
 	}
 	
 
@@ -401,7 +401,7 @@ public class Server implements ServerInterface{
 	public String moveVehicleForward(String vehicleId) {
 		String destination;
 		try {		
-			destination = streetGraph.moveRobotForward(vehicleId);
+			destination = streetGraph.moveVehicleForward(vehicleId);
 		} catch(TargetIsOccupiedException e) {
 			System.out.println("Server: Zielknoten besetzt. Nächster Versuch kommt.");
 			// 4 Sekunden warten, bis zum erneuten versuch
@@ -425,7 +425,7 @@ public class Server implements ServerInterface{
 			//TODO Bewegung auf den Graphen rückgängig machen, bei RemoteException, um auf den vorherigen Stand zu kommen, wie bei turn-Befehlen?
 		}
 		
-		gui.setRobotPosition(vehicleId, destination);
+		gui.setVehiclePosition(vehicleId, destination);
 		return destination;
 	}
 		

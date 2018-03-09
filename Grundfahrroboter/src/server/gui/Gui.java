@@ -8,11 +8,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import server.gui.controller.RobotController;
+import server.gui.controller.VehicleController;
 import server.gui.graph.CellType;
 import server.gui.graph.Graph;
 import server.gui.layout.grid.GridLayout;
-import server.gui.layout.robot.RobotLayout;
+import server.gui.layout.vehicle.VehicleLayout;
 import server.server.Server;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -28,8 +28,6 @@ import javafx.stage.Stage;
 
 public class Gui extends Application {
 	
-	//FIXME Server anhalten, wenn das Fenster geschlossen wird
-
 	private static final String CONFIG_FILENAME = "resources/config/config";
 	private static final String FXML_BUNDLE_FILENAME = "resources/config/fxml_files";
 	
@@ -40,10 +38,10 @@ public class Gui extends Application {
 	
 	private Server server;
 	
-	private HashMap<String, RobotController> robotControllers = new HashMap<String, RobotController>();
+	private HashMap<String, VehicleController> vehicleControllers = new HashMap<String, VehicleController>();
 	
 	private Stage primaryStage = new Stage();
-	private RobotLayout rl;
+	private VehicleLayout rl;
 	private BorderPane rootLayout;
 	private FlowPane flow;
 	
@@ -127,7 +125,7 @@ public class Gui extends Application {
 		gl.setScale(200);
         gl.execute();
         
-        rl = new RobotLayout(graph);
+        rl = new VehicleLayout(graph);
                 
 		splitPane1.getItems().addAll(scrollPane, graph.getScrollPane());	
 		
@@ -143,41 +141,41 @@ public class Gui extends Application {
 		rootLayout.setCenter(splitPane2);
 	}
 	
-	public void addRobot(final String robotId, final String position) {
+	public void addVehicle(final String vehicleId, final String position) {
 		Platform.runLater(new Runnable() {
             @Override public void run() {
-            	flow.getChildren().add(buildRobotPane(robotId, position));
-        		rl.moveRobotTo(robotId, position);
+            	flow.getChildren().add(buildVehiclePane(vehicleId, position));
+        		rl.moveVehicleTo(vehicleId, position);
             }
         });
 		
 	}
 	
-	public void removeRobot(String robotId) {
-		//FIXME removeRobot-Methode in der GUI implementieren
+	public void removeVehicle(String vehicleId) {
+		//FIXME removeVehicle-Methode in der GUI implementieren
 		//graph.getModel().removeCell();
 		graph.endUpdate();
 		return;
 	}
 	
-	private BorderPane buildRobotPane(String robotId, String position) {
-		BorderPane robot = null;
+	private BorderPane buildVehiclePane(String vehicleId, String position) {
+		BorderPane vehicle = null;
 		try {
-			FXMLLoader robotLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
-			robot = (BorderPane) robotLoader.load();
-			RobotController controller = robotLoader.getController();
+			FXMLLoader vehicleLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
+			vehicle = (BorderPane) vehicleLoader.load();
+			VehicleController controller = vehicleLoader.getController();
 			controller.setServer(server);
-			controller.setRobotId(robotId);
-			controller.setRobotLayout(rl);
+			controller.setVehicleId(vehicleId);
+			controller.setVehicleLayout(rl);
 			controller.setPositionTextField(position);
-			robotControllers.put(robotId, controller);
+			vehicleControllers.put(vehicleId, controller);
 			
-			graph.getModel().addCell(robotId, CellType.ROBOT);
+			graph.getModel().addCell(vehicleId, CellType.VEHICLE);
 			graph.endUpdate();
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		return robot;
+		return vehicle;
 	}
 	
 	public void addServerTextMessage(String msg) {
@@ -185,29 +183,29 @@ public class Gui extends Application {
 		textArea.appendText("\n");
 	}
 	
-	public void addRobotTextMessage(String robotId, String msg) {
-		RobotController controller = robotControllers.get(robotId);
+	public void addVehicleTextMessage(String vehicleId, String msg) {
+		VehicleController controller = vehicleControllers.get(vehicleId);
 		controller.addTextMessage(msg);
 		controller.addTextMessage("\n");
 	}
 	
-	public void setRobotPosition(String robotId, String position) {
-		RobotController controller = robotControllers.get(robotId);
-		controller.setRobotPosition(position);
+	public void setVehiclePosition(String vehicleId, String position) {
+		VehicleController controller = vehicleControllers.get(vehicleId);
+		controller.setVehiclePosition(position);
 	}
 	
-	public void turnRobotLeft(String robotId) {
-		RobotController controller = robotControllers.get(robotId);
-		controller.rotateRobotLeftServer();
+	public void turnVehicleLeft(String vehicleId) {
+		VehicleController controller = vehicleControllers.get(vehicleId);
+		controller.rotateVehicleLeftServer();
 	}
 	
-	public void turnRobotRight(String robotId) {
-		RobotController controller = robotControllers.get(robotId);
-		controller.rotateRobotRightServer();
+	public void turnVehicleRight(String vehicleId) {
+		VehicleController controller = vehicleControllers.get(vehicleId);
+		controller.rotateVehicleRightServer();
 	}
 	
-	public void setRobotDestinationTextField(String robotId, String position) {
-		RobotController controller = robotControllers.get(robotId);
+	public void setVehicleDestinationTextField(String vehicleId, String position) {
+		VehicleController controller = vehicleControllers.get(vehicleId);
 		controller.setDestinationTextField(position);
 	}
 	

@@ -14,16 +14,16 @@ import java.net.InetAddress;
 
 import server.server.ListenerInterface;
 import server.server.WorkerInterface;
-import client.RoboServerInterface;
+import client.RemoteVehicleInterface;
 
 /**
- * Virtueller Roboter, der das RoboServerInterface implementiert und eine Verbindung zu einem Server 
+ * Virtueller Roboter, der das RemoteVehicleInterface implementiert und eine Verbindung zu einem Server 
  * im Netzwerk aufbaut. Dieser Roboter hat den vollen Methodenumfang eines echten Roboters und kann so
  * zum Testen des Servers genutzt werden.
  * @author Janek Dahl
  *
  */
-public class VirtualRobot extends Thread implements RoboServerInterface{
+public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 	//Attribute des Roboters zum Verhalten / zur Verbindung
 	private String serverIp;
 	private int serverPort;
@@ -36,8 +36,8 @@ public class VirtualRobot extends Thread implements RoboServerInterface{
 	private WorkerInterface worker;
 	private Registry registryW;
 	private Registry returnOfCreateRegistry;
-	private RoboServerInterface obj;
-	private RoboServerInterface stub;
+	private RemoteVehicleInterface obj;
+	private RemoteVehicleInterface stub;
 	private Registry registryR;
 	private ListenerInterface listener;
 	private Registry registryL;
@@ -63,7 +63,7 @@ public class VirtualRobot extends Thread implements RoboServerInterface{
 		try {			
 			// Roboter stellt sich selbst als Server im Netzwerk bereit
     		obj = this;
-    		stub = (RoboServerInterface) UnicastRemoteObject.exportObject(obj, 0); //Behelfs Port
+    		stub = (RemoteVehicleInterface) UnicastRemoteObject.exportObject(obj, 0); //Behelfs Port
     		returnOfCreateRegistry = LocateRegistry.createRegistry(roboterPort); 
     		registryR = LocateRegistry.getRegistry(roboterPort);
     		registryR.bind(robotName, stub);
@@ -78,7 +78,7 @@ public class VirtualRobot extends Thread implements RoboServerInterface{
 					InetAddress ipAddr = InetAddress.getLocalHost();
 					System.out.println(ipAddr.getHostAddress());			
 					//Registriert sich beim Listener des Server-servers
-					listener.registerRobot(robotName, ipAddr.getHostAddress(), roboterPort);
+					listener.requestNewWorker(robotName, ipAddr.getHostAddress(), roboterPort);
         		} catch (ConnectException e) {
         			System.out.println("VirtualRobot: " + robotName + ": Server/Listener nicht erreichbar! Weitere Versuche:" + (MAXTRY - i - 1));
         			Thread.sleep(2 * 1000);
@@ -122,7 +122,7 @@ public class VirtualRobot extends Thread implements RoboServerInterface{
 	
 	
 	@Override
-	public void registerWorker(String name, String ip, int port) throws RemoteException {
+	public void registerWorkerInVehicle(String name, String ip, int port) throws RemoteException {
 	    registryW = LocateRegistry.getRegistry(ip, port);
 		try {
 			//Roboter sucht nach Worker im System. Erst jetzt steht fest kennt der Worker den Roboter und der Roboter den Worker.

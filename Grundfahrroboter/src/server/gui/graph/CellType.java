@@ -4,7 +4,7 @@ public enum CellType {
 
     RECTANGLE,
     TRIANGLE,
-    ROBOT
+    VEHICLE
     ;
 
 }

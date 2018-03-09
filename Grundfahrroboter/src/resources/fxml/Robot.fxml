@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/robot.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.gui.controller.RobotController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/robot.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.gui.controller.VehicleController">
    <top>
       <Text fx:id="title" strokeType="OUTSIDE" strokeWidth="0.0" text="%robot.title" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -63,8 +63,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="right" mnemonicParsing="false" onAction="#rotateRobotRight" prefHeight="30.0" prefWidth="50.0" styleClass="right-button" GridPane.columnIndex="2" />
-                  <Button fx:id="left" mnemonicParsing="false" onAction="#rotateRobotLeft" prefHeight="30.0" prefWidth="50.0" styleClass="left-button" />
+                  <Button fx:id="right" mnemonicParsing="false" onAction="#rotateVehicleRight" prefHeight="30.0" prefWidth="50.0" styleClass="right-button" GridPane.columnIndex="2" />
+                  <Button fx:id="left" mnemonicParsing="false" onAction="#rotateVehicleLeft" prefHeight="30.0" prefWidth="50.0" styleClass="left-button" />
                   <Button fx:id="down" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" styleClass="down-button" GridPane.columnIndex="1" />
                </children>
             </GridPane>
@@ -78,7 +78,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="up" mnemonicParsing="false" onAction="#moveRobotForward" prefHeight="30.0" prefWidth="50.0" styleClass="up-button" GridPane.columnIndex="1" />
+                  <Button fx:id="up" mnemonicParsing="false" onAction="#moveVehicleForward" prefHeight="30.0" prefWidth="50.0" styleClass="up-button" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </children>

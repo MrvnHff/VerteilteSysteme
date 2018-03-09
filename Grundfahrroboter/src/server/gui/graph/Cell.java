@@ -3,7 +3,7 @@ package server.gui.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-import server.server.graph.nodes.RoboNode;
+import server.server.graph.nodes.StreetNode;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
 public class Cell extends Pane {
 
     String cellId;
-    RoboNode cellValue;
+    StreetNode cellValue;
 
     List<Cell> children = new ArrayList<>();
     List<Cell> parents = new ArrayList<>();
@@ -26,7 +26,7 @@ public class Cell extends Pane {
         this.cellId = cellId;
     }
     
-    public Cell(String cellId, RoboNode cellValue) {
+    public Cell(String cellId, StreetNode cellValue) {
     	this(cellId);
     	this.cellValue = cellValue;
     }
@@ -65,11 +65,11 @@ public class Cell extends Pane {
         return cellId;
     }
     
-    public void setCellValue(RoboNode cellValue) {
+    public void setCellValue(StreetNode cellValue) {
     	this.cellValue = cellValue;
     }
     
-    public RoboNode getCellvalue() {
+    public StreetNode getCellvalue() {
     	return this.cellValue;
     }
 }
