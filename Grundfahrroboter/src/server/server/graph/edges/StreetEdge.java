@@ -2,30 +2,30 @@ package server.server.graph.edges;
 
 import org.jgrapht.graph.DefaultEdge;
 
-import server.server.graph.nodes.RobotOrientation;
+import server.server.graph.nodes.VehicleOrientation;
 /**
- * Erweiterung des Standardkante um das Attribut robotId
+ * Erweiterung des Standardkante um das Attribut vehicleId
  * @author Mathias
  *
  */
 @SuppressWarnings("serial")
-public class RoboEdge extends DefaultEdge {
+public class StreetEdge extends DefaultEdge {
 	
-	private String robotId;
-	private RobotOrientation orientation;
+	private String vehicleId;
+	private VehicleOrientation orientation;
 	
-	public RoboEdge() {
+	public StreetEdge() {
 		super();
-		robotId = "";
+		vehicleId = "";
 		orientation = null;
 	}
 	
-	public void setRobotId(String robotId) {
-		this.robotId = robotId;
+	public void setVehicleId(String vehicleId) {
+		this.vehicleId = vehicleId;
 	}
 	
-	public String getRobotId() {
-		return robotId;
+	public String getVehicleId() {
+		return vehicleId;
 	}
 	
 }

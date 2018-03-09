@@ -6,12 +6,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 
-public class RobotCell extends Cell {
+public class VehicleCell extends Cell {
 	
 	double width = 50;
     double height = 50;
 
-	public RobotCell(String id) {
+	public VehicleCell(String id) {
 		super(id);
 		
 		StackPane view = new StackPane();

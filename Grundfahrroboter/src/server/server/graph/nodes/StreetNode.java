@@ -1,23 +1,23 @@
 package server.server.graph.nodes;
 
-public class RoboNode {
+public class StreetNode {
 	private String nodeId;
-	private String robotId;
-	private RobotOrientation orientation;
+	private String vehicleId;
+	private VehicleOrientation orientation;
 	
-	public RoboNode() {
+	public StreetNode() {
 		nodeId = null;
-		robotId = null;
+		vehicleId = null;
 		orientation = null;
 	}
 	
-	public RoboNode(String nodeId, String robotId, RobotOrientation orientation) {
+	public StreetNode(String nodeId, String vehicleId, VehicleOrientation orientation) {
 		this.nodeId = nodeId;
-		this.robotId = robotId;
+		this.vehicleId = vehicleId;
 		this.orientation = orientation;
 	}
 	
-	public RoboNode(String nodeId) {
+	public StreetNode(String nodeId) {
 		this.nodeId = nodeId;
 	}
 	
@@ -25,24 +25,24 @@ public class RoboNode {
 		return this.nodeId;
 	}
 	
-	public String getRobotId() {
-		return this.robotId;
+	public String getVehicleId() {
+		return this.vehicleId;
 	}
 	
-	public void setRobotId(String robotId) {
-		this.robotId = robotId;
+	public void setVehicleId(String vehicleId) {
+		this.vehicleId = vehicleId;
 	}
 	
-	public void setOrientation(RobotOrientation orientation) {
+	public void setOrientation(VehicleOrientation orientation) {
 		this.orientation = orientation;
 	}
 	
-	public RobotOrientation getOrientation() {
+	public VehicleOrientation getOrientation() {
 		return this.orientation;
 	}
 	
 	public boolean isEmpty() {
-		if(robotId == null) {
+		if(vehicleId == null) {
 			return true;
 		} else {
 			return false;
@@ -51,7 +51,7 @@ public class RoboNode {
 	
 	@Override
 	public String toString() {
-		return robotId + "|"+ orientation;
+		return vehicleId + "|"+ orientation;
 	}
 
 	public void turnLeft() {

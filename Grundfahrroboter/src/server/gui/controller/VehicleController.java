@@ -3,7 +3,7 @@ package server.gui.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import server.gui.layout.robot.RobotLayout;
+import server.gui.layout.vehicle.VehicleLayout;
 import server.server.Server;
 import server.server.exceptions.NoValidTargetNodeException;
 import server.server.exceptions.TargetIsOccupiedException;
@@ -21,7 +21,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
-public class RobotController implements Initializable{
+public class VehicleController implements Initializable{
 
 	@FXML
 	private TextArea textArea;
@@ -35,8 +35,8 @@ public class RobotController implements Initializable{
 	private Button modeButton;
 	
 	private Server server;
-	private String robotId;
-	private RobotLayout robotLayout;
+	private String vehicleId;
+	private VehicleLayout vehicleLayout;
 	
 	private ResourceBundle bundle;
 	private boolean automatic;
@@ -57,7 +57,7 @@ public class RobotController implements Initializable{
 		    @Override
 		    public void handle(KeyEvent event) {
 		        if(event.getCode().equals(KeyCode.ENTER)) {
-		             driveRobotTo(destination.getText());
+		             driveVehicleTo(destination.getText());
 		        }
 		    }
 		});
@@ -67,9 +67,9 @@ public class RobotController implements Initializable{
 		this.server = server;
 	}
 	
-	public void setRobotId(String robotId) {
-		this.robotId = robotId;
-		this.title.setText(bundle.getString("robot.title") + " " + robotId);
+	public void setVehicleId(String vehicleId) {
+		this.vehicleId = vehicleId;
+		this.title.setText(bundle.getString("robot.title") + " " + vehicleId);
 	}
 	
 	private void toggleMode() {
@@ -83,7 +83,7 @@ public class RobotController implements Initializable{
 			t1 = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					server.activateAutoDst(robotId);
+					server.activateAutoDst(vehicleId);
 				}
 			});
 			
@@ -93,13 +93,13 @@ public class RobotController implements Initializable{
 		} else {
 			automatic = false;
 			modeButton.setText(bundle.getString("robot.manual"));
-			server.deactivateAutoDst(robotId);
+			server.deactivateAutoDst(vehicleId);
 		}
 		
 	}
 	
-	public void setRobotLayout(RobotLayout rl) {
-		this.robotLayout = rl;
+	public void setVehicleLayout(VehicleLayout rl) {
+		this.vehicleLayout = rl;
 	}
 	
 	public void addTextMessage(String msg) {
@@ -107,35 +107,35 @@ public class RobotController implements Initializable{
 	}
 	
 	/**
-	 * Rotiert den Roboter in der Gui und im Server nach Links
+	 * Rotiert das Fahrzeug in der Gui und im Server nach Links
 	 */
-	public void rotateRobotLeft() {
-		//rotateRobot(-90); //FIXME dreht doppelt, wenn einkommentiert und Robo manuell gesteuert
-		server.turnVehicleLeft(robotId);
+	public void rotateVehicleLeft() {
+		//rotateVehicle(-90); //FIXME dreht doppelt, wenn einkommentiert und Fahrzeug manuell gesteuert
+		server.turnVehicleLeft(vehicleId);
 	}
 	
-	public void rotateRobotLeftServer() {
-		rotateRobot(-90);
+	public void rotateVehicleLeftServer() {
+		rotateVehicle(-90);
 	}
 	
 	/**
-	 * Rotiert den Roboter in der Gui und im Server nach Rechts
+	 * Rotiert das Fahrzeug in der Gui und im Server nach Rechts
 	 */
-	public void rotateRobotRight() {
-		//rotateRobot(90); //FIXME dreht doppelt, wenn einkommentiert und Robo manuell gesteuert
-		server.turnVehicleRight(robotId);
+	public void rotateVehicleRight() {
+		//rotateVehicle(90); //FIXME dreht doppelt, wenn einkommentiert und Fahrzeug manuell gesteuert
+		server.turnVehicleRight(vehicleId);
 	}
 	
-	public void rotateRobotRightServer() {
-		rotateRobot(90);
+	public void rotateVehicleRightServer() {
+		rotateVehicle(90);
 	}
 	
 	/**
 	 * Rotiert den Robotor nur in der Gui
 	 * @param grad der rotation
 	 */
-	public void rotateRobot(int angle) {
-		robotLayout.rotate(this.robotId, angle);
+	public void rotateVehicle(int angle) {
+		vehicleLayout.rotate(this.vehicleId, angle);
 	}
 	
 	
@@ -147,10 +147,10 @@ public class RobotController implements Initializable{
 		alert.showAndWait();
 	}
 	
-	public void moveRobotForward() {
+	public void moveVehicleForward() {
 		try {
-			String destination = server.moveVehicleForward(robotId);
-			robotLayout.moveRobotTo(robotId, destination);
+			String destination = server.moveVehicleForward(vehicleId);
+			vehicleLayout.moveVehicleTo(vehicleId, destination);
 			position.setText(destination);
 		} catch (NoValidTargetNodeException e) {
 			showAlert("Kein Gültiges Ziel");
@@ -159,7 +159,7 @@ public class RobotController implements Initializable{
 		}
 	}
 	
-	public void setRobotPosition(final String position) {
+	public void setVehiclePosition(final String position) {
 		Platform.runLater(new Runnable() {
 
 			@Override
@@ -172,7 +172,7 @@ public class RobotController implements Initializable{
 	
 	private void setPosition(String position) {
 		this.position .setText(position);
-		robotLayout.moveRobotTo(robotId, position);
+		vehicleLayout.moveVehicleTo(vehicleId, position);
 	}
 	
 	public void setDestinationTextField(String position) {
@@ -183,11 +183,11 @@ public class RobotController implements Initializable{
 		this.position.setText(position);		
 	}
 	
-	private void driveRobotTo(final String destination) {
+	private void driveVehicleTo(final String destination) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				server.driveVehicletTo(robotId, destination);
+				server.driveVehicletTo(vehicleId, destination);
 			}
 		}).start();
 		
