@@ -93,19 +93,16 @@ public class Server implements ServerInterface{
 	 * Entfernt den Worker und den Roboter aus dem Graphen anhand der Worker Position im Array
 	 * @param position Index des Worker Arrays, an welcher der Worker entfernt werden soll
 	 */
-	private void removeWorker(int position) { //FIXME kontrollieren
+	private void removeWorker(int position) { 
 		//TODO Fehlerbehandlung fï¿½r ungï¿½ltigen Parameter
 		//FIXME Testen ob das funktioniert, wenn es von addWorker aufgerufen wird
-		//Entfernen des Roboters aus dem Graphen
 		//Anhalten des Workers
-		try {
-			worker[position].closeConnection();
-			removeRobot(this.worker[position].getRoboName());
-			worker[position] = null;
-			anzahl--;
-		} catch (RemoteException | NotBoundException e) {
-			System.err.println("Server: Fehler bei removeRobot() " + e);
-		}		
+		//Entfernen des Roboters aus dem Graphen
+		//Worker dereferenzieren
+		removeRobot(this.worker[position].getRoboName());
+		worker[position].closeConnection();
+		worker[position] = null;
+				
 	}
 
 	
@@ -169,6 +166,7 @@ public class Server implements ServerInterface{
 	private void removeRobot(String robotId) {
 		roboGraph.removeRobot(robotId);
 		gui.removeRobot(robotId);
+		//FIXME Mathias: kann ich vom Server aus den Roboter aus dem AUTO-Mode nehmen, so dass der zugehörige Thread auch beendet wird?
 		if(isRobotInAutoMode(robotId)) {
 			deactivateAutoDst(robotId);
 		}
@@ -293,7 +291,7 @@ public class Server implements ServerInterface{
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				//Keine weitere Behandlung notwendig
 			}
 			addRobotTextMessage(robotId, "Ziel erreicht");
 		} 
@@ -323,7 +321,7 @@ public class Server implements ServerInterface{
 	
 	
 	public void driveRobotTo(String robotId, String destination) {
-		String position = roboGraph.getRobotPosition(robotId);
+		String position = roboGraph.getRobotPosition(robotId); //TODO Variable Position notwendig??
 		List<String> path = roboGraph.getShortesPath(robotId, destination);
 		
 		
@@ -399,19 +397,13 @@ public class Server implements ServerInterface{
 	 * @throws NotBoundException 
 	 * @throws RemoteException 
 	 */
-	public void stopServer() { //FIXME stopServer kontrollieren
-		try {
-			System.out.println(listener.getPort());
-			listener.stopListener();
-			listener = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void stopServer() { 
+		listener.stopListener();
+		listener = null;
+
 		for (int i = 0; i < maxWorker; i++) {
 			if (worker[i] != null) {
-				try {
-					worker[i].closeConnection();
-				} catch (RemoteException | NotBoundException e) {}
+				removeWorker(i);
 			}
 		}
 	}

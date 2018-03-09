@@ -81,6 +81,14 @@ public class Gui extends Application {
 	@Override
 	public void stop() {
 		server.stopServer();
+		this.server = null;
+		
+		System.gc();
+		System.runFinalization();
+		
+		//System.exit(0);
+		//TODO Ist das an dieser stelle möglich oder gibt das Probleme mit den JavaFx Threads, 
+		// da die vermutlich gewaltsam abgebrochen werden??
 	}
 
 	private void initRootLayout() {

@@ -74,16 +74,25 @@ public class Listener extends Thread implements ListenerInterface{
 	
 	
 	/**
-	 * Beendet den Listener-Thread und gibt den Port an der Netzwerkschnittstelle wieder frei.
+	 * Beendet den Listener und gibt den Port an der Netzwerkschnittstelle wieder frei.
 	 */
 	public void stopListener() {
-		this.interrupt();
-		try {
-			UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
-		} catch (NoSuchObjectException e) {
-			// TODO Auto-generated catch block
+		try {					// Binding zwischen Listener und Remote-Object-Stub aufheben
+			registry.unbind("Listener");
+		} catch (RemoteException | NotBoundException e) {
+			System.err.println("Listener: Fehler beim unbind:");
 			e.printStackTrace();
 		}
+		
+		try {					// Den Port wieder freigeben
+			UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
+		} catch (NoSuchObjectException e) {
+			System.err.println("Listener: Fehler beim unexport.");
+			e.printStackTrace();
+		}
+		
+		this.server = null; 	// Dereferenzieren
+		
 		System.out.println("Listener: Listener beendet.");
 	}
 	

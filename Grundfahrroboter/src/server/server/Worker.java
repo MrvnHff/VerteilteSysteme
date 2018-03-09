@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -138,12 +139,34 @@ public class Worker extends Thread implements WorkerInterface{
 	 * @throws RemoteException
 	 * @throws NotBoundException
 	 */
-	public void closeConnection() throws RemoteException, NotBoundException {
-		//TODO Wenn Roboter nicht erreichbar wird Prozess nicht beendet
-		robo.closeConnection();
-		UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
-		registryW.unbind(workerName);
-		this.interrupt();
+	public void closeConnection() {
+		
+		try {
+			robo.closeConnection();			// Programm auf Roboter beenden
+			this.robo = null;				// Dereferenzieren
+		} catch (RemoteException e) {
+			System.err.println("Worker: " + this.workerName + " Fehler beim Versuch Roboter zu beenden. Roboter: " + this.roboName);
+			e.printStackTrace();
+		}
+		
+		try {
+			registryW.unbind(workerName);	// Das Binding des Workers zum Remote-Objekt-Stub aufheben
+		} catch (RemoteException | NotBoundException e) {
+			System.err.println("Worker: " + this.workerName + " Fehler beim unbind.");
+			e.printStackTrace();
+		}
+				
+		try { 				// Den Port wieder freigeben 
+			UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
+		} catch (NoSuchObjectException e) {
+			System.err.println("Worker: " + this.workerName + " Fehler beim unexport.");
+			e.printStackTrace();
+		}
+
+		this.robo = null;		//Dereferenzieren, damit der Garbage Collector die Objekte aufsammelt
+		this.server = null;
+		
+		System.out.println("Worker: " + this.workerName + " beendet. (Roboter war: " +  this.roboName + ")");
 	}
 
 	/*//FIXME Methoden entfallen 
