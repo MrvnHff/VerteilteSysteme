@@ -113,9 +113,8 @@ public class StreetGraph {
 	
 	public String addVehicle(String vehicleId) {
 		String position = findFreePosition();
-		StreetNode node = streetNodeMap.get(position);
-		node.setVehicleId(vehicleId);
-		node.setOrientation(VehicleOrientation.NORTH);
+		streetNodeMap.get(position).setVehicleId(vehicleId);
+		streetNodeMap.get(position).setOrientation(VehicleOrientation.NORTH);
 		return position;
 	}
 
@@ -132,9 +131,9 @@ public class StreetGraph {
 	}
 	
 	public void removeVehicle(String vehicleId) {
-		//FIXME removeVehicle-Methode im Graph implementieren
-		StreetNode node = this.getVehicleById(vehicleId);
-		node.setVehicleId(null);
+		String nodeId = getVehiclePosition(vehicleId);
+		streetNodeMap.get(nodeId).setVehicleId(null);
+		streetNodeMap.get(nodeId).setOrientation(null);
 		return;
 	}
 	
@@ -148,9 +147,11 @@ public class StreetGraph {
 		Iterator<StreetNode> it = streetNodeMap.values().iterator();
 		while(it.hasNext()) {
 			node = it.next();
-			if(node.getVehicleId() == vehicleId) {
-				return node;
-			}
+			try {
+				if(node.getVehicleId().equals(vehicleId)) {
+					return node;
+				}
+			} catch(NullPointerException e) {} //Muss abgefangen werden, fall die  Vehicle ID NULL ist
 		}
 		return null;
 	}
