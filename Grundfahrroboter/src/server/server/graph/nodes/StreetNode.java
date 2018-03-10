@@ -1,5 +1,11 @@
 package server.server.graph.nodes;
 
+/**
+ * Knotentyp zur verwendung im StreetGraph
+ * Verwaltet KnotenId, vehicleId und die Orientierung des vehicels
+ * @author Mathias Wittling
+ *
+ */
 public class StreetNode {
 	private String nodeId;
 	private String vehicleId;
@@ -18,7 +24,36 @@ public class StreetNode {
 	}
 	
 	public StreetNode(String nodeId) {
+		this();
 		this.nodeId = nodeId;
+	}
+	
+	/**
+	 * Dreht die Orientierung nach links
+	 */
+	public void turnLeft() {
+		orientation = orientation.turnLeft();
+		System.out.println(this.orientation);
+	}
+
+	/**
+	 * Dreht die Orientierung nach rechts
+	 */
+	public void turnRight() {
+		orientation = orientation.turnRight();
+		System.out.println(this.orientation);
+	}
+	
+	/**
+	 * Prüft ob dem Knoten eine vehicleId zugeordnet ist
+	 * @return true falls keine Id zugeordnet, false wenn doch
+	 */
+	public boolean isEmpty() {
+		if(vehicleId == null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public String getNodeId() {
@@ -41,27 +76,10 @@ public class StreetNode {
 		return this.orientation;
 	}
 	
-	public boolean isEmpty() {
-		if(vehicleId == null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	@Override
 	public String toString() {
-		return vehicleId + "|"+ orientation;
+		return nodeId + "|" + vehicleId + "|"+ orientation;
 	}
 
-	public void turnLeft() {
-		orientation = orientation.turnLeft();
-		System.out.println(this.orientation);
-		
-	}
-
-	public void turnRight() {
-		orientation = orientation.turnRight();
-		System.out.println(this.orientation);
-	}
+	
 }
