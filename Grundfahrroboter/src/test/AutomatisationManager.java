@@ -69,7 +69,7 @@ public class AutomatisationManager {
 	public void removeRobot(String robotId) {
 		if(management.containsKey(robotId)) {
 			try {
-				management.get(robotId).closeConnection();
+				management.get(robotId).quitWorker();
 				management.remove(robotId);
 				System.out.println("AutomatisationManager: Roboter entfernt. ID: " + robotId);
 			} catch (Exception e) {

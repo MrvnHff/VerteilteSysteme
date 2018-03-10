@@ -8,8 +8,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeUnit;
 
-import Exceptions.RobotException;
-
 import java.net.InetAddress;
 
 import server.server.ListenerInterface;
@@ -32,7 +30,7 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 	private String robotName;
 	
 	public static final int MAXTRY = 10;
-	//Attribute für Roboter-Server / Server-Server / Listener / Worker
+	//Attribute fï¿½r Roboter-Server / Server-Server / Listener / Worker
 	private WorkerInterface worker;
 	private Registry registryW;
 	private Registry returnOfCreateRegistry;
@@ -63,11 +61,15 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 		try {			
 			// Roboter stellt sich selbst als Server im Netzwerk bereit
     		obj = this;
-    		stub = (RemoteVehicleInterface) UnicastRemoteObject.exportObject(obj, 0); //Behelfs Port
-    		returnOfCreateRegistry = LocateRegistry.createRegistry(roboterPort); 
-    		registryR = LocateRegistry.getRegistry(roboterPort);
-    		registryR.bind(robotName, stub);
-    		
+    		try {
+    		stub = (RemoteVehicleInterface)UnicastRemoteObject.exportObject(obj, 0); //Behelfs Port
+    			returnOfCreateRegistry = LocateRegistry.createRegistry(roboterPort); 
+    			registryR = LocateRegistry.getRegistry(roboterPort);
+    			registryR.bind(robotName, stub);
+    		} catch(Exception e) 
+    		{
+    			System.out.println("VirtualRobot:  Port bereits belegt" + e);
+    		}
     		//Versuch des Verbindungsaufbaus mit dem Listener des Server-servers
 			for (int i = 0; i < MAXTRY; ++i) {
 				try {            
@@ -112,7 +114,7 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 		} catch (Exception e){
 			System.out.println("Fehlerhafte Eingabe. Keinen Roboter gestartet.");
 			System.out.println("Eingabeparameter: ServerIp Serverport Roboterport WaitTime RobotID");
-			System.out.println("0 <= WaitTime <= 10 (Ausführungsdauer einer Fahroperation in Sekunden. Zufallsdauer falls ungültig.");
+			System.out.println("0 <= WaitTime <= 10 (Ausfï¿½hrungsdauer einer Fahroperation in Sekunden. Zufallsdauer falls ungï¿½ltig.");
 		}
 	}
 
@@ -128,7 +130,7 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 			//Roboter sucht nach Worker im System. Erst jetzt steht fest kennt der Worker den Roboter und der Roboter den Worker.
 			worker = (WorkerInterface) registryW.lookup(name);
 			System.out.println("VirtualRobot: Mit Worker "+ name + " verbunden!");
-			// Timeout zum unterbinden der Nullpointer Exception. Der Aufruf findet schneller statt, als der Roboter der GUI hinzugefügt wurde.
+			// Timeout zum unterbinden der Nullpointer Exception. Der Aufruf findet schneller statt, als der Roboter der GUI hinzugefï¿½gt wurde.
 			try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException e) {}
 			worker.printStatus(robotName + " bereit!");
 			System.out.println("VirtualRobot: " + robotName + " bereit!");
@@ -154,7 +156,7 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 
 
 	/**
-	 * Meldet den Roboter überall ab, schließt den Port und beendet den Thread.
+	 * Meldet den Roboter ï¿½berall ab, schlieï¿½t den Port und beendet den Thread.
 	 */
 	@Override
 	public void closeConnection() throws RemoteException {
@@ -165,11 +167,19 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 			e.printStackTrace();
 		}
 		
-		//FIXME Roboter überall abmelden und Fehler abfangen
+		//FIXME Roboter ï¿½berall abmelden und Fehler abfangen
 		UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
 		//worker.printStatus("Aufwiedersehen! Beende mein Programm!");
 		System.out.println("VirtualRobot: " + robotName + " connection closed.");
 		interrupt();
+	}
+	
+	public void quitWorker() {
+		try {
+			worker.quitFromVehicle();
+		} catch (RemoteException e) {
+			System.err.println("VirualRobot: Exception in quitVehicle() ausgelöst.");
+		}
 	}
 	
 	
