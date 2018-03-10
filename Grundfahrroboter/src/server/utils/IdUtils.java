@@ -14,4 +14,10 @@ public abstract class IdUtils {
 	public static String createIdString(int row, int col) {
 		return row + "/" + col;
 	}
+	
+	public static boolean isValidNodeId(String nodeId) {
+		//FIXME muss noch implementiert werden
+		return true;
+	}
 }
+
