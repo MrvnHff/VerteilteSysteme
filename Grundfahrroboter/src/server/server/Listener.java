@@ -50,6 +50,7 @@ public class Listener extends Thread implements ListenerInterface{
 		} catch (Exception e) {
 			server.addServerTextMessage("Fehler bei addWorker()" + e);
 			System.err.println("Listener: Fehler bei addWorker()" + e );
+			e.printStackTrace();
 		}
 	}
 	

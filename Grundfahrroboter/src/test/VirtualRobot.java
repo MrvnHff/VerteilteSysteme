@@ -128,11 +128,12 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 			//Roboter sucht nach Worker im System. Erst jetzt steht fest kennt der Worker den Roboter und der Roboter den Worker.
 			worker = (WorkerInterface) registryW.lookup(name);
 			System.out.println("VirtualRobot: Mit Worker "+ name + " verbunden!");
+			// Timeout zum unterbinden der Nullpointer Exception. Der Aufruf findet schneller statt, als der Roboter der GUI hinzugefügt wurde.
+			try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException e) {}
 			worker.printStatus(robotName + " bereit!");
 			System.out.println("VirtualRobot: " + robotName + " bereit!");
-			worker.setWay("", "");
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
+			System.err.println("VirtualRobot: Fehler innerhalb von registerWorkerInVehicle");
 			e.printStackTrace();
 		}
 	}
@@ -157,12 +158,20 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 	 */
 	@Override
 	public void closeConnection() throws RemoteException {
+		try {
+			registryR.unbind(this.robotName);
+		} catch (NotBoundException e) {
+			System.err.println("VirtualRobot: Fehler beim unbind in closeConnection");
+			e.printStackTrace();
+		}
+		
 		//FIXME Roboter überall abmelden und Fehler abfangen
 		UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
 		//worker.printStatus("Aufwiedersehen! Beende mein Programm!");
 		System.out.println("VirtualRobot: " + robotName + " connection closed.");
 		interrupt();
 	}
+	
 	
 	
 	//########################################

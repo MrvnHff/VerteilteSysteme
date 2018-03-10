@@ -171,7 +171,6 @@ public class RoboServer implements RemoteVehicleInterface{
 			System.out.println("Mit Worker "+ name + " verbunden!");
 			worker.printStatus(robotName + " bereit!");
 			System.out.println(robotName + " bereit!");
-			worker.setWay("", "");
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

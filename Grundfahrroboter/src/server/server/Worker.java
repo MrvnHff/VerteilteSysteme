@@ -57,8 +57,10 @@ public class Worker extends Thread implements WorkerInterface{
 	public void run() {
 		try {
 			registerWorker();		
-			registerVehicleInWorker();			
-		} catch (Exception e) {
+			registerVehicleInWorker();	
+			registerWorkerInVehicle();
+		} catch (Exception e) {			
+			System.err.println("Worker: Fehler in der run() Methode aufgefangen.");
 			e.printStackTrace();
 		}
 	}
@@ -87,14 +89,6 @@ public class Worker extends Thread implements WorkerInterface{
 		return this.workerIp;
 	}
 	
-
-	// TODO setWay umbenennen in etwas sinnvolles (Worker + Interface + VehicleServer) + Javadoc Kommentar anpassen
-	//Javadoc-Kommentar im Interface
-	//remoteReachable
-	@Override
-	public void setWay(String point1, String point2) throws RemoteException {
-		System.out.println("Statusabruf: " + vehicle.getStatus());
-	}
 
 	//Javadoc-Kommentar im Interface
 	//remoteReachable
@@ -143,8 +137,16 @@ public class Worker extends Thread implements WorkerInterface{
 	    registryV = LocateRegistry.getRegistry(vehicleIp, vehiclePort);
 		vehicle = (RemoteVehicleInterface) registryV.lookup(vehicleId);		
 		System.out.println("Worker: " + workerId + " verbunden mit Fahrzeug " + vehicleId + "!");		
+	}
+	
+	private void registerWorkerInVehicle() {
 		// Diesen Worker beim Fahrzeug anmelden
-		vehicle.registerWorkerInVehicle(workerId, workerIp, workerPort);
+		try {
+			vehicle.registerWorkerInVehicle(workerId, workerIp, workerPort);
+		} catch (RemoteException e) {
+			System.out.println("Worker: Fehler beim Aufruf registerWorkerInVehicle() " + e);
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -182,7 +184,7 @@ public class Worker extends Thread implements WorkerInterface{
 		
 		System.out.println("Worker: " + this.workerId + " beendet. (Fahrzeug war: " +  this.vehicleId + ")");
 	}
-
+	
 
 	public void turnLeft() throws RemoteException {
 		vehicle.turnLeft();

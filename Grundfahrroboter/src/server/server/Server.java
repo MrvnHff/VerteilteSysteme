@@ -26,6 +26,8 @@ public class Server implements ServerInterface{
 	private int maxWorker;
 	
 	private StreetGraph streetGraph;
+	
+	// <String> = vehicleId, <Boolean> = true, wenn Roboter im AUTO-Mode. Roboter die nicht in AUTO sind, werden aus der Map gelöscht
 	private Map<String, Boolean> vehicleMode = new HashMap<String, Boolean>();
 	
 	private int port;
@@ -183,10 +185,10 @@ public class Server implements ServerInterface{
 	 * Beendet den Worker und den entfernt das Fahrzeug aus dem Graphen und der GUI anhand der ID des Fahrzeugs
 	 * @param vehicleId
 	 */
-	public void removeWorker(String vehicleId) {
+	public synchronized void removeWorker(String vehicleId) {
 		// Aus GUI und StreetGraph entfernen
 		streetGraph.removeVehicle(vehicleId);
-		gui.removeVehicle(vehicleId);
+		//gui.removeVehicle(vehicleId); //FIXME kann nicht aufgerufen werden, da es sich nicht um einen FX-Thread handelt
 		//FIXME Mathias: kann ich vom Server aus den Roboter aus dem AUTO-Mode nehmen, so dass der zugehörige Thread auch beendet wird?
 		if(isVehicleInAutoMode(vehicleId)) {
 			deactivateAutoDst(vehicleId);
