@@ -178,11 +178,17 @@ public class Worker extends Thread implements WorkerInterface{
 			System.err.println("Worker: " + this.workerId + " Fehler beim unexport.");
 			e.printStackTrace();
 		}
-
+		server.addServerTextMessage("Worker: " + this.workerId + " beendet. (Fahrzeug war: " +  this.vehicleId + ")");
+		
 		this.vehicle = null;		//Dereferenzieren, damit der Garbage Collector die Objekte aufsammelt
 		this.server = null;
 		
 		System.out.println("Worker: " + this.workerId + " beendet. (Fahrzeug war: " +  this.vehicleId + ")");
+		
+	}
+	
+	public void quitFromVehicle() {
+		server.removeWorker(this.vehicleId);
 	}
 	
 
