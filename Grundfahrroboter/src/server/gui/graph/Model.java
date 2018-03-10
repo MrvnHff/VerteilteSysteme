@@ -130,16 +130,26 @@ public class Model {
     }
 
     private void addCell( Cell cell) {
-
         addedCells.add(cell);
         cellMap.put( cell.getCellId(), cell);
-
     }
+    
+    public void removeCell(String cellId) {
+		this.removedCells.add(cellMap.get(cellId));
+		cellMap.remove(cellId);
+		//FIXME verknüpfte Kanten ebenfalls Löschen
+		
+	}
     
     private void addVehicleCell(VehicleCell cell) {
     	addedVehicleCells.add(cell);
     	vehicleMap.put(cell.getCellId(), cell);
     }
+    
+    public void removeVehicleCell(String vehicleId) {
+		removedVehicleCells.add((VehicleCell) vehicleMap.get(vehicleId));
+		vehicleMap.remove(vehicleId);
+	}
 
     public void addEdge( String sourceId, String targetId) {
 
@@ -200,4 +210,8 @@ public class Model {
         removedEdges.clear();
 
     }
+
+	
+
+	
 }

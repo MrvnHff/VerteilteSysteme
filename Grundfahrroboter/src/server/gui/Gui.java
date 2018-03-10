@@ -88,6 +88,8 @@ public class Gui extends Application implements GuiInterface{
 		//System.exit(0);
 		//TODO Ist das an dieser stelle möglich oder gibt das Probleme mit den JavaFx Threads, 
 		// da die vermutlich gewaltsam abgebrochen werden??
+		//Sollte keine Probleme geben. Das hier ist die Methode die aufgerufen wird wenn du die javaFx anwendung über
+		//Platform.exit(), oder auf das x symbol im fenster klicks. (Das ruft auch meines wissens Platform.exit() auf und somit diese methode)
 	}
 
 	private void initRootLayout() {
@@ -152,11 +154,22 @@ public class Gui extends Application implements GuiInterface{
 		
 	}
 	
-	public void removeVehicle(String vehicleId) {
-		//FIXME removeVehicle-Methode in der GUI implementieren
-		//graph.getModel().removeCell();
-		graph.endUpdate();
-		return;
+	public void removeVehicle(final String vehicleId) {
+		Platform.runLater(new Runnable() {
+            @Override public void run() {
+            	graph.getModel().removeVehicleCell(vehicleId);
+        		graph.endUpdate();
+        		vehicleControllers.remove(vehicleId);
+        		Object[] vehiclePanes = flow.getChildren().toArray();
+        		
+        		for(Object o: vehiclePanes) {
+        			BorderPane vehiclePane = (BorderPane)o;
+        			if(vehiclePane.getId().equals(vehicleId)) {
+        				flow.getChildren().remove(vehiclePane);
+        			}
+        		}
+            }
+        });
 	}
 	
 	private BorderPane buildVehiclePane(String vehicleId, String position) {
@@ -164,6 +177,7 @@ public class Gui extends Application implements GuiInterface{
 		try {
 			FXMLLoader vehicleLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
 			vehicle = (BorderPane) vehicleLoader.load();
+			vehicle.setId(vehicleId);
 			VehicleController controller = vehicleLoader.getController();
 			controller.setServer(server);
 			controller.setVehicleId(vehicleId);

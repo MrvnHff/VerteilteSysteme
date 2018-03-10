@@ -81,6 +81,7 @@
                   <Button fx:id="up" mnemonicParsing="false" onAction="#moveVehicleForward" prefHeight="30.0" prefWidth="50.0" styleClass="up-button" GridPane.columnIndex="1" />
                </children>
             </GridPane>
+            <Button fx:id="removeVehicle" mnemonicParsing="false" onAction="#removeVehicle" text="Disconnect" GridPane.rowIndex="3" />
          </children>
          <BorderPane.margin>
             <Insets left="10.0" right="10.0" />

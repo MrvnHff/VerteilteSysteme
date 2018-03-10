@@ -193,4 +193,8 @@ public class VehicleController implements Initializable{
 		}).start();
 		
 	}
+	
+	public void removeVehicle() {
+		server.removeWorker(vehicleId);
+	}
 } 

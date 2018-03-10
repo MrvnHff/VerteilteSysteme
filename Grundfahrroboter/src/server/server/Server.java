@@ -112,7 +112,7 @@ public class Server implements ServerInterface{
 	 * @throws NotBoundException 
 	 * @throws RemoteException 
 	 */
-	public void stopServer() { 
+	public void stopServer() {
 		listener.stopListener();
 		listener = null;
 		/*
@@ -206,8 +206,10 @@ public class Server implements ServerInterface{
 	public synchronized void removeWorker(String vehicleId) {
 		// Aus GUI und StreetGraph entfernen
 		streetGraph.removeVehicle(vehicleId);
-		//gui.removeVehicle(vehicleId); //FIXME kann nicht aufgerufen werden, da es sich beim aufrufen nicht um einen FX-Thread handelt
+		gui.removeVehicle(vehicleId);
 		//FIXME Mathias: kann ich vom Server aus den Roboter aus dem AUTO-Mode nehmen, so dass der zugehörige Thread auch beendet wird?
+		//Ja kann man, da hier der Roboter sowieso rausgeschmissen wird. Ansonsten muss man zusätzlich die entsprechenden Werte in der Gui ändern, 
+		//ansonsten führt das zu inkonsistenzen
 		if(isVehicleInAutoMode(vehicleId)) {
 			deactivateAutoDst(vehicleId);
 		}
@@ -289,6 +291,7 @@ public class Server implements ServerInterface{
 	//###################################################
 	
 	public String generateRndDestination() {
+		//TODO nur freie Knoten aussuchen
 		int x;
 		int y;
 		x = (int) (Math.random()* streetGraph.getColumnCount());
@@ -347,12 +350,8 @@ public class Server implements ServerInterface{
 	
 	
 	public void driveVehicletTo(String vehicleId, String destination) {
-		String position = streetGraph.getVehiclePosition(vehicleId); //TODO Mathias: Variable Position notwendig??
 		List<String> path = streetGraph.getShortesPath(vehicleId, destination);
-		
-		
-		
-		//Der folgende algorithmus ist arbeit fÃ¼r einen eigenen Thread/Worker, sodass die pfade gleichzeitg fÃ¼r mehrere Fahrzeuge abgearbeitet werden kÃ¶nnen
+	
 		while(path.size() > 1) {
 			String nodeId = path.get(1);
 			if((path.size() == 2) && (nodeId == destination)) {
@@ -403,7 +402,6 @@ public class Server implements ServerInterface{
 	 * @param vehicleId ID des Fahrzeuges, das gedreht werden soll.
 	 */
 	public void turnVehicleLeft(String vehicleId) {
-		
 		try {
 			//worker[findWorkerToVehicleId(vehicleId)].turnLeft();
 			workerMap.get(vehicleId).turnLeft();
@@ -434,13 +432,14 @@ public class Server implements ServerInterface{
 		gui.turnVehicleRight(vehicleId);
 	}
 	
-
-	
 	/**
 	 * 
 	 * @param vehicleId
 	 */
 	public String moveVehicleForward(String vehicleId) {
+		//TODO eine verbesserung wäre wenn hier oder vorher auch ab und zu nach einem neuen freiem Pfad gesucht wird.
+		//Momentan bleibt der algorthmus hier hängen wenn einmal ein knoten auf dem Weg blockiert ist, auch wenn sich in der
+		//zwischenzeit ein neuer freier Pfad ergeben hat
 		String destination;
 		try {		
 			destination = streetGraph.moveVehicleForward(vehicleId);
