@@ -23,6 +23,9 @@ public class Turn {
 	 */
 	public static void turn(int grad, boolean right, RegulatedMotor b, RegulatedMotor c, Gyrosensor gyro) {
 		Driving drive = new Driving(b, c);
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {}
 		int speed = grad - Math.abs(gyro.getValue()) + 30;
 		gyro.reset();
 		if (right) {

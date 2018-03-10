@@ -7,6 +7,9 @@ public class DriveCm {
 
 	public static void driveCm(double cm, int speed, RegulatedMotor b, RegulatedMotor c, double diameter) {
 		Driving drive = new Driving(b, c);
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {}
 		if (speed >= 0) {
 			drive.setDirection(Driving.FORWARD);
 			drive.start(speed);

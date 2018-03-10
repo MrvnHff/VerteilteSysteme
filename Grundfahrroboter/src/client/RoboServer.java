@@ -49,7 +49,7 @@ public class RoboServer implements RemoteVehicleInterface{
 	@Override
 	public void driveUntilBlack(int speed) throws RemoteException{
 		try {
-			robo.driveUntilLight(speed, 15, "<=");
+			robo.driveUntilLight(speed, 17, "<=");
 			worker.printStatus(robo.getStatus());
 		} catch (RobotException e) {
 			e.printStackTrace();
