@@ -14,6 +14,7 @@ import server.gui.graph.Graph;
 import server.gui.layout.grid.GridLayout;
 import server.gui.layout.vehicle.VehicleLayout;
 import server.server.Server;
+import server.server.ServerInterface;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +27,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
-public class Gui extends Application {
+public class Gui extends Application implements GuiInterface{
 	
 	private static final String CONFIG_FILENAME = "resources/config/config";
 	private static final String FXML_BUNDLE_FILENAME = "resources/config/fxml_files";
@@ -36,7 +37,7 @@ public class Gui extends Application {
 	
 	private Graph graph;
 	
-	private Server server;
+	private ServerInterface server;
 	
 	private HashMap<String, VehicleController> vehicleControllers = new HashMap<String, VehicleController>();
 	

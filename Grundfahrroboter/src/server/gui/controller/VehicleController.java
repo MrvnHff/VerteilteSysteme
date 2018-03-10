@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import server.gui.layout.vehicle.VehicleLayout;
 import server.server.Server;
+import server.server.ServerInterface;
 import server.server.exceptions.NoValidTargetNodeException;
 import server.server.exceptions.TargetIsOccupiedException;
 import javafx.application.Platform;
@@ -34,7 +35,7 @@ public class VehicleController implements Initializable{
 	@FXML
 	private Button modeButton;
 	
-	private Server server;
+	private ServerInterface server;
 	private String vehicleId;
 	private VehicleLayout vehicleLayout;
 	
@@ -63,7 +64,7 @@ public class VehicleController implements Initializable{
 		});
 	}
 	
-	public void setServer(Server server) {
+	public void setServer(ServerInterface server) {
 		this.server = server;
 	}
 	

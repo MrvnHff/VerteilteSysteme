@@ -11,6 +11,7 @@ import java.util.Map;
 
 
 import server.gui.Gui;
+import server.gui.GuiInterface;
 import server.server.exceptions.MaximumWorkersReachedException;
 import server.server.exceptions.TargetIsOccupiedException;
 import server.server.graph.StreetGraph;
@@ -22,7 +23,7 @@ public class Server implements ServerInterface{
 	//# 	Klassenattribute							#
 	//###################################################
 	
-	private Gui gui;
+	private GuiInterface gui;
 		
 	private Listener listener;
 	//private Worker[] worker;
