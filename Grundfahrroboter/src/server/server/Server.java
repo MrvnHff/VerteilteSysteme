@@ -2,9 +2,13 @@ package server.server;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 import server.gui.Gui;
 import server.server.exceptions.MaximumWorkersReachedException;
@@ -21,9 +25,11 @@ public class Server implements ServerInterface{
 	private Gui gui;
 		
 	private Listener listener;
-	private Worker[] worker;
-	private int anzahl;
+	//private Worker[] worker;
+	//private int anzahl; //Wird obsolet, da man die Anzahl direkt aus der Map abfragen kann.
 	private int maxWorker;
+	//<String> = vehicleId, <Worker> = referenz auf den Worker
+	private Map<String, Worker> workerMap = new HashMap<String, Worker>();;
 	
 	private StreetGraph streetGraph;
 	
@@ -61,8 +67,9 @@ public class Server implements ServerInterface{
 	public Server(int graphRows, int graphColumns, int port, int maxWorker) {
 		streetGraph = new StreetGraph(graphRows, graphColumns);
 		this.maxWorker = maxWorker;
-		worker = new Worker[maxWorker];
-		anzahl = 0;
+		//worker = new Worker[maxWorker];
+		//anzahl = 0;
+		//workerMap = new HashMap<String, Worker>();
 		this.port= port;
 	}
 	
@@ -107,11 +114,15 @@ public class Server implements ServerInterface{
 	public void stopServer() { 
 		listener.stopListener();
 		listener = null;
-
+		/*
 		for (int i = 0; i < maxWorker; i++) {
 			if (worker[i] != null) {
 				removeWorker(worker[i].getVehicleId());
 			}
+		}*/
+		
+		for(String vehicleId : workerMap.keySet()) {
+			removeWorker(vehicleId);
 		}
 	}
 	
@@ -160,14 +171,20 @@ public class Server implements ServerInterface{
 	public synchronized void addWorker(String vehicleId, String vehicleIp, int vehiclePort) {
 		
 		if(isAddWorkerAllowed()) {
-			int existingWorkerPosition = findWorkerToVehicleId(vehicleId) ; 
+			/*int existingWorkerPosition = findWorkerToVehicleId(vehicleId) ; 
 			if(existingWorkerPosition >= 0) { // Wenn ein Worker zu dieser FahrzeugID existiert, beende diesen.
 				removeWorker(vehicleId);
 			}
 			int nextFreePos = getNextFreeWorkerNumber();
 			this.worker[nextFreePos] = new Worker(this, "Worker_" + nextFreePos, vehicleId, vehicleIp, vehiclePort, (this.port + nextFreePos + 1));
 			anzahl++;
+			*/
 			
+			if(workerMap.containsKey(vehicleId)) { //Erst löschen, falls vorhanden
+				removeWorker(vehicleId);
+			}
+			int nextFreeNumber = getNextFreeWorkerNumber();
+			workerMap.put(vehicleId, new Worker(this, "Worker_" + nextFreeNumber, vehicleId, vehicleIp, vehiclePort, (this.port + nextFreeNumber)));
 			
 			//Fahrzeug dem Graphen und der GUI hinzufügen
 			String position;
@@ -188,16 +205,19 @@ public class Server implements ServerInterface{
 	public synchronized void removeWorker(String vehicleId) {
 		// Aus GUI und StreetGraph entfernen
 		streetGraph.removeVehicle(vehicleId);
-		//gui.removeVehicle(vehicleId); //FIXME kann nicht aufgerufen werden, da es sich nicht um einen FX-Thread handelt
+		//gui.removeVehicle(vehicleId); //FIXME kann nicht aufgerufen werden, da es sich beim aufrufen nicht um einen FX-Thread handelt
 		//FIXME Mathias: kann ich vom Server aus den Roboter aus dem AUTO-Mode nehmen, so dass der zugehörige Thread auch beendet wird?
 		if(isVehicleInAutoMode(vehicleId)) {
 			deactivateAutoDst(vehicleId);
 		}
-		
+		/*
 		// Worker anhalten und dereferenzieren
 		int position = findWorkerToVehicleId(vehicleId);
 		worker[position].closeConnection();
 		worker[position] = null;
+		*/
+		workerMap.get(vehicleId).closeConnection();
+		workerMap.remove(vehicleId);
 	}
 	
 
@@ -207,20 +227,36 @@ public class Server implements ServerInterface{
 	 * @return Die nächste freie Nummer, wenn noch eine frei ist, sonst -1.
 	 */
 	private int getNextFreeWorkerNumber() {
-		for (int i = 0; i < maxWorker; i++) {
+		List<Integer> usedNumbers = new ArrayList<Integer>();
+		for(Worker worker : workerMap.values()) {
+			usedNumbers.add(worker.getWorkerPort() - this.port);
+		}
+		
+		Collections.sort( usedNumbers );
+		
+		int number = 1;
+		for(int i : usedNumbers) {
+			if(number != i) {
+				return number;
+			}
+			number++;
+		}
+		return number;
+		
+		/*for (int i = 0; i < maxWorker; i++) {
 			if (worker[i] == null) {
 				return i;
 			}
 		}
-		return -1;
+		return -1;*/
 	}
 	
 	
-	/**
+	/*
 	 * Sucht den Worker im Array zur Fahrzeug ID
 	 * @param vehicleId Name (ID) des Fahrzeuges
 	 * @return Index der Fundstelle, wenn nicht vorhanden -1
-	 */
+	 *
 	private int findWorkerToVehicleId(String vehicleId) {
 		for (int i = 0; i < maxWorker; i++) {
 			try {
@@ -233,7 +269,7 @@ public class Server implements ServerInterface{
 			}
 		}
 		return -1;
-	}
+	}*/
 	
 	
 	/**
@@ -241,7 +277,8 @@ public class Server implements ServerInterface{
 	 * @return true falls noch Worker hinzugefügt werden können, sonst false
 	 */
 	public boolean isAddWorkerAllowed() {
-		return(anzahl < maxWorker);
+		//return(anzahl < maxWorker);
+		return(workerMap.size() < maxWorker);
 	}
 
 
@@ -309,7 +346,7 @@ public class Server implements ServerInterface{
 	
 	
 	public void driveVehicletTo(String vehicleId, String destination) {
-		String position = streetGraph.getVehiclePosition(vehicleId); //TODO Variable Position notwendig??
+		String position = streetGraph.getVehiclePosition(vehicleId); //TODO Mathias: Variable Position notwendig??
 		List<String> path = streetGraph.getShortesPath(vehicleId, destination);
 		
 		
@@ -367,7 +404,8 @@ public class Server implements ServerInterface{
 	public void turnVehicleLeft(String vehicleId) {
 		
 		try {
-			worker[findWorkerToVehicleId(vehicleId)].turnLeft();
+			//worker[findWorkerToVehicleId(vehicleId)].turnLeft();
+			workerMap.get(vehicleId).turnLeft();
 		} catch (RemoteException e) {
 			System.err.println("Server: Fehler bei turnVehicleLeft remote Aufruf, " + 
 					"Fahrzeugdrehung abgebrochen.");
@@ -383,7 +421,8 @@ public class Server implements ServerInterface{
 	 */
 	public void turnVehicleRight(String vehicleId) {
 		try {
-			worker[findWorkerToVehicleId(vehicleId)].turnRight();
+			//worker[findWorkerToVehicleId(vehicleId)].turnRight();
+			workerMap.get(vehicleId).turnRight();
 		} catch (RemoteException e) {
 			System.err.println("Server: Fehler bei turnVehicleRight remote Aufruf, " + 
 					"Fahrzeugdrehung abgebrochen.");
@@ -418,7 +457,8 @@ public class Server implements ServerInterface{
 		
 		try {
 			//TODO Fahrzeug keine Feste Geschwindigkeit übergeben
-			worker[findWorkerToVehicleId(vehicleId)].driveNextPoint(20);
+			//worker[findWorkerToVehicleId(vehicleId)].driveNextPoint(20);
+			workerMap.get(vehicleId).driveNextPoint(20);
 		} catch (RemoteException e) {
 			System.err.println("Server: Fehler bei moveVehicleForward remote Aufruf, " + 
 					"Fahrzeugbewegung abgebrochen.");
