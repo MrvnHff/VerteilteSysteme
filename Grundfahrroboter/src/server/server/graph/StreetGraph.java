@@ -75,7 +75,7 @@ public class StreetGraph {
 	 * @param nodeId Id des Knoten, muss dem Muster row/collumn entsprechen
 	 */
 	public void addNode(String nodeId) {
-		if(IdUtils.isValidNodeId(nodeId)) {
+		if(IdUtils.isValidId(nodeId)) {
 			roadGraph.addVertex(nodeId);
 			streetNodeMap.put(nodeId, new StreetNode(nodeId));
 		} else {
@@ -100,6 +100,15 @@ public class StreetGraph {
 	public boolean isNodeEmpty(String nodeId) {
 		StreetNode node = getNode(nodeId);
 		return node.isEmpty();
+	}
+	
+	public boolean nodeExists(String nodeId) {
+		StreetNode node = getNode(nodeId);
+		if(node == null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	/**

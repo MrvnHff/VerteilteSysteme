@@ -25,5 +25,6 @@ public interface ServerInterface {
 	public void activateAutoDst(String vehicleId);
 	public void deactivateAutoDst(String vehicleId);
 	public boolean isVehicleInAutoMode(String vehicleId);
+	public boolean nodeExists(String nodeId);
 	
 }

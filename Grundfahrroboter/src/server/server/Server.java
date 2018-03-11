@@ -156,6 +156,10 @@ public class Server implements ServerInterface{
     		System.out.println("Keine GUI registriert. Servermeldung: " + message);
     	}
     }
+    
+    public boolean nodeExists(String nodeId) {
+		return streetGraph.nodeExists(nodeId);
+	}
 
 	
 	
@@ -506,5 +510,7 @@ public class Server implements ServerInterface{
        		} 	
         }
     }
+
+	
 	
 }

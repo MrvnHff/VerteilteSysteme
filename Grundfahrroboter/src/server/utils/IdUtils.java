@@ -1,5 +1,7 @@
 package server.utils;
 
+import server.server.exceptions.NoValidIdException;
+
 /**
  * Bietet Methoden an für den Umgang mit Id's
  * @author Mathias Wittling
@@ -13,12 +15,16 @@ public abstract class IdUtils {
 	 * @return array mit den entsprechenden Zahlenwerten
 	 */
 	public static int[] extractCoordinates(String cellId) {
-		String strCoordinates[];
-		int	intCoordinates[] = new int[2];
-		strCoordinates = cellId.split("/");
-		intCoordinates[0] =  Integer.parseInt(strCoordinates[0]);
-		intCoordinates[1] =  Integer.parseInt(strCoordinates[1]);
-		return intCoordinates;
+		if(isValidId(cellId)) {
+			String strCoordinates[];
+			int	intCoordinates[] = new int[2];
+			strCoordinates = cellId.split("/");
+			intCoordinates[0] =  Integer.parseInt(strCoordinates[0]);
+			intCoordinates[1] =  Integer.parseInt(strCoordinates[1]);
+			return intCoordinates;
+		} else {
+			throw new NoValidIdException(cellId);
+		}
 	}
 	
 	/**
@@ -36,9 +42,8 @@ public abstract class IdUtils {
 	 * @param nodeId Id die überprüft werden soll
 	 * @return true falls gültig, false wenn nicht
 	 */
-	public static boolean isValidNodeId(String nodeId) {
-		//FIXME muss noch implementiert werden
-		return true;
+	public static boolean isValidId(String nodeId) {
+		return nodeId.matches("[0-9]*/[0-9]*");
 	}
 }
 

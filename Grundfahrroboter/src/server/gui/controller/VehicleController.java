@@ -8,6 +8,7 @@ import server.server.Server;
 import server.server.ServerInterface;
 import server.server.exceptions.NoValidTargetNodeException;
 import server.server.exceptions.TargetIsOccupiedException;
+import server.utils.IdUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -58,7 +59,15 @@ public class VehicleController implements Initializable{
 		    @Override
 		    public void handle(KeyEvent event) {
 		        if(event.getCode().equals(KeyCode.ENTER)) {
-		             driveVehicleTo(destination.getText());
+		        	 if(!IdUtils.isValidId(destination.getText())) {
+		        		 showAlert("Keine Gültige Node Id\n"
+			        		 		+ "Id muss dem Muster [0-9]*/[0-9]* entsprechen");
+		        	 } else if(!server.nodeExists(destination.getText())) { 
+		        		 showAlert("Die Knoten Id " + destination.getText() + " ist nicht im Graph vorhanden");
+		        	 } else {
+		        		 driveVehicleTo(destination.getText());
+		        	 }
+		        	 
 		        }
 		    }
 		});
