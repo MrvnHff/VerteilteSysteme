@@ -350,6 +350,8 @@ public class Server implements ServerInterface{
 	
 	
 	public void driveVehicletTo(String vehicleId, String destination) {
+		//TODO Feherbehandlung falls kein Pfad exisitiert. 
+		//In diesem fall wird von derJgraphT bibliothek eine exception ausgelöst
 		List<String> path = streetGraph.getShortesPath(vehicleId, destination);
 	
 		while(path.size() > 1) {
