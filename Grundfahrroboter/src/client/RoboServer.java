@@ -137,11 +137,14 @@ public class RoboServer implements RemoteVehicleInterface{
 	@Override
 	public void driveNextPoint(int speed) throws RemoteException{
 		try {
+			robo.turn(3, false);
 			robo.driveCm(3, speed);
 			robo.pidLightCm(speed, 68);
+			robo.turn(4, true);
 			robo.driveCm(6, speed);
-			robo.driveUntilLight(speed, 10, "<=");
-			robo.driveCm(10.5, speed);
+			robo.turn(4, false);
+			robo.driveUntilLight(speed, 10, "<=");			
+			robo.driveCm(10, speed);
 			worker.printStatus("Habe den Punkt erreicht!");
 		} catch (RobotException e) {
 			e.printStackTrace();
@@ -184,7 +187,7 @@ public class RoboServer implements RemoteVehicleInterface{
 	}
 	
 public static void main(String args[]) {
-	final int ROBO_NUMBER = 4;
+	final int ROBO_NUMBER = 3;
 	
 	double dm = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "Durchmesser"));
 	double kp = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_p"));
