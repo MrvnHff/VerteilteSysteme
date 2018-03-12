@@ -137,12 +137,11 @@ public class RoboServer implements RemoteVehicleInterface{
 	@Override
 	public void driveNextPoint(int speed) throws RemoteException{
 		try {
-			robo.driveCm(2, speed);
-			robo.searchLine();
+			robo.driveCm(3, speed);
 			robo.pidLightCm(speed, 68);
 			robo.driveCm(6, speed);
 			robo.driveUntilLight(speed, 10, "<=");
-			robo.driveCm(9.5, speed);
+			robo.driveCm(10.5, speed);
 			worker.printStatus("Habe den Punkt erreicht!");
 		} catch (RobotException e) {
 			e.printStackTrace();
@@ -185,7 +184,7 @@ public class RoboServer implements RemoteVehicleInterface{
 	}
 	
 public static void main(String args[]) {
-	final int ROBO_NUMBER = 2;
+	final int ROBO_NUMBER = 4;
 	
 	double dm = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "Durchmesser"));
 	double kp = Double.parseDouble(FileSystem.readProperties(ROBO_NUMBER, "PID_p"));
@@ -219,7 +218,7 @@ public static void main(String args[]) {
 			for (int i = 0; i < MAXTRY; ++i) {
 				try {            
             		//Roboter sucht im System nach dem Listener
-            		registryL = LocateRegistry.getRegistry("192.168.178.24", 55555);
+            		registryL = LocateRegistry.getRegistry("192.168.178.100", 55555);
             		listener = (ListenerInterface) registryL.lookup("Listener");
             		i = MAXTRY;
 					InetAddress ipAddr = InetAddress.getLocalHost();
