@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.ResourceBundle;
 
 import server.gui.Gui;
 import server.gui.GuiInterface;
@@ -22,6 +22,7 @@ public class Server implements ServerInterface{
 	//###################################################
 	//# 	Klassenattribute							#
 	//###################################################
+	private static final String CONFIG_FILENAME = "resources/config/serverStart";
 	
 	private GuiInterface gui;
 		
@@ -39,10 +40,9 @@ public class Server implements ServerInterface{
 	
 	private int port;
 	
-	private final static int STD_MAXWORKER = 4;
-	private final static int STD_LISTENER_PORT = 55555;
-	private final static int STD_GRAPH_ROWS = 3;
-	private final static int STD_GRAPH_COMLUMNS = 3;
+	private static ResourceBundle configuration = ResourceBundle.getBundle(CONFIG_FILENAME);
+	
+	private final static int VEHICLE_SPEED = Integer.parseInt(configuration.getString("VehicleSpeed"));
 
 	
 	//###################################################
@@ -55,7 +55,10 @@ public class Server implements ServerInterface{
 	 * legt den Standardwert f�r die maximale Workerzahl fest (4)
 	 */
 	public Server() {
-		this(STD_GRAPH_ROWS, STD_GRAPH_COMLUMNS, STD_LISTENER_PORT, STD_MAXWORKER);
+		this(Integer.parseInt(configuration.getString("GraphRows")), 
+				Integer.parseInt(configuration.getString("GraphRows")),
+				Integer.parseInt(configuration.getString("Port")), 
+				Integer.parseInt(configuration.getString("MaxVehicles")));
 	}
 	
 	/**
@@ -68,9 +71,6 @@ public class Server implements ServerInterface{
 	public Server(int graphRows, int graphColumns, int port, int maxWorker) {
 		streetGraph = new StreetGraph(graphRows, graphColumns);
 		this.maxWorker = maxWorker;
-		//worker = new Worker[maxWorker];
-		//anzahl = 0;
-		//workerMap = new HashMap<String, Worker>();
 		this.port= port;
 	}
 	
