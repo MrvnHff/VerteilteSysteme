@@ -10,6 +10,8 @@ import server.server.exceptions.NoValidTargetNodeException;
 import server.server.exceptions.TargetIsOccupiedException;
 import server.utils.IdUtils;
 import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -121,7 +123,18 @@ public class VehicleController implements Initializable{
 	 */
 	public void rotateVehicleLeft() {
 		//rotateVehicle(-90); //FIXME dreht doppelt, wenn einkommentiert und Fahrzeug manuell gesteuert
-		server.turnVehicleLeft(vehicleId);
+		
+		Service<Void> ser = new Service<Void>() {
+	        @Override protected Task createTask() {
+	            return new Task<Void>() {
+	            @Override protected Void call() throws InterruptedException {
+	            	server.turnVehicleLeft(vehicleId);
+	                return null;
+	                }
+	            };
+	         }
+		};
+		ser.start();
 	}
 	
 	public void rotateVehicleLeftServer() {
@@ -133,12 +146,17 @@ public class VehicleController implements Initializable{
 	 */
 	public void rotateVehicleRight() {
 		//rotateVehicle(90); //FIXME dreht doppelt, wenn einkommentiert und Fahrzeug manuell gesteuert
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				server.turnVehicleRight(vehicleId);
-			}
-		}).start();
+		Service<Void> ser = new Service<Void>() {
+	        @Override protected Task createTask() {
+	            return new Task<Void>() {
+	            @Override protected Void call() throws InterruptedException {
+	            	server.turnVehicleRight(vehicleId);
+	                return null;
+	                }
+	            };
+	         }
+		};
+		ser.start();
 		
 	}
 	
