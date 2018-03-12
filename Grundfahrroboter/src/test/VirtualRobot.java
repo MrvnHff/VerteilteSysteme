@@ -167,9 +167,7 @@ public class VirtualRobot extends Thread implements RemoteVehicleInterface{
 			e.printStackTrace();
 		}
 		
-		//FIXME Roboter �berall abmelden und Fehler abfangen
 		UnicastRemoteObject.unexportObject(returnOfCreateRegistry, true);
-		//worker.printStatus("Aufwiedersehen! Beende mein Programm!");
 		System.out.println("VirtualRobot: " + robotName + " connection closed.");
 		interrupt();
 	}

@@ -85,9 +85,7 @@ public class Gui extends Application implements GuiInterface{
 		System.gc();
 		System.runFinalization();
 		
-		//System.exit(0);
-		//TODO Ist das an dieser stelle möglich oder gibt das Probleme mit den JavaFx Threads, 
-		// da die vermutlich gewaltsam abgebrochen werden??
+		System.exit(0);
 		//Sollte keine Probleme geben. Das hier ist die Methode die aufgerufen wird wenn du die javaFx anwendung über
 		//Platform.exit(), oder auf das x symbol im fenster klicks. (Das ruft auch meines wissens Platform.exit() auf und somit diese methode)
 	}

@@ -223,7 +223,6 @@ public class StreetGraph {
 	 * @return benötigte drehung, -1 für einmal links, 1 für einmal rechts, 2 für zweimal rechts und so weiter
 	 */
 	public int getNeededRotation(String vehicleId, String destination) {
-		//TODO vielleicht deklaration und initialisierung trennen
 		VehicleOrientation neededOrientation;
 		VehicleOrientation nodeOrientation;
 		

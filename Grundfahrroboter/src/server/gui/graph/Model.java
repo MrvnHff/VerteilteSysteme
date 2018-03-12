@@ -137,7 +137,7 @@ public class Model {
     public void removeCell(String cellId) {
 		this.removedCells.add(cellMap.get(cellId));
 		cellMap.remove(cellId);
-		//FIXME verknüpfte Kanten ebenfalls Löschen
+		//FIXME (Obsolet) verknüpfte Kanten ebenfalls Löschen
 		
 	}
     

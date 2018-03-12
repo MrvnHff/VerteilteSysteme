@@ -211,18 +211,11 @@ public class Server implements ServerInterface{
 		// Aus GUI und StreetGraph entfernen
 		streetGraph.removeVehicle(vehicleId);
 		gui.removeVehicle(vehicleId);
-		//FIXME Mathias: kann ich vom Server aus den Roboter aus dem AUTO-Mode nehmen, so dass der zugehörige Thread auch beendet wird?
-		//Ja kann man, da hier der Roboter sowieso rausgeschmissen wird. Ansonsten muss man zusätzlich die entsprechenden Werte in der Gui ändern, 
-		//ansonsten führt das zu inkonsistenzen
+
 		if(isVehicleInAutoMode(vehicleId)) {
 			deactivateAutoDst(vehicleId);
 		}
-		/*
-		// Worker anhalten und dereferenzieren
-		int position = findWorkerToVehicleId(vehicleId);
-		worker[position].closeConnection();
-		worker[position] = null;
-		*/
+
 		workerMap.get(vehicleId).closeConnection();
 		workerMap.remove(vehicleId);
 	}
@@ -393,8 +386,8 @@ public class Server implements ServerInterface{
 					break;
 			case -1:turnVehicleLeft(vehicleId);
 					break;
-			case -2:turnVehicleLeft(vehicleId);
-					turnVehicleLeft(vehicleId);
+			case -2:turnVehicleRight(vehicleId);
+					turnVehicleRight(vehicleId);
 					break;
 			case -3:turnVehicleRight(vehicleId);
 					break;
@@ -409,13 +402,11 @@ public class Server implements ServerInterface{
 	 */
 	public void turnVehicleLeft(String vehicleId) {
 		try {
-			//worker[findWorkerToVehicleId(vehicleId)].turnLeft();
 			workerMap.get(vehicleId).turnLeft();
 		} catch (RemoteException e) {
 			System.err.println("Server: Fehler bei turnVehicleLeft remote Aufruf, " + 
 					"Fahrzeugdrehung abgebrochen.");
 			e.printStackTrace();
-			//return; //Wenn Fehler beim Remote, drehe nicht im Graphen oder in der GUI
 		}		
 		streetGraph.turnVehicleLeft(vehicleId);
 		gui.turnVehicleLeft(vehicleId);
@@ -432,7 +423,6 @@ public class Server implements ServerInterface{
 			System.err.println("Server: Fehler bei turnVehicleRight remote Aufruf, " + 
 					"Fahrzeugdrehung abgebrochen.");
 			e.printStackTrace();
-			//return; //Wenn Fehler beim Remote, drehe nicht im Graphen oder in der GUI
 		}
 		streetGraph.turnVehicleRight(vehicleId);
 		gui.turnVehicleRight(vehicleId);
@@ -469,8 +459,6 @@ public class Server implements ServerInterface{
 			System.err.println("Server: Fehler bei moveVehicleForward remote Aufruf, " + 
 					"Fahrzeugbewegung abgebrochen.");
 			e.printStackTrace();
-			//return destination; //Wenn Fehler beim Remote, drehe nicht im Graphen oder in der GUI
-			//TODO Bewegung auf den Graphen rückgängig machen, bei RemoteException, um auf den vorherigen Stand zu kommen, wie bei turn-Befehlen?
 		}
 		
 		gui.setVehiclePosition(vehicleId, destination);
