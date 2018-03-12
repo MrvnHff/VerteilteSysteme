@@ -114,8 +114,14 @@ public class VehicleController implements Initializable{
 		this.vehicleLayout = rl;
 	}
 	
-	public void addTextMessage(String msg) {
-		textArea.appendText(msg);
+	public void addTextMessage(final String msg) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				textArea.appendText(msg);
+			}
+		});
+		
 	}
 	
 	/**
@@ -168,17 +174,29 @@ public class VehicleController implements Initializable{
 	 * Rotiert den Robotor nur in der Gui
 	 * @param grad der rotation
 	 */
-	public void rotateVehicle(int angle) {
-		vehicleLayout.rotate(this.vehicleId, angle);
+	public void rotateVehicle(final int angle) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				vehicleLayout.rotate(vehicleId, angle);
+			}
+		});
+		
 	}
 	
 	
-	private void showAlert(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Aktion ist fehlgeschlagen");
-		alert.setContentText(message);
-		alert.showAndWait();
+	private void showAlert(final String message) {
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("Aktion ist fehlgeschlagen");
+				alert.setContentText(message);
+				alert.showAndWait();
+			}
+		});
 	}
 	
 	public void moveVehicleForward() {
@@ -201,7 +219,6 @@ public class VehicleController implements Initializable{
 	
 	public void setVehiclePosition(final String position) {
 		Platform.runLater(new Runnable() {
-
 			@Override
 			public void run() {
 				setPosition(position);
@@ -210,17 +227,33 @@ public class VehicleController implements Initializable{
 		
 	}
 	
-	private void setPosition(String position) {
-		this.position .setText(position);
-		vehicleLayout.moveVehicleTo(vehicleId, position);
+	private void setPosition(final String pos) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				position .setText(pos);
+				vehicleLayout.moveVehicleTo(vehicleId, pos);
+			}
+		});
+		
 	}
 	
-	public void setDestinationTextField(String position) {
-		this.destination.setText(position);
+	public void setDestinationTextField(final String position) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				destination.setText(position);
+			}
+		});
 	}
 
-	public void setPositionTextField(String position) {
-		this.position.setText(position);		
+	public void setPositionTextField(final String pos) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				position.setText(pos);
+			}
+		});
 	}
 	
 	private void driveVehicleTo(final String destination) {
