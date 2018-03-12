@@ -133,7 +133,13 @@ public class VehicleController implements Initializable{
 	 */
 	public void rotateVehicleRight() {
 		//rotateVehicle(90); //FIXME dreht doppelt, wenn einkommentiert und Fahrzeug manuell gesteuert
-		server.turnVehicleRight(vehicleId);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				server.turnVehicleRight(vehicleId);
+			}
+		}).start();
+		
 	}
 	
 	public void rotateVehicleRightServer() {
@@ -158,15 +164,21 @@ public class VehicleController implements Initializable{
 	}
 	
 	public void moveVehicleForward() {
-		try {
-			String destination = server.moveVehicleForward(vehicleId);
-			vehicleLayout.moveVehicleTo(vehicleId, destination);
-			position.setText(destination);
-		} catch (NoValidTargetNodeException e) {
-			showAlert("Kein Gültiges Ziel");
-		} catch (TargetIsOccupiedException e) {
-			showAlert("Ziel ist bereits belegt");
-		}
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					String destination = server.moveVehicleForward(vehicleId);
+					vehicleLayout.moveVehicleTo(vehicleId, destination);
+					position.setText(destination);
+				} catch (NoValidTargetNodeException e) {
+					showAlert("Kein Gültiges Ziel");
+				} catch (TargetIsOccupiedException e) {
+					showAlert("Ziel ist bereits belegt");
+				}
+			}
+		}).start();
+		
 	}
 	
 	public void setVehiclePosition(final String position) {
