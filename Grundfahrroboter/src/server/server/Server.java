@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 import server.gui.Gui;
 import server.gui.GuiInterface;
+import server.server.exceptions.MaxMoveRetriesReachedException;
 import server.server.exceptions.MaximumWorkersReachedException;
 import server.server.exceptions.TargetIsOccupiedException;
 import server.server.graph.StreetGraph;
@@ -27,10 +28,8 @@ public class Server implements ServerInterface{
 	private GuiInterface gui;
 		
 	private Listener listener;
-	//private Worker[] worker;
-	//private int anzahl; //Wird obsolet, da man die Anzahl direkt aus der Map abfragen kann.
 	private int maxWorker;
-	//<String> = vehicleId, <Worker> = referenz auf den Worker
+	//<String> = vehicleId, <Worker> = Referenz auf den Worker
 	private Map<String, Worker> workerMap = new HashMap<String, Worker>();;
 	
 	private StreetGraph streetGraph;
@@ -42,8 +41,11 @@ public class Server implements ServerInterface{
 	
 	private static ResourceBundle configuration = ResourceBundle.getBundle(CONFIG_FILENAME);
 	
+	//Geschwindigkeit der Fahrzeuge beim Vorwärtsfahren in %
 	private final static int VEHICLE_SPEED = Integer.parseInt(configuration.getString("VehicleSpeed"));
-
+	
+	//Anzahl maximaler Versuche vorwärts auf ein belegtes Feld zu fahren
+	private final static int MAX_RETRIES = Integer.parseInt(configuration.getString("MaxMoveRetries"));
 	
 	//###################################################
 	//# 	Konstruktoren								#
@@ -115,12 +117,6 @@ public class Server implements ServerInterface{
 	public void stopServer() {
 		listener.stopListener();
 		listener = null;
-		/*
-		for (int i = 0; i < maxWorker; i++) {
-			if (worker[i] != null) {
-				removeWorker(worker[i].getVehicleId());
-			}
-		}*/
 		
 		for(String vehicleId : workerMap.keySet()) {
 			removeWorker(vehicleId);
@@ -176,15 +172,6 @@ public class Server implements ServerInterface{
 	public synchronized void addWorker(String vehicleId, String vehicleIp, int vehiclePort) {
 		
 		if(isAddWorkerAllowed()) {
-			/*int existingWorkerPosition = findWorkerToVehicleId(vehicleId) ; 
-			if(existingWorkerPosition >= 0) { // Wenn ein Worker zu dieser FahrzeugID existiert, beende diesen.
-				removeWorker(vehicleId);
-			}
-			int nextFreePos = getNextFreeWorkerNumber();
-			this.worker[nextFreePos] = new Worker(this, "Worker_" + nextFreePos, vehicleId, vehicleIp, vehiclePort, (this.port + nextFreePos + 1));
-			anzahl++;
-			*/
-			
 			if(workerMap.containsKey(vehicleId)) { //Erst löschen, falls vorhanden
 				removeWorker(vehicleId);
 			}
@@ -242,35 +229,9 @@ public class Server implements ServerInterface{
 			number++;
 		}
 		return number;
-		
-		/*for (int i = 0; i < maxWorker; i++) {
-			if (worker[i] == null) {
-				return i;
-			}
-		}
-		return -1;*/
 	}
 	
-	
-	/*
-	 * Sucht den Worker im Array zur Fahrzeug ID
-	 * @param vehicleId Name (ID) des Fahrzeuges
-	 * @return Index der Fundstelle, wenn nicht vorhanden -1
-	 *
-	private int findWorkerToVehicleId(String vehicleId) {
-		for (int i = 0; i < maxWorker; i++) {
-			try {
-				if (worker[i].getVehicleId().equals(vehicleId)) {
-					return i;
-				}
-			} catch(NullPointerException e) {
-				//Wird geworfen, falls worker[i] = null ist
-				//keine weitere Behandlung notwendig
-			}
-		}
-		return -1;
-	}*/
-	
+
 	
 	/**
 	 * Prüft ob die maximale Anzahl an Worker erreicht ist.
@@ -288,11 +249,8 @@ public class Server implements ServerInterface{
 	//###################################################
 	
 	public String generateRndDestination() {
-		//TODO nur freie Knoten aussuchen
-		int x;
-		int y;
-		x = (int) (Math.random()* streetGraph.getColumnCount());
-		y = (int) (Math.random()* streetGraph.getRowCount());
+		int x = (int) (Math.random()* streetGraph.getColumnCount());
+		int y = (int) (Math.random()* streetGraph.getRowCount());
 		
 		return (x + "/" + y);
 	}
@@ -305,7 +263,11 @@ public class Server implements ServerInterface{
 	public void activateAutoDst(String vehicleId) {
 		vehicleMode.put(vehicleId, true);
 		while(isVehicleInAutoMode(vehicleId)) {
-			String destination = generateRndDestination();
+			String destination;
+			do {
+				destination = generateRndDestination();
+			}while(!streetGraph.isNodeEmpty(destination)); //Neues Ziel, falls Knoten besetzt, soll Deadlocks in AUTO verringern
+			
 			gui.setVehicleDestinationTextField(vehicleId, destination);
 			driveVehicletTo(vehicleId, destination);
 			addVehicleTextMessage(vehicleId, "Ziel erreicht");
@@ -347,8 +309,8 @@ public class Server implements ServerInterface{
 	
 	
 	public void driveVehicletTo(String vehicleId, String destination) {
-		//TODO Feherbehandlung falls kein Pfad exisitiert. 
-		//In diesem fall wird von derJgraphT bibliothek eine exception ausgelöst
+		//TODO Fehlerbehandlung falls kein Pfad existiert. 
+		//In diesem fall wird von derJgraphT Bibliothek eine exception ausgelöst
 		List<String> path = streetGraph.getShortesPath(vehicleId, destination);
 	
 		while(path.size() > 1) {
@@ -359,9 +321,15 @@ public class Server implements ServerInterface{
 			
 			int rotationsNeeded = streetGraph.getNeededRotation(vehicleId, nodeId);
 			turnVehicle(rotationsNeeded, vehicleId);
-			
-			moveVehicleForward(vehicleId);
-			path = streetGraph.getShortesPath(vehicleId, destination);
+			try {
+				moveVehicleForward(vehicleId);
+				path = streetGraph.getShortesPath(vehicleId, destination);
+			} catch(MaxMoveRetriesReachedException mmrre) {
+				System.err.println("Server: Knoten für Fahrzeug " + vehicleId + " zu lange besetzt. Neue Route berechnen");
+				addVehicleTextMessage(vehicleId, "Neue Route berechnen...");
+				path.clear(); //Bestehende Liste leeren, neue wird beim Wiederaufruf erstellt.
+				driveVehicletTo(vehicleId, destination);
+			}
 		}
 	}
 	
@@ -440,21 +408,11 @@ public class Server implements ServerInterface{
 		try {		
 			destination = streetGraph.moveVehicleForward(vehicleId);
 		} catch(TargetIsOccupiedException e) {
-			System.out.println("Server: Zielknoten besetzt. Nächster Versuch kommt.");
-			// 4 Sekunden warten, bis zum erneuten versuch
-			try {
-				Thread.sleep(4000);
-			} catch (InterruptedException e1) {
-				// Keine Fehlerbehandlung notwendig
-			}
-			destination = moveVehicleForward(vehicleId);
-			return destination; // Rausspringen, bei ausgelöster Exception, sonst beim Rekursiven auflösen zu viele Befehle
+			destination = moveVehicleForwardRetry(vehicleId, 1);
 		}
 		
 		try {
-			//TODO Fahrzeug keine Feste Geschwindigkeit übergeben
-			//worker[findWorkerToVehicleId(vehicleId)].driveNextPoint(20);
-			workerMap.get(vehicleId).driveNextPoint(20);
+			workerMap.get(vehicleId).driveNextPoint(VEHICLE_SPEED);
 		} catch (RemoteException e) {
 			System.err.println("Server: Fehler bei moveVehicleForward remote Aufruf, " + 
 					"Fahrzeugbewegung abgebrochen.");
@@ -462,7 +420,30 @@ public class Server implements ServerInterface{
 		}
 		
 		gui.setVehiclePosition(vehicleId, destination);
-		return destination;
+		return destination; //TODO Mathias: Braucht der Vehicle Controller den String (zur Weiterverarbeitung) oder kann man den entfernen wie bei den anderen Bewegungsmethoden? 
+	}
+	
+	private String moveVehicleForwardRetry(String vehicleId, int retry) {		
+		String destination;
+
+		if(retry <= MAX_RETRIES) {
+			System.out.println("Server: Zielknoten für Fahrzeug " + vehicleId + " besetzt. Versuch " + retry);
+			// 4 Sekunden warten, bis zum erneuten versuch
+			try {
+				Thread.sleep(4000);
+			} catch (InterruptedException e1) { } // Keine Fehlerbehandlung notwendig
+			
+			try {		
+				destination = streetGraph.moveVehicleForward(vehicleId);
+			} catch(TargetIsOccupiedException e) {				
+				destination = moveVehicleForwardRetry(vehicleId, ++retry);
+			}
+			return destination;
+		} else {
+			System.err.println("Server: Für Roboter " + vehicleId + " Vorwärtsfahrt abgebrochen. Maximale Versuche erreicht.");
+			addVehicleTextMessage(vehicleId, "Vorwärtsfahrt abgebrochen.");
+			throw new MaxMoveRetriesReachedException("Roboter " + vehicleId + "hat maximale Anzahl an Fahrversuchen vorwärts erreicht");
+		}
 	}
 		
 	

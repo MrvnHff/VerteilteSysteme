@@ -39,7 +39,7 @@ public class StartAutomatisation {
 			
 			// Hier Methoden für Klassenstart ohne Parameter einfügen.
 			// Methoden und Parameterbeschreibungen sind in der Klasse AutomatisationManager() zu finden.
-			am.addMultitpleRobots("127.0.0.1", 55555, 55554, 1, "TestBot", 2);
+			am.addMultitpleRobots("127.0.0.1", 55555, 55554, 1, "", 4);
 			
 
 		}
