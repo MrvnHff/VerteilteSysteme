@@ -56,6 +56,7 @@ public class MiniGui extends Application {
 			FXMLLoader layoutLoader = new FXMLLoader(MiniGui.class.getClassLoader().getResource("resources/fxml/MiniGui.fxml"), config);
 			layout = (BorderPane) layoutLoader.load();
 			controller = layoutLoader.getController();
+			controller.setGui(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

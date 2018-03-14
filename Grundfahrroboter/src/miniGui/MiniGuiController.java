@@ -17,6 +17,8 @@ public class MiniGuiController implements Initializable {
 	private TextField targetIp;
 	@FXML
 	private TextArea textArea;
+	
+	private MiniGui gui;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -56,5 +58,9 @@ public class MiniGuiController implements Initializable {
 				targetIp.setText(ip);
 			}
 		});
+	}
+	
+	public void setGui(MiniGui gui) {
+		this.gui = gui;
 	}
 }
