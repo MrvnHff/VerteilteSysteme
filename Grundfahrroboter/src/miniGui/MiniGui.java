@@ -8,8 +8,11 @@ import javax.swing.JOptionPane;
 
 import client.RemoteVehicleInterface;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
@@ -35,15 +38,7 @@ public class MiniGui extends Application {
 	public void start(Stage primaryStage) {
 		config = ResourceBundle.getBundle(CONFIG_FILENAME);
 		
-		TextInputDialog dialog = new TextInputDialog();
-		dialog.setHeaderText("Choose your Name");
-		dialog.setContentText("Vehicle Name: ");
-		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(true);
-		
-		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()){
-		    vehicleName = result.get();
-		}
+		showDialog();
 		
 		String destinationIP = config.getString("DestinationIP");
 		int destinationPort = Integer.parseInt(config.getString("DestinationPort"));
@@ -89,6 +84,22 @@ public class MiniGui extends Application {
 	public static void main(String[] args) {
         launch(args);
     }
+	
+	private void showDialog() {
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setHeaderText("Choose your Name");
+		dialog.setContentText("Vehicle Name: ");
+		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(true);
+		
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+		    vehicleName = result.get();
+		    if(result.get().isEmpty()) {
+		    	showDialog();
+		    }
+		} 
+		
+	}
 	
 	public void connectVehicle() {
 		vehicle.start();
