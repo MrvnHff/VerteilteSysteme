@@ -38,7 +38,7 @@ public class MiniGui extends Application {
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setHeaderText("Choose your Name");
 		dialog.setContentText("Vehicle Name: ");
-		dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(true);
 		
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()){
