@@ -26,11 +26,11 @@ public class MiniGuiController implements Initializable {
 	}
 	
 	public void connect() {
-		
+		gui.connectVehicle();
 	}
 	
 	public void disconnect() {
-		
+		gui.disconnectVehicle();
 	}
 	
 	public void addTextMessage(final String msg) {

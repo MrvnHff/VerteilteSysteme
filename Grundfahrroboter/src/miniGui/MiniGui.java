@@ -3,6 +3,8 @@ package miniGui;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
 import client.RemoteVehicleInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -31,9 +33,10 @@ public class MiniGui extends Application {
 		
 		String destinationIP = config.getString("DestinationIP");
 		int destinationPort = Integer.parseInt(config.getString("DestinationPort"));
-		int ownPort = 55555;
+		int ownPort = 55565;
 		int waitTime = 2;
-		String vehicleName = config.getString("VehicleName");
+		//String vehicleName = config.getString("VehicleName");
+		String vehicleName = JOptionPane.showInputDialog("Name fuer Fahrzeug eingeben");
 		vehicleName = vehicleName.replaceAll(" ", "_");
 		
 		
@@ -68,13 +71,20 @@ public class MiniGui extends Application {
 		
 		controller.setTargetIpTextField(destinationIP + ":" + destinationPort);
 		controller.setVehicleIdTextField(vehicleName);
+		controller.addTextMessage("GUI: start fertig");
 	}
 
 	public static void main(String[] args) {
         launch(args);
     }
 	
-	public RemoteVehicleInterface getRobot() {
-		return this.vehicle;
+	public void connectVehicle() {
+		vehicle.start();
+		controller.addTextMessage("GUI: connectVehicle ausgelöst");
+	}
+	
+	public void disconnectVehicle() {
+		vehicle.quitWorker();
+		controller.addTextMessage("GUI: disconnectVehicle ausgelöst");
 	}
 }
