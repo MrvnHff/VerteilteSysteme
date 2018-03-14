@@ -1,12 +1,15 @@
 package miniGui;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import client.RemoteVehicleInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import test.VirtualRobot;
@@ -20,6 +23,7 @@ public class MiniGui extends Application {
 	private Stage primaryStage = new Stage();
 	private BorderPane layout;
 	private MiniGuiController controller;
+	private String vehicleName;
 	
 	//private RemoteVehicleInterface vehicleInterface;
 	
@@ -29,12 +33,20 @@ public class MiniGui extends Application {
 	public void start(Stage primaryStage) {
 		config = ResourceBundle.getBundle(CONFIG_FILENAME);
 		
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setHeaderText("Choose your Name");
+		dialog.setContentText("Vehicle Name: ");
+		dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+		
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+		    vehicleName = result.get();
+		}
+		
 		String destinationIP = config.getString("DestinationIP");
 		int destinationPort = Integer.parseInt(config.getString("DestinationPort"));
 		int ownPort = 55555;
 		int waitTime = 2;
-		String vehicleName = config.getString("VehicleName");
-		vehicleName = vehicleName.replaceAll(" ", "_");
 		
 		
 		vehicle = new VirtualRobot(
