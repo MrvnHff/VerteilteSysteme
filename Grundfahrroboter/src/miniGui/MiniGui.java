@@ -1,12 +1,10 @@
 package miniGui;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
-import client.RemoteVehicleInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,22 +12,26 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import test.VirtualRobot;
 
 public class MiniGui extends Application {
 	
-	private static final String CONFIG_FILENAME = "resources/config/miniGui";
+	private static final String CONFIG_FILENAME = "miniGui/miniGui";
 	
 	private ResourceBundle config;
 	
 	private Stage primaryStage = new Stage();
 	private BorderPane layout;
 	private MiniGuiController controller;
+	
+	//Vehicle attributes
+	private String destinationIP;
+	private int destinationPort;
+	private int ownPort = 55540;
+	private int waitTime = 2;
 	private String vehicleName;
 	
-	//private RemoteVehicleInterface vehicleInterface;
-	
-	private VirtualRobot vehicle;
+		
+	private RemoteTestVehicle vehicle;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -42,17 +44,18 @@ public class MiniGui extends Application {
 		
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()){
-		    vehicleName = result.get();
+		    vehicleName = result.get().replaceAll(" ", "_");
 		}
 		
-		String destinationIP = config.getString("DestinationIP");
-		int destinationPort = Integer.parseInt(config.getString("DestinationPort"));
-		int ownPort = 55565;
-		int waitTime = 2;
-		vehicleName = vehicleName.replaceAll(" ", "_");
+		destinationIP = config.getString("DestinationIP");
+		destinationPort = Integer.parseInt(config.getString("DestinationPort"));
 		
+		// Zum testen
+		//destinationIP = "127.0.0.1";
+		//destinationPort = 55555;
+
 		
-		vehicle = new VirtualRobot(
+		vehicle = new RemoteTestVehicle(
 				destinationIP,
 				destinationPort,
 				ownPort, 
@@ -68,7 +71,7 @@ public class MiniGui extends Application {
 
 		
 		try {
-			FXMLLoader layoutLoader = new FXMLLoader(MiniGui.class.getClassLoader().getResource("resources/fxml/MiniGui.fxml"), config);
+			FXMLLoader layoutLoader = new FXMLLoader(MiniGui.class.getClassLoader().getResource("miniGui/MiniGui.fxml"), config);
 			layout = (BorderPane) layoutLoader.load();
 			controller = layoutLoader.getController();
 			controller.setGui(this);
@@ -80,10 +83,11 @@ public class MiniGui extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
+		vehicle.setGui(this);
 		
 		controller.setTargetIpTextField(destinationIP + ":" + destinationPort);
 		controller.setVehicleIdTextField(vehicleName);
-		controller.addTextMessage("GUI: start fertig");
+		this.addMessageToUi("GUI: start fertig");
 	}
 
 	public static void main(String[] args) {
@@ -91,12 +95,32 @@ public class MiniGui extends Application {
     }
 	
 	public void connectVehicle() {
+		/*RemoteTestVehicle vehicle = new RemoteTestVehicle(
+				destinationIP,
+				destinationPort,
+				ownPort, 
+				waitTime,
+				vehicleName);*/
+		vehicle.setGui(this);
 		vehicle.start();
-		controller.addTextMessage("GUI: connectVehicle ausgel�st");
+		this.addMessageToUi("GUI: connectVehicle ausgeloest");
 	}
 	
 	public void disconnectVehicle() {
 		vehicle.quitWorker();
-		controller.addTextMessage("GUI: disconnectVehicle ausgel�st");
+		try {
+			vehicle.closeConnection();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		vehicle = null;
+		this.addMessageToUi("GUI: disconnectVehicle ausgeloest");
 	}
+	
+	    
+   public void addMessageToUi(String msg) { 
+       controller.addTextMessage(msg);
+       controller.addTextMessage("\n");
+   }
 }
