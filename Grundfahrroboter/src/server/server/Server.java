@@ -14,6 +14,7 @@ import server.gui.Gui;
 import server.gui.GuiInterface;
 import server.server.exceptions.MaxMoveRetriesReachedException;
 import server.server.exceptions.MaximumWorkersReachedException;
+import server.server.exceptions.NoPathToDestinationException;
 import server.server.exceptions.TargetIsOccupiedException;
 import server.server.graph.StreetGraph;
 
@@ -309,10 +310,20 @@ public class Server implements ServerInterface{
 	
 	
 	public void driveVehicletTo(String vehicleId, String destination) {
-		//TODO Fehlerbehandlung falls kein Pfad existiert. 
-		//In diesem fall wird von derJgraphT Bibliothek eine exception ausgelöst
-		List<String> path = streetGraph.getShortesPath(vehicleId, destination);
-	
+		boolean pathExists = false;
+		List<String> path = null;
+		while(!pathExists){
+			try {
+				path = streetGraph.getShortesPath(vehicleId, destination);
+				pathExists = true;
+			} catch (NoPathToDestinationException nptde) {
+				pathExists = false;
+				System.err.println(nptde.getMessage() + "Neuer Pfad wird gleich ermittelt.");
+				try {
+					Thread.sleep(2000);					// Wartezeit, bis ein neuer Pfad ermittelt wird.
+				} catch (InterruptedException ie) { } 	// Kein Handling notwendig
+			}
+		}
 		while(path.size() > 1) {
 			String nodeId = path.get(1);
 			if((path.size() == 2) && (nodeId == destination)) {
@@ -330,6 +341,7 @@ public class Server implements ServerInterface{
 				path.clear(); //Bestehende Liste leeren, neue wird beim Wiederaufruf erstellt.
 				driveVehicletTo(vehicleId, destination);
 			}
+		
 		}
 	}
 	
@@ -401,9 +413,6 @@ public class Server implements ServerInterface{
 	 * @param vehicleId
 	 */
 	public String moveVehicleForward(String vehicleId) {
-		//TODO eine verbesserung wäre wenn hier oder vorher auch ab und zu nach einem neuen freiem Pfad gesucht wird.
-		//Momentan bleibt der algorthmus hier hängen wenn einmal ein knoten auf dem Weg blockiert ist, auch wenn sich in der
-		//zwischenzeit ein neuer freier Pfad ergeben hat
 		String destination;
 		try {		
 			destination = streetGraph.moveVehicleForward(vehicleId);

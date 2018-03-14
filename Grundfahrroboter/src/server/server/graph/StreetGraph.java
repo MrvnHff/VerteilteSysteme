@@ -13,6 +13,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
+import server.server.exceptions.NoPathToDestinationException;
 import server.server.exceptions.NoValidNodeIdException;
 import server.server.exceptions.NoValidTargetNodeException;
 import server.server.exceptions.TargetIsOccupiedException;
@@ -303,9 +304,16 @@ public class StreetGraph {
 	 * @return Liste von KnotenId die den Pfad darstellen
 	 */
 	private List<String> executeDijkstraShortestPathAlgo(String start, String destination) {
+		List<String> pathList;
 		DijkstraShortestPath<String, StreetEdge> shortestPathAlgo = new DijkstraShortestPath<String, StreetEdge>(roadGraph);
 		GraphPath<String, StreetEdge> path = shortestPathAlgo.getPath(start, destination);
-		return path.getVertexList();
+		try {
+			pathList = path.getVertexList();
+		}catch(NullPointerException npe) {
+			// Tritt auf, wenn kein Pfad existiert, weil alle Wege belegt sind
+			throw new NoPathToDestinationException("Es konnte kein Pfad von " + start + " nach " + destination + " ermittelt werden.");
+		}
+		return pathList;
 	}
 
 	/**
