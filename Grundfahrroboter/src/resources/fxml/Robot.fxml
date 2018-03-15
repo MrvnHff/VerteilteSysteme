@@ -65,7 +65,6 @@
                <children>
                   <Button fx:id="right" mnemonicParsing="false" onAction="#rotateVehicleRight" prefHeight="30.0" prefWidth="50.0" styleClass="right-button" GridPane.columnIndex="2" />
                   <Button fx:id="left" mnemonicParsing="false" onAction="#rotateVehicleLeft" prefHeight="30.0" prefWidth="50.0" styleClass="left-button" />
-                  <Button fx:id="down" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" styleClass="down-button" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">

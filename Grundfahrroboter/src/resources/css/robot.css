@@ -1,21 +1,21 @@
 .left-button {
-  -fx-background-image: url('../icons/rotating-circular-arrow.png');
-  -fx-background-size: 30px;
+  -fx-background-image: url('../icons/left-arrow.png');
+  -fx-background-size: 20px;
   -fx-background-repeat: no-repeat;
   -fx-background-position: 90%;
   -fx-background-position: center;
 }
 
 .right-button {
-  -fx-background-image: url('../icons/rotate-object.png');
-  -fx-background-size: 30px;
+  -fx-background-image: url('../icons/right-arrow.png');
+  -fx-background-size: 20px;
   -fx-background-repeat: no-repeat;
   -fx-background-position: 90%;
   -fx-background-position: center;
 }
 
 .up-button {
-  -fx-background-image: url('../icons/thin-up-arrow.png');
+  -fx-background-image: url('../icons/arrow-down-sign-to-navigate.png');
   -fx-background-size: 25px;
   -fx-background-repeat: no-repeat;
   -fx-background-position: 90%;
@@ -23,7 +23,7 @@
 }
 
 .down-button {
-  -fx-background-image: url('../icons/thin-download-arrow.png');
+  -fx-background-image: url('');
   -fx-background-size: 25px;
   -fx-background-repeat: no-repeat;
   -fx-background-position: 90%;
