@@ -66,7 +66,6 @@ public class Graph {
     		for(Iterator<StreetEdge> it = edges.iterator(); it.hasNext();) {
     			edge = it.next();
     			model.addEdge(vehicleGraph.getEdgeSource(edge), vehicleGraph.getEdgeTarget(edge));
-    			
     		}
     	}
     	

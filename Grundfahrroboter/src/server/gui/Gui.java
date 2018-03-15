@@ -52,7 +52,7 @@ public class Gui extends Application implements GuiInterface{
 	private ResourceBundle fxmlBundle;
 	
 	/**
-	 * LÃ¤dt die configurationen aus den properties dateien
+	 * Lädt die configurationen aus den properties dateien
 	 */
 	private void loadConfiguration() {
 		config = ResourceBundle.getBundle(CONFIG_FILENAME, locale);
@@ -63,8 +63,6 @@ public class Gui extends Application implements GuiInterface{
 	public void start(Stage primaryStage) {
 		server = new Server();
 		
-		//wird benÃ¶tigt um svg dateien zu laden
-		SvgImageLoaderFactory.install();
 		loadConfiguration();
 		
 		this.primaryStage = primaryStage;
@@ -86,8 +84,6 @@ public class Gui extends Application implements GuiInterface{
 		System.runFinalization();
 		
 		System.exit(0);
-		//Sollte keine Probleme geben. Das hier ist die Methode die aufgerufen wird wenn du die javaFx anwendung über
-		//Platform.exit(), oder auf das x symbol im fenster klicks. (Das ruft auch meines wissens Platform.exit() auf und somit diese methode)
 	}
 
 	private void initRootLayout() {
@@ -142,6 +138,27 @@ public class Gui extends Application implements GuiInterface{
 		rootLayout.setCenter(splitPane2);
 	}
 	
+	private BorderPane buildVehiclePane(String vehicleId, String position) {
+		BorderPane vehicle = null;
+		try {
+			FXMLLoader vehicleLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
+			vehicle = (BorderPane) vehicleLoader.load();
+			vehicle.setId(vehicleId);
+			VehicleController controller = vehicleLoader.getController();
+			controller.setServer(server);
+			controller.setVehicleId(vehicleId);
+			controller.setVehicleLayout(rl);
+			controller.setPositionTextField(position);
+			vehicleControllers.put(vehicleId, controller);
+			
+			graph.getModel().addCell(vehicleId, CellType.VEHICLE);
+			graph.endUpdate();
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		return vehicle;
+	}
+	
 	public void addVehicle(final String vehicleId, final String position) {
 		Platform.runLater(new Runnable() {
             @Override public void run() {
@@ -170,26 +187,7 @@ public class Gui extends Application implements GuiInterface{
         });
 	}
 	
-	private BorderPane buildVehiclePane(String vehicleId, String position) {
-		BorderPane vehicle = null;
-		try {
-			FXMLLoader vehicleLoader = new FXMLLoader(Gui.class.getClassLoader().getResource(fxmlBundle.getString("fxml.robot")), config);
-			vehicle = (BorderPane) vehicleLoader.load();
-			vehicle.setId(vehicleId);
-			VehicleController controller = vehicleLoader.getController();
-			controller.setServer(server);
-			controller.setVehicleId(vehicleId);
-			controller.setVehicleLayout(rl);
-			controller.setPositionTextField(position);
-			vehicleControllers.put(vehicleId, controller);
-			
-			graph.getModel().addCell(vehicleId, CellType.VEHICLE);
-			graph.endUpdate();
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-		return vehicle;
-	}
+	
 	
 	public void addServerTextMessage(String msg) {
 		textArea.appendText(msg);

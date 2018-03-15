@@ -13,6 +13,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
+import server.gui.graph.CellType;
 import server.server.exceptions.NoPathToDestinationException;
 import server.server.exceptions.NoValidNodeIdException;
 import server.server.exceptions.NoValidTargetNodeException;
@@ -69,6 +70,34 @@ public class StreetGraph {
 		for(int m = 0; m < row-1; m++) {
 			addEdge(m + "/" + (col-1), (m+1) + "/" + (col-1));
 		}
+	}
+	
+	/**
+	 * Kopierkonstruktor
+	 * @param graph
+	 */
+	public StreetGraph(StreetGraph graph) {
+		this();
+		StreetNode node;
+    	Collection<StreetNode> nodes = graph.getAllNodes();
+    	StreetNode[] nodesArray = new StreetNode[nodes.size()];
+    	nodes.toArray(nodesArray);
+    	StreetEdge edge;
+    	Set<StreetEdge> edges;
+    	
+    	for(int i = 0; i < nodes.size(); i++) {
+    		node = nodesArray[i];
+    		this.addNode(node.getNodeId());
+    	}
+    	
+    	for(int i = 0; i < nodes.size(); i++) {
+    		node = nodesArray[i];
+    		edges = graph.getEdgesOf(node.getNodeId());
+    		for(Iterator<StreetEdge> it = edges.iterator(); it.hasNext();) {
+    			edge = it.next();
+    			this.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
+    		}
+    	}
 	}
 	
 	/**
@@ -235,14 +264,14 @@ public class StreetGraph {
 		}
 		
 		//TODO umbenennen und evtl. auslagern
-		int Node[] = IdUtils.extractCoordinates(nodeId);
-		int Dest[] = IdUtils.extractCoordinates(destination);
+		int nodeIdArray[] = IdUtils.extractCoordinates(nodeId);
+		int destIdArray[] = IdUtils.extractCoordinates(destination);
 		
-		if((Node[0] + 1) == Dest[0] && Node[1] == Dest[1]) {
+		if((nodeIdArray[0] + 1) == destIdArray[0] && nodeIdArray[1] == destIdArray[1]) {
 			neededOrientation = VehicleOrientation.SOUTH;
-		} else if((Node[0] - 1) == Dest[0] && Node[1] == Dest[1]) {
+		} else if((nodeIdArray[0] - 1) == destIdArray[0] && nodeIdArray[1] == destIdArray[1]) {
 			neededOrientation = VehicleOrientation.NORTH;
-		} else if(Node[0] == Dest[0] && (Node[1] - 1) == Dest[1]) {
+		} else if(nodeIdArray[0] == destIdArray[0] && (nodeIdArray[1] - 1) == destIdArray[1]) {
 			neededOrientation = VehicleOrientation.WEST;
 		} else {
 			neededOrientation = VehicleOrientation.EAST;
@@ -326,7 +355,7 @@ public class StreetGraph {
 		List<StreetNode> occupiedNodes = this.getListOfOccupiedNodes();
 		occupiedNodes.removeAll(exceptions);
 		//TODO echte Kopie vom Graph erstellen
-		StreetGraph tempGraph = new StreetGraph(this.getRowCount(), this.getColumnCount());
+		StreetGraph tempGraph = new StreetGraph(this);
 		tempGraph.deleteNodes(occupiedNodes);
 		return tempGraph;
 	}

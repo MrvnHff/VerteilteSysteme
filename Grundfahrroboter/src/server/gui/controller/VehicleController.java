@@ -128,7 +128,6 @@ public class VehicleController implements Initializable{
 	 * Rotiert das Fahrzeug in der Gui und im Server nach Links
 	 */
 	public void rotateVehicleLeft() {
-		//rotateVehicle(-90); //FIXME dreht doppelt, wenn einkommentiert und Fahrzeug manuell gesteuert
 		
 		Service<Void> ser = new Service<Void>() {
 	        @Override protected Task createTask() {
@@ -151,7 +150,7 @@ public class VehicleController implements Initializable{
 	 * Rotiert das Fahrzeug in der Gui und im Server nach Rechts
 	 */
 	public void rotateVehicleRight() {
-		//rotateVehicle(90); //FIXME dreht doppelt, wenn einkommentiert und Fahrzeug manuell gesteuert
+		
 		Service<Void> ser = new Service<Void>() {
 	        @Override protected Task createTask() {
 	            return new Task<Void>() {
