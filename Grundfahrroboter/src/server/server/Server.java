@@ -251,8 +251,11 @@ public class Server implements ServerInterface{
 	//###################################################
 	
 	public String generateRndDestination() {
-		int x = (int) (Math.random()* streetGraph.getColumnCount());
-		int y = (int) (Math.random()* streetGraph.getRowCount());
+		int x, y;
+		do {
+			x = (int) (Math.random()* streetGraph.getColumnCount());
+			y = (int) (Math.random()* streetGraph.getRowCount());
+		} while(!streetGraph.isNodeEmpty(x + "/" + y));
 		
 		return (x + "/" + y);
 	}

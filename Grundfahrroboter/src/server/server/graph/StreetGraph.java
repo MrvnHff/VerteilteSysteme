@@ -354,7 +354,6 @@ public class StreetGraph {
 	private StreetGraph creatUnoccupiedGraph(List<StreetNode> exceptions) {
 		List<StreetNode> occupiedNodes = this.getListOfOccupiedNodes();
 		occupiedNodes.removeAll(exceptions);
-		//TODO echte Kopie vom Graph erstellen
 		StreetGraph tempGraph = new StreetGraph(this);
 		tempGraph.deleteNodes(occupiedNodes);
 		return tempGraph;
