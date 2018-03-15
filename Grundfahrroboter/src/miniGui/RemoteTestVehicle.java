@@ -8,6 +8,10 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeUnit;
 
+import client.RemoteVehicleInterface;
+import server.server.ListenerInterface;
+import server.server.WorkerInterface;
+
 import java.net.InetAddress;
 
 

@@ -30,7 +30,7 @@ public class MiniGui extends Application {
 	private String destinationIP;
 	private int destinationPort;
 	private int ownPort = 55540;
-	private int waitTime = 2;
+	private int waitTime = 3;
 	private String vehicleName;
 	
 		
@@ -45,17 +45,6 @@ public class MiniGui extends Application {
 		destinationIP = config.getString("DestinationIP");
 		destinationPort = Integer.parseInt(config.getString("DestinationPort"));
 		
-		// Zum testen
-		//destinationIP = "127.0.0.1";
-		//destinationPort = 55555;
-
-		
-		vehicle = new RemoteTestVehicle(
-				destinationIP,
-				destinationPort,
-				ownPort, 
-				waitTime,
-				vehicleName);
 		
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Fahrzeug");
@@ -78,7 +67,6 @@ public class MiniGui extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
-		vehicle.setGui(this);
 		
 		controller.setTargetIpTextField(destinationIP + ":" + destinationPort);
 		controller.setVehicleIdTextField(vehicleName);
@@ -107,12 +95,12 @@ public class MiniGui extends Application {
 	}
 	
 	public void connectVehicle() {
-		/*RemoteTestVehicle vehicle = new RemoteTestVehicle(
+		vehicle = new RemoteTestVehicle(
 				destinationIP,
 				destinationPort,
 				ownPort, 
 				waitTime,
-				vehicleName);*/
+				vehicleName);
 		vehicle.setGui(this);
 		vehicle.start();
 		this.addMessageToUi("GUI: connectVehicle ausgeloest");

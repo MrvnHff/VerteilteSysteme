@@ -197,6 +197,7 @@ public class Server implements ServerInterface{
 	 */
 	public synchronized void removeWorker(String vehicleId) {
 		// Aus GUI und StreetGraph entfernen
+		// FIXME Worker wird nicht entfern, wenn der RemoteHost nicht mehr erreichbar ist und eine Exception ausgelöst wird.
 		streetGraph.removeVehicle(vehicleId);
 		gui.removeVehicle(vehicleId);
 
