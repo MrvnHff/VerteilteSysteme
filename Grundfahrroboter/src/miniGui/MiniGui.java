@@ -42,11 +42,6 @@ public class MiniGui extends Application {
 		
 		showDialog();
 		
-		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()){
-		    vehicleName = result.get().replaceAll(" ", "_");
-		}
-		
 		destinationIP = config.getString("DestinationIP");
 		destinationPort = Integer.parseInt(config.getString("DestinationPort"));
 		
@@ -102,9 +97,10 @@ public class MiniGui extends Application {
 		
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()){
-		    vehicleName = result.get();
-		    if(result.get().isEmpty()) {
+			if(result.get().isEmpty()) {
 		    	showDialog();
+		    } else {
+		    	vehicleName = result.get().replaceAll(" ", "_");
 		    }
 		} 
 		
