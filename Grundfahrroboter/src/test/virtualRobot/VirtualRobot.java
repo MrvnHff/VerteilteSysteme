@@ -1,4 +1,4 @@
-package test;
+package test.virtualRobot;
 
 import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
@@ -8,11 +8,12 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeUnit;
 
+import client.client.RemoteVehicleInterface;
+
 import java.net.InetAddress;
 
 import server.server.ListenerInterface;
 import server.server.WorkerInterface;
-import client.RemoteVehicleInterface;
 
 /**
  * Virtueller Roboter, der das RemoteVehicleInterface implementiert und eine Verbindung zu einem Server 

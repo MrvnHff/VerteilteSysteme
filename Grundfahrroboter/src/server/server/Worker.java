@@ -11,7 +11,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-import client.RemoteVehicleInterface;
+import client.client.RemoteVehicleInterface;
 
 public class Worker extends Thread implements WorkerInterface{
 	private WorkerInterface stub;

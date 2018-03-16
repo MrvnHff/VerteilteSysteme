@@ -50,6 +50,7 @@ public class VehicleController implements Initializable{
 		this.bundle = resources;
 		this.automatic = false;
 		this.modeButton.setText(bundle.getString("robot.manual"));
+		
 		this.modeButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
@@ -84,6 +85,13 @@ public class VehicleController implements Initializable{
 		this.title.setText(bundle.getString("robot.title") + " " + vehicleId);
 	}
 	
+	public void setVehicleLayout(VehicleLayout rl) {
+		this.vehicleLayout = rl;
+	}
+	
+	/**
+	 * Wechselt zwischen denm Automatischen und dem manuellen Modus
+	 */
 	private void toggleMode() {
 		
 		
@@ -106,13 +114,9 @@ public class VehicleController implements Initializable{
 			automatic = false;
 			modeButton.setText(bundle.getString("robot.manual"));
 			server.deactivateAutoDst(vehicleId);
-		}
-		
+		}	
 	}
 	
-	public void setVehicleLayout(VehicleLayout rl) {
-		this.vehicleLayout = rl;
-	}
 	
 	public void addTextMessage(final String msg) {
 		Platform.runLater(new Runnable() {

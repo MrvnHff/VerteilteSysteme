@@ -1,4 +1,4 @@
-package test;
+package test.virtualRobot;
 
 import java.util.HashMap;
 import java.util.HashSet;

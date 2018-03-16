@@ -1,4 +1,4 @@
-package miniGui;
+package test.miniGui;
 
 import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
@@ -8,7 +8,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeUnit;
 
-import client.RemoteVehicleInterface;
+import client.client.RemoteVehicleInterface;
 import server.server.ListenerInterface;
 import server.server.WorkerInterface;
 

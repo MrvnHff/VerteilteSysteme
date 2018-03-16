@@ -413,7 +413,7 @@ public class Server implements ServerInterface{
 	}
 	
 	/**
-	 * 
+	 * Bewegt das Fahrezeug auf der Datenstruktur und der Gui nach vorne
 	 * @param vehicleId
 	 */
 	public String moveVehicleForward(String vehicleId) {
@@ -433,7 +433,7 @@ public class Server implements ServerInterface{
 		}
 		
 		gui.setVehiclePosition(vehicleId, destination);
-		return destination; //TODO Mathias: Braucht der Vehicle Controller den String (zur Weiterverarbeitung) oder kann man den entfernen wie bei den anderen Bewegungsmethoden? 
+		return destination;
 	}
 	
 	private String moveVehicleForwardRetry(String vehicleId, int retry) {		

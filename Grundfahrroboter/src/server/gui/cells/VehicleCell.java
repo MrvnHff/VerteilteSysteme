@@ -6,6 +6,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 
+/**
+ * Dreieckige Zelle mit Namen. Als repräsentation der Fahrzeuge
+ */
 public class VehicleCell extends Cell {
 	
 	double width = 50;

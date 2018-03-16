@@ -6,6 +6,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+/**
+ * Viereckige Zelle zum einfügen in den Graphen
+ *
+ */
 public class RectangleCell extends Cell {
 
     public RectangleCell( String id) {

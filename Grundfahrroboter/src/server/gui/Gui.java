@@ -27,6 +27,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
+/**
+ * Implementiert mit JavaFX. Baut die Grafische oberfläche auf, verwaltet die controller und stellt die 
+ * Schnittstelle vom Server zu den Controllern dar.
+ *
+ */
 public class Gui extends Application implements GuiInterface{
 	
 	private static final String CONFIG_FILENAME = "resources/config/config";
@@ -59,6 +64,9 @@ public class Gui extends Application implements GuiInterface{
 		fxmlBundle = ResourceBundle.getBundle(FXML_BUNDLE_FILENAME);
 	}
 	
+	/**
+	 * Startet die Anwendung
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		server = new Server();
@@ -75,6 +83,9 @@ public class Gui extends Application implements GuiInterface{
 		
 	}
 	
+	/**
+	 * Stopt die Anwendung
+	 */
 	@Override
 	public void stop() {
 		server.stopServer();
@@ -86,6 +97,9 @@ public class Gui extends Application implements GuiInterface{
 		System.exit(0);
 	}
 
+	/**
+	 * Initialisiert das RootLayout
+	 */
 	private void initRootLayout() {
 		try {
 			FXMLLoader rootLayoutLoader = new FXMLLoader();
@@ -102,6 +116,9 @@ public class Gui extends Application implements GuiInterface{
 		}	
 	}
 	
+	/**
+	 * Baut die GuI aus den einzelnen Panes zusammen
+	 */
 	private void buildGui() {		
 		SplitPane splitPane1 = new SplitPane();
 		splitPane1.setOrientation(Orientation.HORIZONTAL);
@@ -138,6 +155,13 @@ public class Gui extends Application implements GuiInterface{
 		rootLayout.setCenter(splitPane2);
 	}
 	
+	/**
+	 * Baut das VehiclePane welches zur steuerung einzelner Fahrzeuge dient. Lädt den zugehörigen Controller, 
+	 * übergibt nötige Verweise und fügt das Vehicle zur Graphdarstellung hinzu
+	 * @param vehicleId id des Fahrzeugs
+	 * @param position nodeId des Knoten auf dem das Fahrzeug eingefügt werden soll
+	 * @return vehiclePane(BorderPane)
+	 */
 	private BorderPane buildVehiclePane(String vehicleId, String position) {
 		BorderPane vehicle = null;
 		try {
@@ -159,6 +183,11 @@ public class Gui extends Application implements GuiInterface{
 		return vehicle;
 	}
 	
+	/**
+	 * Fügt ein Fahrzeug zur Gui hinzu
+	 * @param vehicleId id des Fahrzeugs
+	 * @param position nodeId des Knoten auf dem das Fahrzeug eingefügt werden soll
+	 */
 	public void addVehicle(final String vehicleId, final String position) {
 		Platform.runLater(new Runnable() {
             @Override public void run() {
@@ -169,6 +198,10 @@ public class Gui extends Application implements GuiInterface{
 		
 	}
 	
+	/**
+	 * Entfernt ein Fahrezeug aus der GuI
+	 * @param vehicleId id des Fahrzeugs
+	 */
 	public void removeVehicle(final String vehicleId) {
 		Platform.runLater(new Runnable() {
             @Override public void run() {
@@ -188,33 +221,59 @@ public class Gui extends Application implements GuiInterface{
 	}
 	
 	
-	
+	/**
+	 * Hängt einen Text an das server TextFeld an
+	 * @param msg Nachricht die angehängt werden soll
+	 */
 	public void addServerTextMessage(String msg) {
 		textArea.appendText(msg);
 		textArea.appendText("\n");
 	}
 	
+	/**
+	 * Hängt einen Text and das Textfeld des übergebenen Fahrzeugs an
+	 * @param msg Nachricht die angehängt werden soll
+	 * @param vehicleId id des Fahrzeug an dessen Textfeld die nachricht angehängt werden soll
+	 */
 	public void addVehicleTextMessage(String vehicleId, String msg) {
 		VehicleController controller = vehicleControllers.get(vehicleId);
 		controller.addTextMessage(msg);
 		controller.addTextMessage("\n");
 	}
 	
+	/**
+	 * Setzt ein Fahrezug an eine Position
+	 * @param vehicleID id des Fahrzeugs das bewegt werden soll
+	 * @param position id des Knotens auf das das fahrzeug bewegt werden soll
+	 */
 	public void setVehiclePosition(String vehicleId, String position) {
 		VehicleController controller = vehicleControllers.get(vehicleId);
 		controller.setVehiclePosition(position);
 	}
 	
+	/**
+	 * Dreht ein Fahrzeug nach Links
+	 * @param vehicleId id des Fahrzeugs das gedreht werden soll
+	 */
 	public void turnVehicleLeft(String vehicleId) {
 		VehicleController controller = vehicleControllers.get(vehicleId);
 		controller.rotateVehicleLeftServer();
 	}
 	
+	/**
+	 * Dreht ein Fahrzeug nach Rechts
+	 * @param vehicleId id des Fahrzeugs das gedreht werde soll
+	 */
 	public void turnVehicleRight(String vehicleId) {
 		VehicleController controller = vehicleControllers.get(vehicleId);
 		controller.rotateVehicleRightServer();
 	}
 	
+	/**
+	 * Setzt einen Text ind das Destination Textfield eines Fahrzeugs
+	 * @param vehicleId id des Vehicles dessen destination Feld manupuliert werden soll
+	 * @param position id des Knotens die gesetzt werden soll
+	 */
 	public void setVehicleDestinationTextField(String vehicleId, String position) {
 		VehicleController controller = vehicleControllers.get(vehicleId);
 		controller.setDestinationTextField(position);

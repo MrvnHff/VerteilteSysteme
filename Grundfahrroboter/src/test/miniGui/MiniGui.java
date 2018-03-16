@@ -1,4 +1,4 @@
-package miniGui;
+package test.miniGui;
 
 import java.io.IOException;
 import java.rmi.RemoteException;

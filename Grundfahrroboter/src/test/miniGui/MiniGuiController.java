@@ -1,4 +1,4 @@
-package miniGui;
+package test.miniGui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
