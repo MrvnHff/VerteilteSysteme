@@ -1,11 +1,11 @@
-package control;
+package client.control;
 
-import control.DRegler;
-import control.IRegler;
-import control.PRegler;
-import driving.Driving;
+import client.control.DRegler;
+import client.control.IRegler;
+import client.control.PRegler;
+import client.driving.Driving;
+import client.sensors.DefaultSensor;
 import lejos.robotics.RegulatedMotor;
-import sensors.DefaultSensor;
 
 /**
  * Die Klasse PID (Proportional, Integral, Differential) verwaltet einen PID-Regler.
@@ -31,7 +31,7 @@ public class PID extends Thread {
 	 * Der Konstruktor initialisiert einen PID
 	 * @param average, der Mittelwert, dem der Roboter folgen soll. Besitzt die Linie einen Farbwert von 0 und die Ebene daneben einen von 100,
 	 * so ist der Mittelwert der Kante 50.
-	 * @param s, der zu verwendene Sensor {@link sensors.DefaultSensor}
+	 * @param s, der zu verwendene Sensor {@link client.sensors.DefaultSensor}
 	 * @param kp, der Regelwert, der den P-Anteil steuert.
 	 * @param ki, der Regelwert, der den I-Anteil steuert
 	 * @param kd, der Regelwert, der den D-Anteil steuert
@@ -70,7 +70,7 @@ public class PID extends Thread {
 
 	/**
 	 * Die Methode startete die run() Methode, die einen Thread startet.
-	 * Sie setzt die Geschwindigkeit der Motoren des {@link driving.Driving}-Objektes und startet seinen Thread.
+	 * Sie setzt die Geschwindigkeit der Motoren des {@link client.driving.Driving}-Objektes und startet seinen Thread.
 	 * Erst dann wird der PID-Regler gestartet.
 	 * @param speed
 	 */

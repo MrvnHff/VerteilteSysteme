@@ -1,4 +1,4 @@
-package logic;
+package client.logic;
 
 import lejos.robotics.RegulatedMotor;
 

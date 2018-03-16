@@ -1,4 +1,4 @@
-package sensors;
+package client.sensors;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.port.Port;
 import lejos.robotics.SampleProvider;

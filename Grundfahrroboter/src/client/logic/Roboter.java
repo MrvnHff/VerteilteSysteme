@@ -1,15 +1,15 @@
-package logic;
-import Exceptions.RobotException;
-import control.PID;
-import driving.Turn;
-import driving.DriveCm;
-import driving.Driving;
+package client.logic;
+import client.control.PID;
+import client.driving.DriveCm;
+import client.driving.Driving;
+import client.driving.Turn;
+import client.exceptions.RobotException;
+import client.sensors.Gyrosensor;
+import client.sensors.Lightsensor;
+import client.wait.WaitFor;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.robotics.RegulatedMotor;
-import sensors.Gyrosensor;
-import sensors.Lightsensor;
-import wait.WaitFor;
 import lejos.utility.Delay;
 
 /**

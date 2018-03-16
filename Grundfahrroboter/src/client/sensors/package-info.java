@@ -4,4 +4,4 @@
  * @author Lennart Monir
  * @version 1.0
  */
-package sensors;
+package client.sensors;

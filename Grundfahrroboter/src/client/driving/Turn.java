@@ -1,7 +1,7 @@
-package driving;
+package client.driving;
 
+import client.sensors.Gyrosensor;
 import lejos.robotics.RegulatedMotor;
-import sensors.Gyrosensor;
 
 /**
  * Die Klasse verwaltet Methoden, die die Steuerung vom Roboter übernehmen, damit er eine Drehung ausführen kann.

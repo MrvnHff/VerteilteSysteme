@@ -1,6 +1,6 @@
-package logic;
+package client.logic;
 
-import sensors.Gyrosensor;
+import client.sensors.Gyrosensor;
 
 /**
  * Die Klasse bestimmt die Ausrichtung des Roboters und stellt über den Gyrosensor einen Kompas da.

@@ -3,4 +3,4 @@
  * @author Lennart Monir
  * @version 1.0
  */
-package wait;
+package client.wait;

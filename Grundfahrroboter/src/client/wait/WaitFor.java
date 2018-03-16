@@ -1,7 +1,7 @@
-package wait;
+package client.wait;
 
+import client.sensors.DefaultSensor;
 import lejos.robotics.RegulatedMotor;
-import sensors.DefaultSensor;
 
 /**
  * Die Klasse WaitFor liefert Methoden, die jeweils While-Schleifen so lange ausführen, bis ein Ereigniss eintritt, das sie beendet.

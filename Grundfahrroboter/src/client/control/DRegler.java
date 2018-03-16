@@ -1,4 +1,4 @@
-package control;
+package client.control;
 
 /**
  * Der D-Regler betrachtet die vergangene und die momentane Regelabweichung und zieht so einen Schluss, wie wohl die Abweichung im nächsten Schritt sein wird

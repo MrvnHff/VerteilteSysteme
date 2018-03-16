@@ -1,4 +1,4 @@
-package logic;
+package client.logic;
 
 /**
  * Diese Klasse stellt zu einem übergebenen Durchmesser die Funktionen bereit Gradzahl oder cm zu erhalten.

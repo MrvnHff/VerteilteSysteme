@@ -1,9 +1,9 @@
-package sensors;
-import sensors.DefaultSensor;
+package client.sensors;
+import client.sensors.DefaultSensor;
 import lejos.hardware.sensor.EV3ColorSensor;
 
 /**
- * Die Klasse Lightsensor verwaltet einen Lichtsensor und erbt von der Klasse {@link sensors.DefaultSensor}
+ * Die Klasse Lightsensor verwaltet einen Lichtsensor und erbt von der Klasse {@link client.sensors.DefaultSensor}
  * @author Lennart Monir
  * @version 0.1
  *

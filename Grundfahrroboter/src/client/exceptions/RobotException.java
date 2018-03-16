@@ -1,4 +1,4 @@
-package Exceptions;
+package client.exceptions;
 
 public class RobotException extends Exception{
 	/**

@@ -1,4 +1,4 @@
-package control;
+package client.control;
 
 /**
  * Der I-Regler betrachtet die vergangene Regelabweichung (Differenz, Vergangenheit) und steuert über seinen ki-Wert der Differenz entgegen.

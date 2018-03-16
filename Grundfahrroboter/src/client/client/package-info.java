@@ -1,4 +1,4 @@
 /**
  * @version 1.0
  */
-package client;
+package client.client;

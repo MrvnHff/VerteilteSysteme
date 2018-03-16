@@ -1,7 +1,7 @@
-package logic;
+package client.logic;
 
+import client.sensors.DefaultSensor;
 import lejos.robotics.RegulatedMotor;
-import sensors.DefaultSensor;
 
 public class Compare {
 	

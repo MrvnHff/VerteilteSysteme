@@ -1,7 +1,7 @@
-package driving;
+package client.driving;
 
+import client.logic.DegreeCm;
 import lejos.robotics.RegulatedMotor;
-import logic.DegreeCm;
 
 public class DriveCm {
 

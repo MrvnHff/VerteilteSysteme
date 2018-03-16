@@ -1,4 +1,4 @@
-package FileSystem;
+package client.fileSystem;
 
 import java.io.*;
 import java.util.ResourceBundle;

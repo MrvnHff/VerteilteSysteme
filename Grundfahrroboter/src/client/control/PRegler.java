@@ -1,4 +1,4 @@
-package control;
+package client.control;
 
 /**
  * Der P-Regler betrachtet die momentane Regelabweichung (Differenz, Gegenwart) und steuert über seinen kp-Wert der Differenz gegen.

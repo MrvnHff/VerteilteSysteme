@@ -1,4 +1,4 @@
-package driving;
+package client.driving;
 
 import lejos.robotics.RegulatedMotor;
 
