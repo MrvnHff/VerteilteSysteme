@@ -59,7 +59,7 @@ public class Server implements ServerInterface{
 	 */
 	public Server() {
 		this(Integer.parseInt(configuration.getString("GraphRows")), 
-				Integer.parseInt(configuration.getString("GraphRows")),
+				Integer.parseInt(configuration.getString("GraphColumns")),
 				Integer.parseInt(configuration.getString("Port")), 
 				Integer.parseInt(configuration.getString("MaxVehicles")));
 	}

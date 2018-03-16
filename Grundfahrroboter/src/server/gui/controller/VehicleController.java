@@ -209,7 +209,7 @@ public class VehicleController implements Initializable{
 						vehicleLayout.moveVehicleTo(vehicleId, destination);
 						setPositionTextField(destination);
 					} catch (NoValidTargetNodeException e) {
-						showAlert("Kein Gültiges Ziel");
+						showAlert("Kein Gueltiges Ziel");
 					} catch (TargetIsOccupiedException e) {
 						showAlert("Ziel ist bereits belegt");
 					} catch (NullPointerException e) {
