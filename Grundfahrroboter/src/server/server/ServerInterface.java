@@ -2,7 +2,10 @@ package server.server;
 
 import server.gui.Gui;
 import server.server.graph.StreetGraph;
-
+/**
+ * Das Interface, welches der Server implementieren muss, um nach auﬂen alle notwendigen Methoden bereitszustellen.
+ * 
+ */
 public interface ServerInterface {
 	
 	public void turnVehicleLeft(String vehicleId);

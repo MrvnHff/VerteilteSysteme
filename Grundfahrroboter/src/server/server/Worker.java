@@ -13,6 +13,12 @@ import java.rmi.server.UnicastRemoteObject;
 
 import client.client.RemoteVehicleInterface;
 
+/**
+ * Der Worker, ueber den die Kommunikation zwischen Server und verbundenem Roboter laeuft. Beim Aufruf sind die
+ * Parameter zu beachten, mit denen der Worker laufen soll. Nach dem Starten wird automatisch versucht eine 
+ * Verbindung mit dem angebenen Fahrzeug aufzubauen.
+ * 
+ */
 public class Worker extends Thread implements WorkerInterface{
 	private WorkerInterface stub;
 	private RemoteVehicleInterface vehicle;
@@ -54,6 +60,12 @@ public class Worker extends Thread implements WorkerInterface{
 		start();
 	}
 	
+	/**
+	 * Beim aufrufen, wird der Worker an der RMI-Schnittstelle angelegt und sucht 
+	 * anschlieﬂend nach dem Fahrzeug im Netzwerk. Wurde dieses gefunden, wird das
+	 * Fahrzeug auf diesen Worker Konfiguriert und ein Datenaustausch ist in beide
+	 * Richtungen moeglich.
+	 */
 	public void run() {
 		try {
 			registerWorker();		
@@ -65,26 +77,55 @@ public class Worker extends Thread implements WorkerInterface{
 		}
 	}
 	
+	/**
+	 * Gibt die ID des Fahrzeugs zurueck, fuer die der Worker laeuft.
+	 * @return Die ID des Fahrzeugs
+	 */
 	public String getVehicleId() {
 		return vehicleId;
 	}
 	
+	
+	/**
+	 * Gibt die IP-Adresse zurueck, fuer die der Worker laeuft.
+	 * @return die IP des Fahrzeugs 
+	 */
 	public String getVehicleIp() {
 		return this.vehicleIp;
 	}
 	
+	
+	/**
+	 * Gibt den Port des Fahrzeuges zurueck, ueber den dieses erreichbar ist.
+	 * @return Der Port des Fahrzeugs
+	 */
 	public int getVehiclePort() {
 		return this.vehiclePort;
 	}
 	
+	
+	/**
+	 * Gibt die ID des Workers zurueck.
+	 * @return Die ID des Workers
+	 */
 	public String getWorkerId() {
 		return workerId;
 	}
 	
+	
+	/**
+	 * Gibt den Port des Worker zurueck, unter dem dieser im Netzwerk erreichbar ist.
+	 * @return Der Port des Workers.
+	 */
 	public int getWorkerPort() {
 		return this.workerPort;
 	}
 	
+	
+	/**
+	 * Gibt die IP-Adresse des Workers zurueck, unter der dieser im Netzwerk zu finden ist.
+	 * @return Die IP-Adresse der Workers.
+	 */
 	public String getWorkerIp() {
 		return this.workerIp;
 	}
@@ -116,12 +157,6 @@ public class Worker extends Thread implements WorkerInterface{
 		returnOfCreateRegistry = LocateRegistry.createRegistry(workerPort);
 	    registryW = LocateRegistry.getRegistry(workerPort);
 	    registryW.bind(workerId, stub);
-	    /*stub = (WorkerInterface) UnicastRemoteObject.exportObject(this, 0); 
-        try { 
-            registryW = LocateRegistry.createRegistry(workerPort); 
-        } catch (ExportException e) {} 
-        registryW = LocateRegistry.getRegistry(workerPort); 
-        registryW.bind(workerId, stub);*/ 
 	    System.out.println("Worker: " + workerId + " bereit!");
 	}
 	
@@ -139,6 +174,10 @@ public class Worker extends Thread implements WorkerInterface{
 		System.out.println("Worker: " + workerId + " verbunden mit Fahrzeug " + vehicleId + "!");		
 	}
 	
+	
+	/**
+	 * Meldet diesen Worker beim Fahrzeug an.
+	 */
 	private void registerWorkerInVehicle() {
 		// Diesen Worker beim Fahrzeug anmelden
 		try {
@@ -187,32 +226,62 @@ public class Worker extends Thread implements WorkerInterface{
 		
 	}
 	
+	
+	//Javadoc-Kommentar im Interface
+	//remoteReachable
 	public void quitFromVehicle() {
 		server.removeWorker(this.vehicleId);
 	}
 	
-
+	/**
+	 * Dreht das verbundene Fahrzeug um 90∞ nach links.
+	 * @throws RemoteException
+	 */
 	public void turnLeft() throws RemoteException {
 		vehicle.turnLeft();
 	}
 
+	
+	/**
+	 * Dreht das verbundene Fahrzeug um 90∞ nach rechts.
+	 * @throws RemoteException
+	 */
 	public void turnRight() throws RemoteException {
 		vehicle.turnRight();
 		
 	}
 
+	/**
+	 * Haelt das verbundene Fahrzeug an.
+	 * @throws RemoteException
+	 */
 	public void stopDrive() throws RemoteException {
 		vehicle.stopDrive();
 	}
 
+	/**
+	 * Faehrt das verbundene Fahrzeug zum Knoten, der in geradeaus Richtung davor liegt.
+	 * @param speed Geschwindigkeit in %, mit der das Fahrzeug fahren soll.
+	 * @throws RemoteException
+	 */
 	public void driveNextPoint(int speed) throws RemoteException {
 		vehicle.driveNextPoint(speed);
 	}
 
+	/**
+	 * Ruft den aktuellen Status des verbundenen Fahrzeugs ab.
+	 * @return Die Statusmeldung des Fahrzeugs
+	 * @throws RemoteException
+	 */
 	public String getStatus() throws RemoteException {
 		return vehicle.getStatus();
 	}
-
+	
+	/**
+	 * Ruft die aktuelle Fehlermeldung beim Fahrzeug ab.
+	 * @return Die Fehlermeldung des Fahrzheugs.
+	 * @throws RemoteException
+	 */
 	public String getError() throws RemoteException {
 		return vehicle.getError();
 	}	

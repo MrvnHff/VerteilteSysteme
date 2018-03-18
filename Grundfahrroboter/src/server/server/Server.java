@@ -18,7 +18,12 @@ import server.server.exceptions.NoPathToDestinationException;
 import server.server.exceptions.TargetIsOccupiedException;
 import server.server.graph.StreetGraph;
 
-
+/**
+ * Der Server verwaltet Worker und Listener. Des Weiteren enthält er auch die Logik zur Steuerung der Roboter und 
+ * die notwendigen Methoden zu Pfadsuche und -ausführung. Die Parameter, mit welchen der Server laufen soll, können
+ * entweder beim Start mitgegeben werden oder es werden die Werte, aus der Datei serverStart.properties genommen. 
+ *
+ */
 public class Server implements ServerInterface{
 	
 	//###################################################
@@ -55,7 +60,7 @@ public class Server implements ServerInterface{
 	/**
 	 * Standard-Konstruktor erzeugt einen Standard-Graphen (3x3),
 	 * startet einen Listener am Standard Port (55555) an,
-	 * legt den Standardwert fï¿½r die maximale Workerzahl fest (4)
+	 * legt den Standardwert fuer die maximale Workerzahl fest (4)
 	 */
 	public Server() {
 		this(Integer.parseInt(configuration.getString("GraphRows")), 
@@ -86,7 +91,7 @@ public class Server implements ServerInterface{
 	
 	/**
 	 * Registriert die GUI beim Server, damit der Server GUI-Funktionen aufrufen kann
-	 * @param gui
+	 * @param gui GUI an die der Server die Informationen weitergeben soll.
 	 */
 	public void setGui(Gui gui) {
 		this.gui = gui;
@@ -127,10 +132,10 @@ public class Server implements ServerInterface{
 
     
     /**
-     * Fï¿½gt eine Meldung in das Textfeld eines Fahrzeuges in der GUI hinzu.
+     * Fuegt eine Meldung in das Textfeld eines Fahrzeuges in der GUI hinzu.
      * Ist keine GUI registriert, wird die Ausgabe auf die Kommandozeile umgelenkt.
      * @param vehicleId Die ID des Fahrzeuges
-     * @param message Die Meldung die hinzugefï¿½gt werden soll
+     * @param message Die Meldung die hinzugefuegt werden soll
      */
     public void addVehicleTextMessage(String vehicleId, String message) {
     	if(gui != null) {
@@ -142,9 +147,9 @@ public class Server implements ServerInterface{
     
     
     /**
-     * Fï¿½r eine Meldung in das Textfeld des Servers in der GUI hinzu.
+     * Fuegt eine Meldung in das Textfeld des Servers in der GUI hinzu.
      * Ist keine GUI registriert, wird die Ausgabe auf die Kommandozeile umgelenkt.
-     * @param message Die Nachricht die hinzugefï¿½gt werden soll
+     * @param message Die Nachricht die hinzugefügt werden soll
      */
     public void addServerTextMessage(String message) {
     	if(gui != null) {
@@ -166,7 +171,7 @@ public class Server implements ServerInterface{
 	
 	
 	/**
-	 * Registriert einen neuen Worker beim Server und fï¿½gt das Fahrzeug dem Straßengraphen und der GUI hinzu
+	 * Registriert einen neuen Worker beim Server und fuegt das Fahrzeug dem Straßengraphen und der GUI hinzu
 	 * @param worker Das Worker Objekt
 	 * @param position Die Position, an die der Worker geschrieben werden soll
 	 */
@@ -197,7 +202,7 @@ public class Server implements ServerInterface{
 	 */
 	public synchronized void removeWorker(String vehicleId) {
 		// Aus GUI und StreetGraph entfernen
-		// FIXME Worker wird nicht entfern, wenn der RemoteHost nicht mehr erreichbar ist und eine Exception ausgelöst wird.
+		// FIXME Worker wird nicht entfernt, wenn der RemoteHost nicht mehr erreichbar ist und eine Exception ausgelöst wird.
 		streetGraph.removeVehicle(vehicleId);
 		gui.removeVehicle(vehicleId);
 
@@ -212,7 +217,7 @@ public class Server implements ServerInterface{
 
 	
 	/**
-	 * Gibt die nächste freie Nummer im Worker Array zurück.
+	 * Gibt die nächste freie Nummer fuer den Worker zurück. Wird benötigt, um die Portnummer zu ermitteln.
 	 * @return Die nächste freie Nummer, wenn noch eine frei ist, sonst -1.
 	 */
 	private int getNextFreeWorkerNumber() {
@@ -240,7 +245,6 @@ public class Server implements ServerInterface{
 	 * @return true falls noch Worker hinzugefügt werden können, sonst false
 	 */
 	public boolean isAddWorkerAllowed() {
-		//return(anzahl < maxWorker);
 		return(workerMap.size() < maxWorker);
 	}
 
@@ -250,20 +254,24 @@ public class Server implements ServerInterface{
 	//# 	AUTO-Modus Methoden							#
 	//###################################################
 	
+	/**
+	 * Generiert zufällige Koordinaten eines Knotens, der innerhalb des Graphen liegt.
+	 * @return Knoten in der Form "x/y"
+	 */
 	public String generateRndDestination() {
 		int x, y;
-		do {
-			x = (int) (Math.random()* streetGraph.getColumnCount());
-			y = (int) (Math.random()* streetGraph.getRowCount());
-		} while(!streetGraph.isNodeEmpty(x + "/" + y));
-		
+
+		x = (int) (Math.random()* streetGraph.getColumnCount());
+		y = (int) (Math.random()* streetGraph.getRowCount());
+
 		return (x + "/" + y);
 	}
 	
 	/**
 	 * Startet einen Thread, der dem angegebenen Fahrzeug in einer Endlosschleife driveVehicleTo() 
-	 * mit zufï¿½llig generierten Zielen ausfï¿½hrt.
-	 * @param vehicleId Die ID des Fahrzeugs
+	 * mit zufaellig generierten Zielen ausfuehrt. Hat der Roboter ein Ziel erreicht, wird ein neues
+	 * Ziel zum Anfahren ausgewaehlt.
+	 * @param vehicleId Die ID des Fahrzeugs.
 	 */
 	public void activateAutoDst(String vehicleId) {
 		vehicleMode.put(vehicleId, true);
@@ -294,8 +302,8 @@ public class Server implements ServerInterface{
 	}
 	
 	/**
-	 * ï¿½berprï¿½ft, ob das Fahrzeug im Auto-Modus ist
-	 * @param vehicleId Die ID des Fahrzeuges, der geprï¿½ft werden soll
+	 * ueberprueft, ob das Fahrzeug im Auto-Modus ist
+	 * @param vehicleId Die ID des Fahrzeuges, die geprueft werden soll
 	 * @return True, wenn der AUTO-Mode aktiv ist, sonst false
 	 */
 	public boolean isVehicleInAutoMode(String vehicleId) {
@@ -312,7 +320,13 @@ public class Server implements ServerInterface{
 	//# 	Fahr- und Pfadlogik							#
 	//###################################################
 	
-	
+	/**
+	 * Fährt ein Fahrzeug anhand seiner ID zum angegebenen Zielknoten. Der Pfad der genommen wird, wird anhand der aktuellen
+	 * Position des Fahrzeuges und den freien Knoten zum Ziel ermittelt. Die notewendigen Fahrschritte zum Ziel werden 
+	 * automatisch an den Roboter weiter gegeben und ausgefuehrt.
+	 * @param vehicleId Die ID des zu steuernden Fahrzeugs
+	 * @param destination Koordinate des Zielknotens in der Form "x/y"
+	 */
 	public void driveVehicletTo(String vehicleId, String destination) {
 		boolean pathExists = false;
 		List<String> path = null;
@@ -355,9 +369,9 @@ public class Server implements ServerInterface{
 	//###################################################
 	
 	/**
-	 * 
-	 * @param rotationsNeeded
-	 * @param vehicleId
+	 * Teilt die benötigten Rotationen in einzelne Fahrbefehle auf gibt diese weiter.
+	 * @param rotationsNeeded Anzahl der Drehbewegungen(1=90°R, 2=180°, 3=270°R, -1=90°L, -2=180°, -3=270°L)
+	 * @param vehicleId Die ID des Fahrzeugs
 	 */
 	private void turnVehicle(int rotationsNeeded, String vehicleId) {
 		switch(rotationsNeeded) {
@@ -398,6 +412,7 @@ public class Server implements ServerInterface{
 	
 	/**
 	 * Dreht das Fahrzeug im StreetGraph, in der GUI und gibt den Befehl an das Remote-Fahrzeug weiter
+	 * @param vehicleId ID des Fahrzeuges, das gedreht werden soll.
 	 */
 	public void turnVehicleRight(String vehicleId) {
 		try {
@@ -413,7 +428,7 @@ public class Server implements ServerInterface{
 	}
 	
 	/**
-	 * Bewegt das Fahrezeug auf der Datenstruktur und der Gui nach vorne
+	 * Gibt dem Fahrzeug den Fahrbefehl und bewegt es auf der Datenstruktur und der GUI nach vorne
 	 * @param vehicleId
 	 */
 	public String moveVehicleForward(String vehicleId) {
@@ -436,6 +451,13 @@ public class Server implements ServerInterface{
 		return destination;
 	}
 	
+	
+	/**
+	 * Rekursiver Aufruf, zum vorwärtsfahren des Fahrzeuges. 
+	 * @param vehicleId Die ID des Fahrzeuges
+	 * @param retry	Anzahl der bereits getaetigten Versuche
+	 * @return Den Zielknoten, wenn er befahren wurde.
+	 */
 	private String moveVehicleForwardRetry(String vehicleId, int retry) {		
 		String destination;
 
@@ -484,11 +506,11 @@ public class Server implements ServerInterface{
        			Server server = new Server(rows, columns, port, workerMax);
        			server.startServer();
        		} catch (ArrayIndexOutOfBoundsException e) {
-       			System.out.println("Keinen Server gestartet. Zu wenige Parameter ï¿½bergeben!");
+       			System.out.println("Keinen Server gestartet. Zu wenige Parameter uebergeben!");
        		} catch (NumberFormatException e) {
-       			System.out.println("Keinen Server gestartet. Parameter in ungï¿½ltigem Format eingegeben!");
+       			System.out.println("Keinen Server gestartet. Parameter in ungueltigem Format eingegeben!");
        		} finally {
-       			System.out.println("Zu ï¿½bergebende Parameterliste: rowCount columnCount portNumber maxWorkers");
+       			System.out.println("Zu uebergebende Parameterliste: rowCount columnCount portNumber maxWorkers");
        		} 	
         }
     }

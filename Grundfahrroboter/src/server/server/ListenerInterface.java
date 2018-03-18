@@ -3,6 +3,9 @@ package server.server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * Interface, das die im Netzwerk erreichbaren Methoden des Listener definiert.
+ */
 public interface ListenerInterface extends Remote {
 	
 	/**

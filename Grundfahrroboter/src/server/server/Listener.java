@@ -9,6 +9,12 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * Der Listener bietet die Moeglichkeit Fahrzeugen, die sich im Netzwerk befinden, einen eigenen Worker anzufragen.
+ * Ist die maximale Anzahl an Workern noch nicht erreicht, wird ein neuer Worker gestartet und dieser tritt dann 
+ * mit dem Fahrzeug in Verbindung.
+ * 
+ */
 public class Listener extends Thread implements ListenerInterface{
 	private String ip;
 	private int port;
@@ -18,8 +24,8 @@ public class Listener extends Thread implements ListenerInterface{
 	private Registry returnOfCreateRegistry;
 	
 	/**
-	 * Startmethode f�r den Listener
-	 * @param server Referenz auf den Server, f�r den der Listener gestartet wurde
+	 * Startmethode fuer den Listener
+	 * @param server Referenz auf den Server, fuer den der Listener gestartet wurde
 	 * @param port Port, an dem der Listener horchen soll
 	 */
 	public Listener(Server server, int port) {
@@ -35,11 +41,16 @@ public class Listener extends Thread implements ListenerInterface{
 		start();
 	}
 	
+	
+	/**
+	 * Ruft die registerListener Methode auf.
+	 */
 	public void run(){
 		registerListener();
 	}
 
 	//JavaDoc Kommentar im Interface
+	// RemoteReachable
 	@Override
 	public synchronized void requestNewWorker(String vehicleId, String vehicleIp, int vehiclePort) throws RemoteException {
 		server.addServerTextMessage("Fahrzeug " + vehicleId + " hat sich unter der IP " + vehicleIp + " gemeldet!");
@@ -99,7 +110,7 @@ public class Listener extends Thread implements ListenerInterface{
 	
 	
 	/**
-	 * Gibt den Port zur�ck, an dem der Listener aktiv ist.
+	 * Gibt den Port zurueck, an dem der Listener aktiv ist.
 	 * @return
 	 */
 	public int getPort() {
@@ -108,7 +119,7 @@ public class Listener extends Thread implements ListenerInterface{
 	
 	
 	/**
-	 * Gibt die IP-Adresse zur�ck, auf der der Listener l�uft.
+	 * Gibt die IP-Adresse zurueck, auf der der Listener laeuft.
 	 * @return
 	 */
 	public String getIpAddress() {
