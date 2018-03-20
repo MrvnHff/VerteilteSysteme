@@ -13,7 +13,15 @@ import client.fileSystem.FileSystem;
 import client.logic.Roboter;
 import server.server.ListenerInterface;
 import server.server.WorkerInterface;
-
+/**
+ * Die Klasse RoboServer enthält die Main, die den Roboter startet und in ihr sind die Methoden implementiert,
+ * die von dem Server aufgerufen und somit ausgeführt werden.
+ * Die Klasse enthält ein Roboter Objekt, welches für die Grundsteuerung des Roboters zuständig ist.
+ * Ebenfalls ist die Klasse dafür zuständig, dass der Roboter auch mit dem Listener und Worker komunizieren kann.
+ * @author Lennart Monir
+ * @version 0.3
+ *
+ */
 public class RoboServer implements RemoteVehicleInterface{
 	private static Roboter robo;
 	private static WorkerInterface worker;
@@ -23,6 +31,12 @@ public class RoboServer implements RemoteVehicleInterface{
 	private static boolean shutdown;
 	private final static int MAXTRY = 10;
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er eine Strecke (cm) fahren soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 * @param cm, die Länge der Strecke
+	 * @param speed, die Geschwindigkeit mit der der Roboter fahren soll
+	 */
 	@Override
 	public void driveCm(double cm, int speed) throws RemoteException{
 		try {
@@ -34,6 +48,11 @@ public class RoboServer implements RemoteVehicleInterface{
 		}		
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er fahren soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 * @param speed, die Geschwindigkeit mit der der Roboter fahren soll
+	 */
 	@Override
 	public void drive(int speed) throws RemoteException{
 		try {
@@ -45,6 +64,11 @@ public class RoboServer implements RemoteVehicleInterface{
 		}
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er so lange fahren soll, bis er mit dem Lichsensor Schwarz sieht.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 * @param speed, die Geschwindigkeit mit der der Roboter fahren soll
+	 */
 	@Override
 	public void driveUntilBlack(int speed) throws RemoteException{
 		try {
@@ -56,6 +80,12 @@ public class RoboServer implements RemoteVehicleInterface{
 		}		
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er eine Strecke (cm) rückwärts fahren soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 * @param cm, die Länge der Strecke
+	 * @param speed, die Geschwindigkeit mit der der Roboter fahren soll
+	 */
 	@Override
 	public void driveBackCm(double cm, int speed) throws RemoteException{
 		try {
@@ -67,8 +97,13 @@ public class RoboServer implements RemoteVehicleInterface{
 		}		
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er rückwärts fahren soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 * @param speed, die Geschwindigkeit mit der der Roboter fahren soll
+	 */
 	@Override
-	public void driveBack(int cm, int speed) throws RemoteException{
+	public void driveBack(int speed) throws RemoteException{
 		try {
 			robo.drive(-speed);
 			worker.printStatus(robo.getStatus());
@@ -78,6 +113,10 @@ public class RoboServer implements RemoteVehicleInterface{
 		}
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er sich nach links um 90 Grad drehen soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 */
 	@Override
 	public void turnLeft() throws RemoteException{
 		try {
@@ -89,6 +128,10 @@ public class RoboServer implements RemoteVehicleInterface{
 		}
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er sich nach rechst um 90 Grad drehen soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 */
 	@Override
 	public void turnRight() throws RemoteException{
 		try {
@@ -100,6 +143,10 @@ public class RoboServer implements RemoteVehicleInterface{
 		}		
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er sich um 180 Grad drehen soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 */
 	@Override
 	public void turnAround() throws RemoteException{
 		try {
@@ -111,6 +158,12 @@ public class RoboServer implements RemoteVehicleInterface{
 		}
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er eine Strecke (cm) mit dem PID fahren soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 * @param cm, die Länge der Strecke
+	 * @param speed, die Geschwindigkeit mit der der Roboter fahren soll
+	 */
 	@Override
 	public void drivePID(int cm, int speed) throws RemoteException{
 		try {
@@ -122,6 +175,10 @@ public class RoboServer implements RemoteVehicleInterface{
 		}
 	}
 
+	/**
+	 * Die Methode sagt dem Roboter, dass er aufhören soll zu fahren.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 */
 	@Override
 	public void stopDrive() throws RemoteException{
 		try {
@@ -133,6 +190,11 @@ public class RoboServer implements RemoteVehicleInterface{
 		}
 	}
 	
+	/**
+	 * Die Methode sagt dem Roboter, dass er von einem Punkt zum nächsten fahren soll.
+	 * Danach wird der Worker über den Stand des Roboters informiert.
+	 * @param speed, die Geschwindigkeit mit der der Roboter fahren soll
+	 */
 	@Override
 	public void driveNextPoint(int speed) throws RemoteException{
 		try {
@@ -151,18 +213,32 @@ public class RoboServer implements RemoteVehicleInterface{
 		}		
 	}
 
+	/**
+	 * Die Methode ruft den aktuellen Status des Roboters ab.
+	 */
 	@Override
 	public String getStatus() throws RemoteException {
 		// TODO Auto-generated method stub
 		return robo.getStatus();
 	}
 	
+	/**
+	 * Die Methode ruft den aktuellen Fehlerstatus des Roboters ab.
+	 */
 	@Override
 	public String getError() throws RemoteException {
 		// TODO Auto-generated method stub
 		return robo.getError();
 	}
 	
+	/**
+	 * Die Methode lässt den Roboter eine Verbindung zum Worker, der ihm zugewiesen wird, aufbauen,
+	 * damit er auch Methoden beim Worker aufrufen kann.
+	 * 
+	 * @param name, der Name des Workers
+	 * @param ip, die IP unter der der Worker zu finden ist
+	 * @param port, der Port über den der Roboter mit dem Worker kommunizieren kann.
+	 */
 	@Override
 	public void registerWorkerInVehicle(String name, String ip, int port) throws RemoteException {
 	    registryW = LocateRegistry.getRegistry(ip, port);
@@ -178,6 +254,9 @@ public class RoboServer implements RemoteVehicleInterface{
 		}
 	}
 	
+	/**
+	 * Die Methode schließt die Verbindung und beendet den Roboter.
+	 */
 	@Override
 	public void closeConnection() throws RemoteException{
 		worker.printStatus("Aufwiedersehen! Beende mein Programm!");
@@ -185,6 +264,11 @@ public class RoboServer implements RemoteVehicleInterface{
 		System.exit(0);
 	}
 	
+	/**
+	 * Die Main baut eine Verbindung zum Listener auf. Dies versucht er eine bestimmte Anzahl oft.
+	 * Da jeder Roboter eigene Werte und Konstanten besitzt, habe wir die Werte in verschiedene Proberty Datein
+	 * geschrieben. Die werden am Anfang alle ausgelesen.
+	 */
 public static void main(String args[]) {
 	final int ROBO_NUMBER = 3;
 	

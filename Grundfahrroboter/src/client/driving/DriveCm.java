@@ -3,8 +3,25 @@ package client.driving;
 import client.logic.DegreeCm;
 import lejos.robotics.RegulatedMotor;
 
-public class DriveCm {
+/**
+ * Die Klasse steuert das Fahren des Roboters für eine gewisse Strecke (cm).
+ * @author Lennart Monir
+ * @version 14.03.2018
+ * @category Movement
+ */
 
+public class DriveCm {
+	
+	/**
+	 * Die Methode benutzt ein Driving Objekt, um das Fahren zu steuern. Die Methode selbst überprüft parallel dazu,
+	 * wie weit sich die Motoren schon gedreht haben, damit der Roboter nicht zu weit fährt.
+	 * Die Methode kann sowohl das Vorwärts- als auch Rückwärtsfahren steuern.
+	 * @param cm, die Strecke in cm
+	 * @param speed, die Geschwindigkeit
+	 * @param b, Motor B
+	 * @param c, Motor C
+	 * @param diameter, der Raddurchmesser
+	 */
 	public static void driveCm(double cm, int speed, RegulatedMotor b, RegulatedMotor c, double diameter) {
 		Driving drive = new Driving(b, c);
 		try {
@@ -41,32 +58,6 @@ public class DriveCm {
 			}
 		}
 	}
-		
-		
-		
-//		int minspeed = 5;
-//		int s = 0;
-//		int degree = Math.abs(DegreeCm.getDegree(cm, diameter));
-//		if (cm < 0 ^ speed < 0) {
-//			drive.setDirection(Driving.BACKWARD);
-//		} else {
-//			drive.setDirection(Driving.FORWARD);
-//		}		
-//		drive.start(minspeed);
-//		while ((minspeed < Math.abs(speed)) && (Math.abs(b.getTachoCount()) < (degree / 2))) {
-//			minspeed += 10;
-//			drive.setSpeed(minspeed);
-//			Delay.msDelay(5);			
-//		}
-//		s = Math.abs(b.getTachoCount());
-//		while (Math.abs(b.getTachoCount()) < (degree - s)) {}
-//		while () {
-//			if (minspeed > 40) {
-//				minspeed -= 10;
-//				drive.setSpeed(minspeed);
-//				Delay.msDelay(5);
-//			}
-//		}
 		drive.stopDriving();
 		drive = null;
 	}

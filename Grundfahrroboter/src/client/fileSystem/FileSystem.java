@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 /**
  * Die FileSystem Klasse verwaltet das erstellen und schreiben von Datein und Ordnern.
+ * Ebenfalls ließt sie die Propertie Datein aus.
  * Da der Roboter unter einem Unix Betriebssystem fährt, kann man auch theoretisch auf allen Ordern arbeiten.
  * Allerdings ist empfehlendswert nur unter dem Pfad "/home/lejos/programs/data/" zu arbeiten und dort alle Ordner anzulegen.
  * @author Lennart Monir
@@ -61,12 +62,23 @@ public class FileSystem {
 		}
 	}
 	
+	/**
+	 * Die Methode liest einen Wert aus einer Propertie Datei aus.
+	 * Jede Datei heißt Robo?. ? = eine Ziffer.
+	 * @param number, die Ziffer.
+	 * @param s, der auszulesende Wert.
+	 */
 	public static String readProperties(int number, String s) {
 		ResourceBundle prop;
 		prop = ResourceBundle.getBundle("FileSystem/Robo"+ number);
 		return prop.getString(s);
 	}
 	
+	/**
+	 * Die Methode liest einen Wert aus einer Propertie Datei aus.
+	 * Dabei enthält die Datei Werte, die für alle Roboter gleich sind.
+	 * @param s, der auszulesende Wert.
+	 */
 	public static String readProperties(String s) {
 		ResourceBundle prop;
 		prop = ResourceBundle.getBundle("FileSystem/AllRobots");

@@ -16,7 +16,7 @@ import lejos.utility.Delay;
  * Die Roboter-Klasse vereint alle Eigenschaften und Klassen des Roboters. Sie soll ein digitales Abbild des Roboters darstellen und alle Funktionen zur Verfügung stellen,
  * die der Roboter besitzt.
  * @author Lennart Monir
- * @version 0.1 *
+ * @version 0.2
  */
 public class Roboter {
 	private double diameter;

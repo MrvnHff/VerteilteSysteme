@@ -25,7 +25,7 @@ public interface RemoteVehicleInterface extends Remote {
 	public void driveUntilBlack(int speed) throws RemoteException;
 	
 	public void driveBackCm(double cm, int speed) throws RemoteException;
-	public void driveBack(int cm, int speed) throws RemoteException;
+	public void driveBack(int speed) throws RemoteException;
 	
 	public void turnLeft() throws RemoteException;
 	public void turnRight() throws RemoteException;
