@@ -232,7 +232,7 @@ public class RemoteTestVehicle extends Thread implements RemoteVehicleInterface{
 	}
 
 	@Override
-	public void driveBack(int cm, int speed) throws RemoteException{
+	public void driveBack(int cm) throws RemoteException{
 		try {
 			TimeUnit.SECONDS.sleep(waitTime);
 			worker.printStatus("Zeit zu Ende. driveBack abgeschlossen.");

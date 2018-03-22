@@ -7,6 +7,10 @@ import server.gui.graph.Cell;
 import server.gui.graph.Graph;
 import server.gui.layout.base.Layout;
 
+/**
+ * Zur Positionierung und anordnung von Knoten nach dem Zufallsprinzip
+ * @author Mathias
+ */
 public class RandomLayout extends Layout {
 
     private Graph graph;
@@ -19,6 +23,9 @@ public class RandomLayout extends Layout {
 
     }
 
+    /**
+     * Weiﬂt  jedem Knoten eine zuf‰llige Position zu
+     */
     public void execute() {
 
         List<Cell> cells = graph.getModel().getAllCells();
@@ -29,9 +36,6 @@ public class RandomLayout extends Layout {
             double y = rnd.nextDouble() * 500;
 
             cell.relocate(x, y);
-
         }
-
     }
-
 }

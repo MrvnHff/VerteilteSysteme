@@ -25,6 +25,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
+/**
+ * javaFx Controller der einzelnen FahrzeugPanes
+ * @author Mathias Wittling
+ */
 public class VehicleController implements Initializable{
 
 	@FXML
@@ -63,10 +67,10 @@ public class VehicleController implements Initializable{
 		    public void handle(KeyEvent event) {
 		        if(event.getCode().equals(KeyCode.ENTER)) {
 		        	 if(!IdUtils.isValidId(destination.getText())) {
-		        		 showAlert("Keine Gültige Node Id\n"
-			        		 		+ "Id muss dem Muster [0-9]*/[0-9]* entsprechen");
+		        		 showAlert(bundle.getString("alert.noValidId") + "\n"
+			        		 		+ bundle.getString("alert.idPattern"));
 		        	 } else if(!server.nodeExists(destination.getText())) { 
-		        		 showAlert("Die Knoten Id " + destination.getText() + " ist nicht im Graph vorhanden");
+		        		 showAlert(bundle.getString("alert.theNodeId") + destination.getText() + bundle.getString("alert.isNotInsideGraph"));
 		        	 } else {
 		        		 driveVehicleTo(destination.getText());
 		        	 }
@@ -146,6 +150,9 @@ public class VehicleController implements Initializable{
 		ser.start();
 	}
 	
+	/**
+	 * Rotiert das Fahrezug nur in der Gui nach Links
+	 */
 	public void rotateVehicleLeftServer() {
 		rotateVehicle(-90);
 	}
@@ -169,6 +176,9 @@ public class VehicleController implements Initializable{
 		
 	}
 	
+	/**
+	 * Rotiert das Fahrzeug nur in der Gui nach Rechts
+	 */
 	public void rotateVehicleRightServer() {
 		rotateVehicle(90);
 	}
@@ -187,21 +197,27 @@ public class VehicleController implements Initializable{
 		
 	}
 	
-	
+	/**
+	 * Zeigt eine Fehlermeldung mit der übergebenen Nachricht an.
+	 * @param message Nachricht die angezeigt werden soll
+	 */
 	private void showAlert(final String message) {
 		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Error");
-				alert.setHeaderText("Aktion ist fehlgeschlagen");
+				alert.setTitle(bundle.getString("alert.error"));
+				alert.setHeaderText(bundle.getString("alert.actionFailed"));
 				alert.setContentText(message);
 				alert.showAndWait();
 			}
 		});
 	}
 	
+	/**
+	 * Bewegt das Fahrzeug in der Gui und im Server nach vorne
+	 */
 	public void moveVehicleForward() {
 		
 		Service<Void> ser = new Service<Void>() {
@@ -213,9 +229,9 @@ public class VehicleController implements Initializable{
 						vehicleLayout.moveVehicleTo(vehicleId, destination);
 						setPositionTextField(destination);
 					} catch (NoValidTargetNodeException e) {
-						showAlert("Kein Gueltiges Ziel");
+						showAlert(bundle.getString("alert.noValidTarget"));
 					} catch (TargetIsOccupiedException e) {
-						showAlert("Ziel ist bereits belegt");
+						showAlert(bundle.getString("alert.targetOccupied"));
 					} catch (NullPointerException e) {
 						System.out.println("NullPointer");
 					}
@@ -228,6 +244,10 @@ public class VehicleController implements Initializable{
 		
 	}
 	
+	/**
+	 * Setzt das Fahrzeug in der Gui an die übergebene Position
+	 * @param position KnotenId des Knotens auf das das Fahrzeug gesetzt werden soll
+	 */
 	public void setVehiclePosition(final String position) {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -246,9 +266,12 @@ public class VehicleController implements Initializable{
 				vehicleLayout.moveVehicleTo(vehicleId, pos);
 			}
 		});
-		
 	}
 	
+	/**
+	 * Zeigt den übergebenen String im ZielTextfeld
+	 * @param position 
+	 */
 	public void setDestinationTextField(final String position) {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -258,6 +281,10 @@ public class VehicleController implements Initializable{
 		});
 	}
 
+	/**
+	 * Zeigt den übergebenen String im Positionstextfeld
+	 * @param pos
+	 */
 	public void setPositionTextField(final String pos) {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -267,6 +294,10 @@ public class VehicleController implements Initializable{
 		});
 	}
 	
+	/**
+	 * Startet die automatische Navigation eines des Fahrzeugs zu einem übergebenen Ziel
+	 * @param destination Knotenid des Zielknotens
+	 */
 	private void driveVehicleTo(final String destination) {
 		new Thread(new Runnable() {
 			@Override
@@ -277,6 +308,9 @@ public class VehicleController implements Initializable{
 		
 	}
 	
+	/**
+	 * Entfernt ein Fahrzeug aus der Gui und dem Server
+	 */
 	public void removeVehicle() {
 		server.removeWorker(vehicleId);
 	}

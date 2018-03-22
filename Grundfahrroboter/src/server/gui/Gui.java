@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 /**
  * Implementiert mit JavaFX. Baut die Grafische oberfläche auf, verwaltet die controller und stellt die 
  * Schnittstelle vom Server zu den Controllern dar.
- *
+ * @author Mathias Wittling
  */
 public class Gui extends Application implements GuiInterface{
 	

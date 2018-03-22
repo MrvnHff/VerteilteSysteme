@@ -8,6 +8,7 @@ import javafx.scene.text.Text;
 
 /**
  * Dreieckige Zelle mit Namen. Als repräsentation der Fahrzeuge
+ * @author Mathias Wittling
  */
 public class VehicleCell extends Cell {
 	

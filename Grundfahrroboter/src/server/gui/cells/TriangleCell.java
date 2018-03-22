@@ -5,7 +5,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 /**
- *	Dreieckige Zelle zum einfügen in den Graphen
+ * Dreieckige Zelle zum einfügen in den Graphen
+ * @author Mathias Wittling
  */
 public class TriangleCell extends Cell {
 

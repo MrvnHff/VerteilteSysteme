@@ -23,6 +23,12 @@ import server.server.graph.nodes.StreetNode;
 import server.server.graph.nodes.VehicleOrientation;
 import server.utils.IdUtils;
 
+/**
+ * Datenstruktur eines Graphen erweitert mit der Verwaltung von Fahrezeugen die sich auf verschiedenen Knoten
+ * befinden und bewegen können
+ * @author Mathias Wittling
+ *
+ */
 public class StreetGraph {
 	
 	private SimpleGraph<String, StreetEdge> roadGraph; 

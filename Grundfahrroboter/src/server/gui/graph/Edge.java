@@ -3,12 +3,17 @@ package server.gui.graph;
 import javafx.scene.Group;
 import javafx.scene.shape.Line;
 
+/**
+ * Verbindet zwei Knoten mit einer dünnen schwarzen Linie
+ * @author Mathias Wittling
+ */
 public class Edge extends Group {
 
     protected Cell source;
     protected Cell target;
 
     Line line;
+
 
     public Edge(Cell source, Cell target) {
 

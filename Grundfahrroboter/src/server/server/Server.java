@@ -22,7 +22,8 @@ import server.server.graph.StreetGraph;
  * Der Server verwaltet Worker und Listener. Des Weiteren enthält er auch die Logik zur Steuerung der Roboter und 
  * die notwendigen Methoden zu Pfadsuche und -ausführung. Die Parameter, mit welchen der Server laufen soll, können
  * entweder beim Start mitgegeben werden oder es werden die Werte, aus der Datei serverStart.properties genommen. 
- *
+ * @author Mathias Wittling
+ * @author Janek Dahl
  */
 public class Server implements ServerInterface{
 	

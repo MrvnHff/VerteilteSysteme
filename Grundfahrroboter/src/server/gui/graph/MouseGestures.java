@@ -4,6 +4,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * Fügt Maus Gesten zum Graühen hinzu
+ * @author Mathias Wittling
+ *
+ */
 public class MouseGestures {
 
     final DragContext dragContext = new DragContext();
@@ -14,6 +19,10 @@ public class MouseGestures {
         this.graph = graph;
     }
 
+    /**
+     * Fügt Mausgeste zum ziehen und ablegen eines Knoten hinzu
+     * @param node
+     */
     public void makeDraggable( final Node node) {
 
 

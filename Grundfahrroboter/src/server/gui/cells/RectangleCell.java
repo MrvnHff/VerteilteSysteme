@@ -8,7 +8,7 @@ import javafx.scene.text.Text;
 
 /**
  * Viereckige Zelle zum einfügen in den Graphen
- *
+ * @author Mathias Wittling
  */
 public class RectangleCell extends Cell {
 

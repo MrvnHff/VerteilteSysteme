@@ -11,6 +11,11 @@ import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 
+/**
+ * Klasse zur darstellen eines Graphen in JavaFx
+ * @author Mathias Wittling
+ *
+ */
 public class Graph {
 
     private Model model;
@@ -28,6 +33,9 @@ public class Graph {
      */
     CellLayer cellLayer;
 
+    /**
+     * Konstruktor um einen leeren Graphen zu erstellen
+     */
     public Graph() {
 
         this.model = new Model();
@@ -46,6 +54,10 @@ public class Graph {
 
     }
     
+    /**
+     * Konstruktor um eine Darstellung von einem StreetGraph zu erstellen
+     * @param vehicleGraph
+     */
     public Graph(StreetGraph vehicleGraph) {
     	this();
     	StreetNode node;
@@ -71,22 +83,10 @@ public class Graph {
     	
     	endUpdate();	
     }
-
-    public ScrollPane getScrollPane() {
-        return this.scrollPane;
-    }
-
-    public Pane getCellLayer() {
-        return this.cellLayer;
-    }
-
-    public Model getModel() {
-        return model;
-    }
-
-    public void beginUpdate() {
-    }
-
+    
+    /**
+     * Übernimmt änderungen die am Graphen vorgenommen wurden und aktualisiert das Model und die darstellung
+     */
     public void endUpdate() {
 
         // add components to graph pane
@@ -114,6 +114,18 @@ public class Graph {
         // merge added & removed cells with all cells
         getModel().merge();
 
+    }
+
+    public ScrollPane getScrollPane() {
+        return this.scrollPane;
+    }
+
+    public Pane getCellLayer() {
+        return this.cellLayer;
+    }
+
+    public Model getModel() {
+        return model;
     }
 
     public double getScale() {

@@ -8,7 +8,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Scale;
 
 /**
- * Extended ScrollPane wich is zoomable and scrollable in both directions
+ * Erweitertes ScrollPane welches man Zoomen und in beide Richtungen Scrollen kann
  * @author Mathias Wittling
  *
  */
@@ -32,14 +32,25 @@ public class ZoomableScrollPane extends ScrollPane {
         zoomGroup.setOnScroll(new ZoomHandler());
     }
 
+    /**
+     * Gibt den Zoomfactor zurück
+     * @return
+     */
     public double getScaleValue() {
         return scaleValue;
     }
 
+    /**
+     * Zommt auf den factor 1
+     */
     public void zoomToActual() {
         zoomTo(1.0);
     }
 
+    /**
+     * Zoomt zu übergebenen factor
+     * @param scaleValue
+     */
     public void zoomTo(double scaleValue) {
 
         this.scaleValue = scaleValue;
@@ -49,13 +60,18 @@ public class ZoomableScrollPane extends ScrollPane {
 
     }
 
+    /**
+     * Zommt auf den factor 1
+     */
     public void zoomActual() {
-
         scaleValue = 1;
         zoomTo(scaleValue);
 
     }
 
+    /**
+     * Zoomt um ein definiertes Delta raus
+     */
     public void zoomOut() {
         scaleValue -= delta;
 
@@ -66,6 +82,9 @@ public class ZoomableScrollPane extends ScrollPane {
         zoomTo(scaleValue);
     }
 
+    /**
+     * Zoomt um ein definiertes Delta rein
+     */
     public void zoomIn() {
 
         scaleValue += delta;
@@ -79,37 +98,31 @@ public class ZoomableScrollPane extends ScrollPane {
     }
 
     /**
-     * 
-     * @param minimizeOnly
-     *            If the content fits already into the viewport, then we don't
-     *            zoom if this parameter is true.
+     * Zoomt zu einem Faktor das der Inhalt komplett dargestellt werden kann
+     * @param minimizeOnly Wenn der Inhalt schon in die view pass, wird nicht gezoomt falls der Parameter true ist.
      */
     public void zoomToFit(boolean minimizeOnly) {
 
         double scaleX = getViewportBounds().getWidth() / getContent().getBoundsInLocal().getWidth();
         double scaleY = getViewportBounds().getHeight() / getContent().getBoundsInLocal().getHeight();
 
-        // consider current scale (in content calculation)
+        // Beachte Momentanen Zoomfaktor
         scaleX *= scaleValue;
         scaleY *= scaleValue;
 
-        // distorted zoom: we don't want it => we search the minimum scale
-        // factor and apply it
+        
         double scale = Math.min(scaleX, scaleY);
 
-        // check precondition
+        // check vorbedingung
         if (minimizeOnly) {
-
-            // check if zoom factor would be an enlargement and if so, just set
-            // it to 1
+        	
+        	//Überprüfe ob zoomfaktor zu einer vergrößerung führen würde, setzte ihn zu 1
             if (Double.compare(scale, 1) > 0) {
                 scale = 1;
             }
         }
-
-        // apply zoom
+        
         zoomTo(scale);
-
     }
 
     private class ZoomHandler implements EventHandler<ScrollEvent> {
