@@ -5,6 +5,11 @@ package server.server.exceptions;
  */
 public class MaximumWorkersReachedException extends RuntimeException {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2942505335749079841L;
+
 	public MaximumWorkersReachedException() {
 		super();
 	}

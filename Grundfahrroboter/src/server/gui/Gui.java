@@ -1,13 +1,10 @@
 package server.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import server.gui.controller.VehicleController;
 import server.gui.graph.CellType;
 import server.gui.graph.Graph;

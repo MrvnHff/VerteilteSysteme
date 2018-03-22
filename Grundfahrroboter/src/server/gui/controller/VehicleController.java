@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import server.gui.layout.vehicle.VehicleLayout;
-import server.server.Server;
 import server.server.ServerInterface;
 import server.server.exceptions.NoValidTargetNodeException;
 import server.server.exceptions.TargetIsOccupiedException;
@@ -138,7 +137,7 @@ public class VehicleController implements Initializable{
 	public void rotateVehicleLeft() {
 		
 		Service<Void> ser = new Service<Void>() {
-	        @Override protected Task createTask() {
+			@Override protected Task createTask() {
 	            return new Task<Void>() {
 	            @Override protected Void call() throws InterruptedException {
 	            	server.turnVehicleLeft(vehicleId);

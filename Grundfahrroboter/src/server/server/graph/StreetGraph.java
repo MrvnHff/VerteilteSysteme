@@ -10,10 +10,8 @@ import java.util.Set;
 
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import server.gui.graph.CellType;
 import server.server.exceptions.NoPathToDestinationException;
 import server.server.exceptions.NoValidNodeIdException;
 import server.server.exceptions.NoValidTargetNodeException;
@@ -232,7 +230,6 @@ public class StreetGraph {
 	 * @return Knoten Id des Knoten auf den der Roboter ausgerichtet ist
 	 */
 	private StreetNode findNodeInFrontOfVehicle(StreetNode node) {
-		//TODO überprüfung einfügen ob sich auf dem Knoten überhaupt ein Roboter befindet 
 		String targetNodeId;
 		int coordinates[] = IdUtils.extractCoordinates(node.getNodeId());
 		switch(node.getOrientation()) {
@@ -269,7 +266,6 @@ public class StreetGraph {
 			return 0;
 		}
 		
-		//TODO umbenennen und evtl. auslagern
 		int nodeIdArray[] = IdUtils.extractCoordinates(nodeId);
 		int destIdArray[] = IdUtils.extractCoordinates(destination);
 		

@@ -6,6 +6,11 @@ package server.server.exceptions;
  */
 public class MaxMoveRetriesReachedException extends RuntimeException {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8910611502419791799L;
+
 	public MaxMoveRetriesReachedException() {
 		super();
 	}

@@ -218,7 +218,6 @@ public class RoboServer implements RemoteVehicleInterface{
 	 */
 	@Override
 	public String getStatus() throws RemoteException {
-		// TODO Auto-generated method stub
 		return robo.getStatus();
 	}
 	
@@ -227,7 +226,6 @@ public class RoboServer implements RemoteVehicleInterface{
 	 */
 	@Override
 	public String getError() throws RemoteException {
-		// TODO Auto-generated method stub
 		return robo.getError();
 	}
 	
@@ -249,7 +247,6 @@ public class RoboServer implements RemoteVehicleInterface{
 			worker.printStatus(robotName + " bereit!");
 			System.out.println(robotName + " bereit!");
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -289,7 +286,6 @@ public static void main(String args[]) {
 	try {
 		robo = new Roboter(dm,kp,ki,kd);
 	} catch (RobotException e1) {
-		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}     
 	

@@ -6,6 +6,11 @@ package server.server.exceptions;
  */
 public class NoPathToDestinationException extends RuntimeException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3077352585066603005L;
+
 	public NoPathToDestinationException() {
 		super();
 	}

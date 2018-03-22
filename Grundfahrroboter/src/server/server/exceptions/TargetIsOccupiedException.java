@@ -8,6 +8,11 @@ package server.server.exceptions;
  */
 public class TargetIsOccupiedException extends RuntimeException {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2857088497872853950L;
+
 	public TargetIsOccupiedException() {
 		super();
 	}

@@ -5,6 +5,11 @@ package server.server.exceptions;
  */
 public class NoValidNodeIdException extends RuntimeException {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1564814941847270587L;
+
 	public NoValidNodeIdException() {
 		super();
 	}

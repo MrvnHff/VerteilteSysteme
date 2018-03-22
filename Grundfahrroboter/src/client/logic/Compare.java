@@ -1,6 +1,5 @@
 package client.logic;
 
-import client.exceptions.RobotException;
 import client.sensors.DefaultSensor;
 import lejos.robotics.RegulatedMotor;
 /**
